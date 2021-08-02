@@ -32,7 +32,7 @@
   <el-col :span="6">
     <div class="grid-content bg-purple"></div>
     <el-card :body-style="{ padding: '0px' }">
-      <img src="https://i.ibb.co/zZ37RMz/course-credit-tracking-icon.jpg" class="image">
+      <img src="../assets/course-credit-tracking-icon.jpg" class="image">
       <div style="padding: 14px;">
         <h2>Course and Credit Tracking</h2>
         <span>Keep track of the courses you have taken and the credits you have obtained so far</span>
@@ -47,7 +47,7 @@
   <el-col :span="6">
     <div class="grid-content bg-purple"></div>
     <el-card :body-style="{ padding: '0px' }">
-      <img src="https://i.ibb.co/MM6M6m0/suggestion-icon.jpg" class="image">
+      <img src="../assets/suggestion-icon.jpg" class="image">
       <div style="padding: 14px;">
         <h2>Course Suggestions</h2>
         <span>Suggest the next course you should take based on your taken courses</span>
@@ -62,7 +62,7 @@
   <el-col :span="6">
     <div class="grid-content bg-purple"></div>
     <el-card :body-style="{ padding: '0px' }">
-      <img src="https://i.ibb.co/8dy4tXQ/Manual-red-tally-counter-with-four-digit-numeric-and-pressing-button-on-the-yellow-background.jpg" class="image">
+      <img src="../assets/counter-icon.jpg" class="image">
       <div style="padding: 14px;">
         <h2>GPCC</h2>
         <span>Generation Per Course Counter. Check how many students in a generation has taken a specific course</span>
@@ -77,7 +77,7 @@
   <el-col :span="6">
     <div class="grid-content bg-purple"></div>
     <el-card :body-style="{ padding: '0px' }">
-      <img src="https://i.ibb.co/nDPfcYg/makeup-icon.png" class="image">
+      <img src="../assets/makeup-icon.png" class="image">
       <div style="padding: 14px;">
         <h2>Makeup Finder</h2>
         <span>Find available timeslots for your cancelled classes in an efficient manner</span>

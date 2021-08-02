@@ -22,28 +22,29 @@
 </el-menu>
 
 <!-- Form -->
-<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-  <el-form-item label="First Name" prop="firstName">
-    <el-input v-model="ruleForm.firstName"></el-input>
-  </el-form-item>
-  <el-form-item label="Last Name" prop="lastName">
-    <el-input v-model="ruleForm.lastName"></el-input>
-  </el-form-item>
-  <el-form-item label="Email" prop="email">
-    <el-input type="email" v-model="ruleForm.email"></el-input>
-  </el-form-item>
-  <el-form-item label="Password" prop="pass">
-    <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
-  </el-form-item>
-  <el-form-item label="Confirm" prop="checkPass">
-    <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
-  </el-form-item>
-  <el-form-item>
-    <el-button type="primary" @click="submitForm('ruleForm')">Submit</el-button>
-    <el-button @click="resetForm('ruleForm')">Reset</el-button>
-  </el-form-item>
-</el-form>
-
+<div style="padding-top: 50px; padding-left: 300px; padding-right: 300px;">
+  <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+    <el-form-item label="First Name" prop="firstName">
+      <el-input v-model="ruleForm.firstName"></el-input>
+    </el-form-item>
+    <el-form-item label="Last Name" prop="lastName">
+      <el-input v-model="ruleForm.lastName"></el-input>
+    </el-form-item>
+    <el-form-item label="Email" prop="email">
+      <el-input type="email" v-model="ruleForm.email"></el-input>
+    </el-form-item>
+    <el-form-item label="Password" prop="pass">
+      <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="Confirm" prop="checkPass">
+      <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="submitForm('ruleForm')">Submit</el-button>
+      <el-button @click="resetForm('ruleForm')">Reset</el-button>
+    </el-form-item>
+  </el-form>
+</div>
 </template>
 
 <script>
