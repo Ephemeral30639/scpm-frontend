@@ -30,7 +30,7 @@
     <el-input v-model="ruleForm.lastName"></el-input>
   </el-form-item>
   <el-form-item label="Email" prop="email">
-    <el-input v-model="ruleForm.email"></el-input>
+    <el-input type="email" v-model="ruleForm.email"></el-input>
   </el-form-item>
   <el-form-item label="Password" prop="pass">
     <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
@@ -50,15 +50,19 @@
   export default {
     data() {
       
-      // Form Data
+      // Form Validation Functions
       var checkFirstName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('Please input your first name'));
+        } else {
+          callback()
         }
       };
       var checkLastName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('Please input your last name'));
+        } else {
+          callback()
         }
       };
       var checkEmail = (rule, value, callback) => {
@@ -68,6 +72,8 @@
         if (!value.includes("student.mahidol.edu")){
           return callback(new Error("Please use an EDU email"))
         }
+        callback()
+
       };
       var validatePass = (rule, value, callback) => {
         if (value === '') {
@@ -93,7 +99,7 @@
         // Top Navigation Bar Yellow Highlighting
         activeIndex: '4',
         
-        // Form Scripts
+        // Form Data Variables
         ruleForm: {
           firstName: '',
           lastName: '',
