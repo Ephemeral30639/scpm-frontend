@@ -15,6 +15,8 @@ import router from './router'
 //     routes,
 // })
 
+// yeah
+
 const app = createApp(App)
 app.use(ElementPlus)
 app.use(router)
