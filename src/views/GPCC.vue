@@ -27,7 +27,8 @@
     :data="tableData"
     :default-sort = "{prop: 'id', order: 'asending'}"
     stripe
-    style="width: 100%">
+    style="width: 100%"
+    >
     <el-table-column
       prop="id"
       label="ID"
@@ -39,12 +40,24 @@
       width="180">
     </el-table-column>
     <el-table-column
-      prop="credit"
-      label="Credit">
+      prop="gen598"
+      label="Generation 598">
     </el-table-column>
         <el-table-column
-      prop="gen"
-      label="Generation count">
+      prop="gen608"
+      label="Generation 608">
+    </el-table-column>
+            <el-table-column
+      prop="gen618"
+      label="Generation 618">
+    </el-table-column>
+            <el-table-column
+      prop="gen628"
+      label="Generation 628">
+    </el-table-column>
+            <el-table-column
+      prop="gen638"
+      label="Generation 638">
     </el-table-column>
   </el-table>
 </template>
@@ -56,63 +69,98 @@
         tableData: [{
           id: 'EGCI204',
           name: 'Engineering Mechanics',
-          credit: '4',
-          gen: '12'
+          gen598: '4',
+          gen608: '12',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         }, {
           id: 'EGCI321',
           name: 'Database Systems',
-          credit: '4',
-          gen: '10'
+          gen598: '14',
+          gen608: '10',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },{
           id: 'EGCI252',
           name: 'System Programming',
-          credit: '4',
-          gen: '5'
+          gen598: '25',
+          gen: '19',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },{
           id: 'ICMA215',
           name: 'Calculus',
-          credit: '4',
-          gen: '8'
+          gen598: '24',
+          gen608: '8',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },{
           id: 'EGCI212',
           name: 'Programming Techniques',
-          credit: '4',
-          gen: '12'
+          gen598: '24',
+          gen608: '12',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },{
           id: 'EGCI100',
           name: 'Introduction to computer engineering',
-          credit: '1',
-          gen: '25'
+          gen598: '22',
+          gen608: '25',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },{
           id: 'EGCI463',
           name: 'Pattern Recognition',
-          credit: '4',
-          gen: '5'
+          gen598: '25',
+          gen608: '15',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },{
           id: 'EGCI233',
           name: 'Digital Circuit Design Lab ',
-          credit: '1',
-          gen: '16'
+          gen598: '22',
+          gen608: '16',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },{
           id: 'EGCI234',
           name: 'Digital Circuit Design',
-          credit: '4',
-          gen: '22'
+          gen598: '25',
+          gen608: '22',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },{
           id: 'EGCI321',
           name: 'Database Systems ',
-          credit: '4',
-          gen: '9'
+          gen598: '22',
+          gen608: '9',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },{
           id: 'EGCI201',
           name: 'Discrete Mathematics',
-          credit: '4',
-          gen: '23'
+          gen598: '12',
+          gen608: '23',
+          gen618: '12',
+          gen628: '12',
+          gen638: '0'
         },]
       }
     }
   }
 </script>
 <style>
-
+  .el-table{
+    color: #505050;
+    }
 </style>
