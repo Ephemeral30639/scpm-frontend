@@ -1,5 +1,4 @@
 <template>
-
 <!-- Top Navigation Bar -->
 <el-menu
   :default-active="activeIndex"
@@ -25,13 +24,16 @@
 <el-row>
 
   <el-col :span="12">
-    <div style="padding-top: 150px;">
+    <div style="padding-top: 100px;">
       <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
         <el-form-item label="First Name" prop="firstName">
           <el-input v-model="ruleForm.firstName"></el-input>
         </el-form-item>
         <el-form-item label="Last Name" prop="lastName">
           <el-input v-model="ruleForm.lastName"></el-input>
+        </el-form-item>
+        <el-form-item label="Student ID" prop="studentID">
+          <el-input v-model="ruleForm.studentID"></el-input>
         </el-form-item>
         <el-form-item label="Email" prop="email">
           <el-input type="email" v-model="ruleForm.email"></el-input>
@@ -50,6 +52,7 @@
     </div>
   </el-col>
 
+  <!-- Register Icon -->
   <el-col :span="12">
     <div style="padding-top: 50px;">
       <img src="../assets/registration-logo.jpg" alt="Girl in a jacket">
@@ -61,6 +64,7 @@
 </template>
 
 <script>
+import axios from 'axios'
   export default {
     data() {
       
@@ -68,6 +72,13 @@
       var checkFirstName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('Please input your first name'));
+        } else {
+          callback()
+        }
+      };
+      var checkStudentID = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('Please input your student ID'));
         } else {
           callback()
         }
@@ -117,6 +128,7 @@
         ruleForm: {
           firstName: '',
           lastName: '',
+          studentID: '',
           email: '',
           pass: '',
           checkPass: ''
@@ -127,6 +139,9 @@
           ],
           lastName: [
             { validator: checkLastName, trigger: 'blur'}
+          ],
+          studentID: [
+            { validator: checkStudentID, trigger: 'blur'}
           ],
           email: [
             { validator: checkEmail, trigger: 'blur'}
@@ -147,7 +162,20 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            // Gather register data
+            var registerData = {
+              "firstname": this.ruleForm.firstName,
+              "lastname": this.ruleForm.lastName,
+              "StudentID": this.ruleForm.studentID,
+              "email": this.ruleForm.email,
+              "password": this.ruleForm.pass
+              }
+
+            //Post to backend
+            axios.post('http://localhost:5000/register', registerData)
+
+            // Alert to user of success
+            alert('Registration Successful')
           } else {
             console.log('error submit!!');
             return false;
