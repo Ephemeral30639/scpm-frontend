@@ -173,11 +173,14 @@ import axios from 'axios'
 
             //Post to backend
             axios.post('http://localhost:5000/register', registerData)
-
-            // Alert to user of success
-            alert('Registration Successful')
+              .then(response => {
+                if (response.data == "Registration Successful"){
+                  alert('Registration Successful')
+                  this.$router.push({path: '/login'})
+                }
+              })
           } else {
-            console.log('error submit!!');
+            alert("Registration failed. Check the errors.")
             return false;
           }
         });

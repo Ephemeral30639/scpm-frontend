@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     data() {
       
@@ -102,9 +103,25 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            //Gather Log In Data
+            var loginData = {
+              "email": this.ruleForm.email,
+              "password": this.ruleForm.pass
+              }
+            
+            //Post to backend for authentication. If Successful, return to homepage.
+            axios.post('http://localhost:5000/login', loginData)
+              .then(reponse => {
+                if(reponse.data == "Successful Log In"){
+                  alert('Logged In');
+                  this.$router.push({path:'/'})
+                  }
+                })
+              .catch(error => {
+                alert("Log in failed. Check your credentials.")
+              })
           } else {
-            console.log('error submit!!');
+            alert("Log in failed. Please check the errors.")
             return false;
           }
         });
