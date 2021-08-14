@@ -14,8 +14,8 @@
     <template #title>Features</template>
     <el-menu-item index="2-1">Course and Credit Tracking</el-menu-item>
     <el-menu-item index="2-2">Course Suggestions</el-menu-item>
-    <el-menu-item index="2-3">Generation Per Course Counter</el-menu-item>
-    <el-menu-item index="2-4">Makeup Finder</el-menu-item>
+    <el-menu-item index="2-3"><a href="/GPCC">Generation Per Course Counter</a></el-menu-item>
+    <el-menu-item index="2-4"><a href="/Makeup">Makeup Finder</a></el-menu-item>
   </el-submenu>
   <el-menu-item index="3"><a href="/login">Login</a></el-menu-item>
   <el-menu-item index="4"><a href="/register">Register</a></el-menu-item>
