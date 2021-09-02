@@ -6,6 +6,7 @@ import TakenCourses from '../views/TakenCourses.vue'
 import Makeup from '../views/Makeup.vue'
 import Login from '../views/Login.vue'
 import GPCC from '../views/GPCC.vue'
+import Suggestion from '../views/courseSuggestion.vue'
 
 const routes = [
     {
@@ -42,6 +43,11 @@ const routes = [
         path: '/gpcc',
         name: 'GPCC',
         component: GPCC
+    },
+    {
+        path: '/coursesuggestion',
+        name: 'CourseSuggestion',
+        component: Suggestion
     }
 ]
 
