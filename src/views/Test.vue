@@ -1,4 +1,5 @@
 <template>
+<!-- This vue component is used for debugging and testing stuff -->
     <div>    
         <h2>Dashboard</h2>    
         <p>Name: {{ user.name }}</p>    

@@ -46,7 +46,6 @@ export default {
     },
     mounted: function(){
       this.activeLink = this.$route.path
-      console.log(this.$route.path)
     }
   }
 </script>

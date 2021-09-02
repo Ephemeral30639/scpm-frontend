@@ -43,7 +43,9 @@ export default {
     },
 
     mounted() {
-
+      // Allow cookie to pass through CORS with " {withCredentials: true} ". Without this, there will either be CORS error or the backend will not be able to identy the
+      // logged in session since no cookies was pass if we don't put " {withCredentials: true} ". This was the reason why "req.user.studentID" in backend was "undefined".
+      // No cookies was send to the backend to identify the logged in user.
       axios.get('http://localhost:5000/taken-courses', {withCredentials: true})
             .then((res) => {
             console.log(res.data)
@@ -67,7 +69,6 @@ export default {
               console.log(err)
             })
     },
-
     methods: {
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
