@@ -110,25 +110,34 @@ export default {
               }
             
             //Post to backend for authentication. If Successful, return to homepage.
-            axios.post('http://localhost:5000/login', loginData)
+            axios.post('http://localhost:5000/login', loginData, { withCredentials: true })
               .then(reponse => {
                 if(reponse.data == "Successful Log In"){
                   alert('Logged In');
                   this.$router.push({path:'/'})
-                  }
-                })
+                }
+              })
               .catch(error => {
                 alert("Log in failed. Check your credentials.")
               })
           } else {
-            alert("Log in failed. Please check the errors.")
-            return false;
-          }
+              alert("Log in failed. Please check the errors.")
+              return false;
+            }
         });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-      }
+      },
+    },
+    mounted(){
+      axios.get('http://localhost:5000/login', { withCredentials: true })
+          .then(reponse => {
+            if (reponse.data == 'Already Logged In'){
+              alert('you are already logged in.')
+              this.$router.push({path:'/'})
+            }
+          })
     }
   }
 </script>

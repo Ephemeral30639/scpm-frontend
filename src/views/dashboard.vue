@@ -12,17 +12,17 @@
         data() {    
             return {    
                 user: {    
-                    name: "Jesse"   
+                    name: "Jesse"    
                 }    
             }    
         },    
         methods: {    
             getUserData: function() {    
                 let self = this    
-                axios.get("http://localhost:5000/getuser", { withCredentials: true })    
+                axios.get("localhost:8000/api/user")    
                     .then((response) => {    
                         console.log(response)    
-                        this.user.name = response.data.user.firstname    
+                        self.$set(this, "user", response.data.user)    
                     })    
                     .catch((errors) => {    
                         console.log(errors)    

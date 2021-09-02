@@ -67,7 +67,7 @@ export default {
 
     mounted() {
 
-      axios.get('http://localhost:5000/taken-courses',cors())
+      axios.get('http://localhost:5000/taken-courses', {withCredentials: true})
             .then((res) => {
             console.log(res.data)
 
@@ -88,6 +88,7 @@ export default {
             })
             .catch((err) => {
             console.log(err)
+            this.$router.push({path: '/login'})
             })
     },
 
