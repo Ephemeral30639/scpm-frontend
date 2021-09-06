@@ -54,7 +54,8 @@
 </template>
 
 <script>
-  import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
+import axios from 'axios'
 export default defineComponent({
   setup() {
     const restaurants = ref([]);
@@ -74,25 +75,27 @@ export default defineComponent({
       };
     };
     const loadAll = () => {
+      // 1 (start)
       // This function is called immediately when user loads the page.
       // This is probably where you connect backend to ask for active courses in the active trimeester.
-      return [
-        { "value": "vue", "link": "https://github.com/vuejs/vue" },
-        { "value": "element", "link": "https://github.com/ElemeFE/element" },
-        { "value": "cooking", "link": "https://github.com/ElemeFE/cooking" },
-        { "value": "mint-ui", "link": "https://github.com/ElemeFE/mint-ui" },
-        { "value": "vuex", "link": "https://github.com/vuejs/vuex" },
-        { "value": "vue-router", "link": "https://github.com/vuejs/vue-router" },
-        { "value": "babel", "link": "https://github.com/babel/babel" }
-        ];
+      axios.get('http://localhost:5000/makeup/getactivecourses')
+      .then((response) => {
+        var data = []
+        for (var i = 0; i < response.data.length; i++){
+          data.push({value: response.data[i].id})
+        }
+        restaurants.value = data
+        return
+      })
     };
     const handleSelect = (item) => {
+      // 2
       // This function is called when the user selects from the suggested output.
       // This is probably where you edit the table to mark x or o depending on what they chose.
       console.log(item);
     };
     onMounted(() => {
-      restaurants.value = loadAll();
+      loadAll();
     });
     return {
       restaurants,
@@ -238,7 +241,7 @@ export default defineComponent({
 });
 </script>
 <style>
-  .el-row {
+  /* .el-row {
     margin-bottom: 20px;
     &:last-child {
       margin-bottom: 0;
@@ -263,5 +266,5 @@ export default defineComponent({
   .row-bg {
     padding: 10px 0;
     background-color: #f9fafc;
-  }
+  } */
 </style>
