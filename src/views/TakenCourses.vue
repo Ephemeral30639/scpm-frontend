@@ -5,85 +5,38 @@
   <!-- Collapse -->
   <el-collapse v-model="activeNames" @change="handleChange" style="margin:30px;">
 
-    <el-collapse-item title="Core Courses" name="1">
-      <!-- table -->
+
+      <!-- To make our code cleaner and easier to debug, we are turning big chunk of repetitve code into a component. -->
+      <!-- To see where the original code is, check inside the component folder. -->
+
+      <!-- We are turing from this.... -->
+
+    <!-- <el-collapse-item title="Core Courses" name="1">
       <el-table :data="CoreCourses" stripe style="width: 100%; justify-content: space-between;"> 
         <el-table-column prop="ID" label="Course ID" ></el-table-column>
         <el-table-column prop="Name" label="Name" ></el-table-column>
         <el-table-column prop="Credit" label="Credit"></el-table-column>
       </el-table>
       <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{CoreTotalCredit}}</el-tag>
-    </el-collapse-item>
+    </el-collapse-item> -->
 
-    <el-collapse-item title="Required Major Courses" name="2">
-      <!-- table -->
-      <el-table :data="RequiredCourses" stripe style="width: 100%; justify-content: space-between;"> 
-        <el-table-column prop="ID" label="Course ID" ></el-table-column>
-        <el-table-column prop="Name" label="Name" ></el-table-column>
-        <el-table-column prop="Credit" label="Credit"></el-table-column>
-      </el-table>
-      <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{RequiredTotalCredit}}</el-tag>
-    </el-collapse-item>
+      <!-- ....to this -->
 
-    <el-collapse-item title="Elective Major Courses" name="3">
-      <!-- table -->
-      <el-table :data="ElectiveCourses" stripe style="width: 100%; justify-content: space-between;"> 
-        <el-table-column prop="ID" label="Course ID" ></el-table-column>
-        <el-table-column prop="Name" label="Name" ></el-table-column>
-        <el-table-column prop="Credit" label="Credit"></el-table-column>
-      </el-table>
-      <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{ElectiveTotalCredit}}</el-tag>
-    </el-collapse-item>
+      <TakenCourseTable title="Core Courses" name="1" :courses="CoreCourses" :totalCredit="CoreTotalCredit"></TakenCourseTable>
 
-    <el-collapse-item title="English Communication" name="4">
-      <!-- table -->
-      <el-table :data="EnglishCourses" stripe style="width: 100%; justify-content: space-between;"> 
-        <el-table-column prop="ID" label="Course ID" ></el-table-column>
-        <el-table-column prop="Name" label="Name" ></el-table-column>
-        <el-table-column prop="Credit" label="Credit"></el-table-column>
-      </el-table>
-      <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{EnglishTotalCredit}}</el-tag>
-    </el-collapse-item>
+      <TakenCourseTable title="Required Major Courses" name="2" :courses="RequiredCourses" :totalCredit="RequiredTotalCredit"></TakenCourseTable>
 
-    <el-collapse-item title="Natural Sciences" name="5">
-      <!-- table -->
-      <el-table :data="NatSciCourses" stripe style="width: 100%; justify-content: space-between;"> 
-        <el-table-column prop="ID" label="Course ID" ></el-table-column>
-        <el-table-column prop="Name" label="Name" ></el-table-column>
-        <el-table-column prop="Credit" label="Credit"></el-table-column>
-      </el-table>
-      <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{NatSciTotalCredit}}</el-tag>
-    </el-collapse-item>
+      <TakenCourseTable title="Elective Major Courses" name="3" :courses="ElectiveCourses" :totalCredit="ElectiveTotalCredit"></TakenCourseTable>
 
-    <el-collapse-item title="Humanities" name="6">
-      <!-- table -->
-      <el-table :data="HumanityCourses" stripe style="width: 100%; justify-content: space-between;"> 
-        <el-table-column prop="ID" label="Course ID" ></el-table-column>
-        <el-table-column prop="Name" label="Name" ></el-table-column>
-        <el-table-column prop="Credit" label="Credit"></el-table-column>
-      </el-table>
-      <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{HumanityTotalCredit}}</el-tag>
-    </el-collapse-item>
+      <TakenCourseTable title="English Communication" name="4" :courses="EnglishCourses" :totalCredit="EnglishTotalCredit"></TakenCourseTable>
 
-     <el-collapse-item title="Social Sciences" name="7">
-      <!-- table -->
-      <el-table :data="SocialSciCourses" stripe style="width: 100%; justify-content: space-between;"> 
-        <el-table-column prop="ID" label="Course ID" ></el-table-column>
-        <el-table-column prop="Name" label="Name" ></el-table-column>
-        <el-table-column prop="Credit" label="Credit"></el-table-column>
-      </el-table>
-      <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{SocialSciTotalCredit}}</el-tag>
-    </el-collapse-item>
+      <TakenCourseTable title="Natural Sciences" name="5" :courses="NatSciCourses" :totalCredit="NatSciTotalCredit"></TakenCourseTable>
 
-    <el-collapse-item title="Health Science and Physical Education" name="8">
-      <!-- table -->
-      <el-table :data="PECourses" stripe style="width: 100%; justify-content: space-between;"> 
-        <el-table-column prop="ID" label="Course ID" ></el-table-column>
-        <el-table-column prop="Name" label="Name" ></el-table-column>
-        <el-table-column prop="Credit" label="Credit"></el-table-column>
-      </el-table>
-      <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{PETotalCredit}}</el-tag>
-    </el-collapse-item>
+      <TakenCourseTable title="Humanities" name="6" :courses="HumanityCourses" :totalCredit="HumanityTotalCredit"></TakenCourseTable>
+
+      <TakenCourseTable title="Social Sciences" name="7" :courses="SocialSciCourses" :totalCredit="SocialSciTotalCredit"></TakenCourseTable>
+
+      <TakenCourseTable title="Health Science and Physical Education" name="8" :courses="PECourses" :totalCredit="PETotalCredit"></TakenCourseTable>
 
   </el-collapse>
 
@@ -93,8 +46,11 @@
 
 <script>
 import axios from 'axios'
-import cors from 'cors'
+import TakenCourseTable from '../components/TakenCoursesComponent/TakenCourseTable.vue'
 export default {
+    components: {
+      TakenCourseTable
+    },
     data() {
       return {
         activeIndex: '2',
