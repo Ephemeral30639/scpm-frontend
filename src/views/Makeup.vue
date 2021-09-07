@@ -27,36 +27,44 @@
     <el-table-column
       prop="time"
       label=""
-      width="180">
+      width="180"
+      align="right">
     </el-table-column>
     <el-table-column
       prop="mon"
       label="Mon"
-      width="180">
+      width="180"
+      align="center">
     </el-table-column>
     <el-table-column
       prop="tue"
-      label="Tue">
+      label="Tue"
+      align="center">
     </el-table-column>
     <el-table-column
       prop="wed"
-      label="Wed">
+      label="Wed"
+      align="center">
     </el-table-column>
     <el-table-column
       prop="thurs"
-      label="Thurs">
+      label="Thurs"
+      align="center">
     </el-table-column>
     <el-table-column
       prop="fri"
-      label="Fri">
+      label="Fri"
+      align="center">
     </el-table-column>
     <el-table-column
       prop="sat"
-      label="Sat">
+      label="Sat"
+      align="center">
     </el-table-column>
     <el-table-column
       prop="sun"
-      label="Sun">
+      label="Sun"
+      align="center">
     </el-table-column>
   </el-table>
 </template>
@@ -276,8 +284,10 @@ export default defineComponent({
             startTime = startTime.concat(':00')
             var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
 
+            // Find the Correct Time according to the data we got
             var foundIndex = this.tableData.findIndex(x => x.time == startTime);
             
+            // Loop according to the duration. Start from startTime.
             for (var j = 0; j < duration; j++){
               this.tableData[foundIndex+j].mon = 'X';
             }
