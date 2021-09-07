@@ -157,6 +157,15 @@ import axios from 'axios'
                   alert('Registration Successful')
                   this.$router.push({path: '/login'})
                 }
+                else {
+                  var error = String(response.data)
+                  if (error.match(".*\\d.*")){
+                    alert('Duplicate student ID')
+                  }
+                  if (error.includes('student.mahidol.edu')){
+                    alert('Duplicate Email')
+                  }
+                }
               })
           } else {
             alert("Registration failed. Check the errors.")
