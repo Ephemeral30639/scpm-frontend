@@ -1,4 +1,17 @@
 <template>
+<el-row :gutter="1">
+  <el-col :span="3">
+  <div class="grid-content"></div>
+  <el-autocomplete
+    class="inline-input"
+    v-model="state2"
+    :fetch-suggestions="querySearch"
+    placeholder="Please Input"
+    :trigger-on-focus="false"
+    @select="handleSelect"
+  ></el-autocomplete></el-col>
+</el-row>
+
   <el-table
     :data="tableData"
     border
@@ -41,137 +54,409 @@
 </template>
 
 <script>
-  export default {
-    data() {
+import { defineComponent, ref, onMounted } from 'vue'
+import axios from 'axios'
+export default defineComponent({
+  data() {
       return {
         tableData: [{
-          time: '8.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '8:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         }, {
-          time: '9.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '9:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '10.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '10:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '11.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '11:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '12.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '12:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '13.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '13:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '14.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '14:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '15.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '15:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '16.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '16:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '17.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '17:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '18.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '18:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '19.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '19:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '20.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '20:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },{
-          time: '21.00',
-          mon: 'O',
-          tue: 'O',
-          wed: 'X',
+          time: '21:00',
+          mon: '',
+          tue: '',
+          wed: '',
           thurs: '',
           fri: '',
           sat: '',
           sun: ''
         },]
       }
+    },
+    setup() {
+    const restaurants = ref([]);
+    const querySearch = (queryString, cb) => {
+      var results = queryString
+        ? restaurants.value.filter(createFilter(queryString))
+        : restaurants.value;
+        // call callback function to return suggestions
+        cb(results);
+    };
+    const createFilter = (queryString) => {
+      return (restaurant) => {
+        return (
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
+        );
+      };
+    };
+    const loadAll = () => {
+      // This function is called immediately when user loads the page.
+      // This is probably where you connect backend to ask for active courses in the active trimeester.
+      axios.get('http://localhost:5000/makeup/getactivecourses')
+      .then((response) => {
+        var data = []
+        for (var i = 0; i < response.data.length; i++){
+          data.push({value: response.data[i].id})
+        }
+        restaurants.value = data
+        return
+      })
+    };
+    onMounted(() => {
+      loadAll();
+    });
+    return {
+      restaurants,
+      state1: ref(''),
+      state2: ref(''),
+      querySearch,
+      createFilter,
+      loadAll
+    };
+  },
+  methods: {
+    handleSelect (item) {
+      // This function is called when the user selects from the suggested output.
+      // This is probably where you edit the table to mark x or o depending on what they chose.
+      axios.get('http://localhost:5000/makeup/getmakeup', {params:{course: item.value}})
+      .then(response => {
+        var data = response.data
+        console.log(data)
+
+        // Clear the table first.
+        for (var x = 0; x < this.tableData.length; x++){
+          this.tableData[x].mon = ''
+          this.tableData[x].tue = ''
+          this.tableData[x].wed = ''
+          this.tableData[x].thurs = ''
+          this.tableData[x].fri = ''
+          this.tableData[x].sat = ''
+          this.tableData[x].sun = ''
+        }
+
+        for (var i = 0; i < data.length; i++){
+
+          if (data[i].Date == 'Monday'){
+            // Take the time
+            var time = data[i].Time
+
+            // Split it to get start and end time
+            var startEndTime = time.split('-')
+
+            // Format the spaces out
+            startEndTime[0] = startEndTime[0].replace(' ','')
+            startEndTime[1] = startEndTime[1].replace(' ','')
+
+            // Get startTime and Duration
+            var startTime = String(startEndTime[0])
+            startTime = startTime.concat(':00')
+            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+            for (var j = 0; j < duration; j++){
+              this.tableData[foundIndex+j].mon = 'X';
+            }
+          }
+
+          if (data[i].Date == 'Tuesday'){
+            // Take the time
+            var time = data[i].Time
+
+            // Split it to get start and end time
+            var startEndTime = time.split('-')
+
+            // Format the spaces out
+            startEndTime[0] = startEndTime[0].replace(' ','')
+            startEndTime[1] = startEndTime[1].replace(' ','')
+
+            // Get startTime and Duration
+            var startTime = String(startEndTime[0])
+            startTime = startTime.concat(':00')
+            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+            for (var j = 0; j < duration; j++){
+              this.tableData[foundIndex+j].tue = 'X';
+            }
+          }
+
+          if (data[i].Date == 'Wednesday'){
+            // Take the time
+            var time = data[i].Time
+
+            // Split it to get start and end time
+            var startEndTime = time.split('-')
+
+            // Format the spaces out
+            startEndTime[0] = startEndTime[0].replace(' ','')
+            startEndTime[1] = startEndTime[1].replace(' ','')
+
+            // Get startTime and Duration
+            var startTime = String(startEndTime[0])
+            startTime = startTime.concat(':00')
+            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+            for (var j = 0; j < duration; j++){
+              this.tableData[foundIndex+j].wed = 'X';
+            }
+          }
+
+          if (data[i].Date == 'Thursday'){
+            // Take the time
+            var time = data[i].Time
+
+            // Split it to get start and end time
+            var startEndTime = time.split('-')
+
+            // Format the spaces out
+            startEndTime[0] = startEndTime[0].replace(' ','')
+            startEndTime[1] = startEndTime[1].replace(' ','')
+
+            // Get startTime and Duration
+            var startTime = String(startEndTime[0])
+            startTime = startTime.concat(':00')
+            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+            for (var j = 0; j < duration; j++){
+              this.tableData[foundIndex+j].thurs = 'X';
+            }
+          }
+
+          if (data[i].Date == 'Friday'){
+            // Take the time
+            var time = data[i].Time
+
+            // Split it to get start and end time
+            var startEndTime = time.split('-')
+
+            // Format the spaces out
+            startEndTime[0] = startEndTime[0].replace(' ','')
+            startEndTime[1] = startEndTime[1].replace(' ','')
+
+            // Get startTime and Duration
+            var startTime = String(startEndTime[0])
+            startTime = startTime.concat(':00')
+            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+            for (var j = 0; j < duration; j++){
+              this.tableData[foundIndex+j].fri = 'X';
+            }
+          }
+
+          if (data[i].Date == 'Saturday'){
+            // Take the time
+            var time = data[i].Time
+
+            // Split it to get start and end time
+            var startEndTime = time.split('-')
+
+            // Format the spaces out
+            startEndTime[0] = startEndTime[0].replace(' ','')
+            startEndTime[1] = startEndTime[1].replace(' ','')
+
+            // Get startTime and Duration
+            var startTime = String(startEndTime[0])
+            startTime = startTime.concat(':00')
+            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+            for (var j = 0; j < duration; j++){
+              this.tableData[foundIndex+j].sat = 'X';
+            }
+          }
+
+          if (data[i].Date == 'Sunday'){
+            // Take the time
+            var time = data[i].Time
+
+            // Split it to get start and end time
+            var startEndTime = time.split('-')
+
+            // Format the spaces out
+            startEndTime[0] = startEndTime[0].replace(' ','')
+            startEndTime[1] = startEndTime[1].replace(' ','')
+
+            // Get startTime and Duration
+            var startTime = String(startEndTime[0])
+            startTime = startTime.concat(':00')
+            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+            for (var j = 0; j < duration; j++){
+              this.tableData[foundIndex+j].sun = 'X';
+            }
+          }
+
+        }
+      })
     }
   }
+});
 </script>
+
+<style>
+  /* .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  } */
+</style>
