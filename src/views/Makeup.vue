@@ -1,15 +1,23 @@
 <template>
-<el-row :gutter="1">
-  <el-col :span="3">
-  <div class="grid-content"></div>
-  <el-autocomplete
-    class="inline-input"
-    v-model="state2"
-    :fetch-suggestions="querySearch"
-    placeholder="Please Input"
-    :trigger-on-focus="false"
-    @select="handleSelect"
-  ></el-autocomplete></el-col>
+<el-row align="bottom">
+  <el-col :span="8">
+    <div class="grid-content bg-purple" style="text-align:left; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px">
+      <el-autocomplete
+        class="inline-input"
+        v-model="state2"
+        :fetch-suggestions="querySearch"
+        placeholder="Select the cancelled class"
+        :trigger-on-focus="false"
+        @select="handleSelect"
+      ></el-autocomplete>
+    </div>
+  </el-col>
+  <el-col :span="8">
+    <div class="grid-content bg-purple-light" style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px">
+      <h1 style="vertical-align:bottom;">Makeup Finder</h1>
+    </div>
+  </el-col>
+  <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
 </el-row>
 
   <el-table
@@ -433,16 +441,7 @@ export default defineComponent({
 </script>
 
 <style>
-  /* .el-row {
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
+  /* .bg-purple-dark {
     background: #99a9bf;
   }
   .bg-purple {
