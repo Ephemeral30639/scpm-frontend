@@ -22,11 +22,9 @@
 
       <!-- ....to this -->
 
-      <TakenCourseTable title="Core Courses" name="1" :courses="CoreCourses" :totalCredit="CoreTotalCredit"></TakenCourseTable>
+      <h1>{{user.name}}'s Taken Courses</h1>
 
-      <TakenCourseTable title="Required Major Courses" name="2" :courses="RequiredCourses" :totalCredit="RequiredTotalCredit"></TakenCourseTable>
-
-      <TakenCourseTable title="Elective Major Courses" name="3" :courses="ElectiveCourses" :totalCredit="ElectiveTotalCredit"></TakenCourseTable>
+      <h2 style="text-align:left;">General Education</h2>
 
       <TakenCourseTable title="English Communication" name="4" :courses="EnglishCourses" :totalCredit="EnglishTotalCredit"></TakenCourseTable>
 
@@ -37,6 +35,14 @@
       <TakenCourseTable title="Social Sciences" name="7" :courses="SocialSciCourses" :totalCredit="SocialSciTotalCredit"></TakenCourseTable>
 
       <TakenCourseTable title="Health Science and Physical Education" name="8" :courses="PECourses" :totalCredit="PETotalCredit"></TakenCourseTable>
+
+      <h2 style="text-align:left;">Majour Courses</h2>
+
+      <TakenCourseTable title="Core Courses" name="1" :courses="CoreCourses" :totalCredit="CoreTotalCredit"></TakenCourseTable>
+
+      <TakenCourseTable title="Required Major Courses" name="2" :courses="RequiredCourses" :totalCredit="RequiredTotalCredit"></TakenCourseTable>
+
+      <TakenCourseTable title="Elective Major Courses" name="3" :courses="ElectiveCourses" :totalCredit="ElectiveTotalCredit"></TakenCourseTable>
 
   </el-collapse>
 
@@ -71,7 +77,11 @@ export default {
         NatSciTotalCredit: 0,
         HumanityTotalCredit: 0,
         SocialSciTotalCredit: 0,
-        PETotalCredit: 0
+        PETotalCredit: 0,
+
+        user: {
+          name: 'Student'
+        }
       };
     },
 
@@ -81,6 +91,16 @@ export default {
       // No cookies was send to the backend to identify the logged in user.
       axios.get('http://localhost:5000/taken-courses', {withCredentials: true})
             .then((res) => {
+
+            if (res.data == "Not Logged In") {
+              alert("You are not logged in. Please log in first.")
+              this.$router.push({path: '/login'})
+            }
+
+            axios.get('http://localhost:5000/getuser', {withCredentials: true})
+            .then((res => {
+              this.user.name = res.data.user.firstname
+            }))
 
             //filter JSON data
             this.CoreCourses = res.data.filter(course => course.Category =="Core Courses")
