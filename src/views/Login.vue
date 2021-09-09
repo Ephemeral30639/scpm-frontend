@@ -1,6 +1,6 @@
 <template>
 <!-- Form -->
-<el-row>
+<el-row v-loading="loading">
 
   <el-col :span="12">
     <div style="padding-top: 50px;">
@@ -72,7 +72,8 @@ export default {
           pass: [
             { validator: validatePass, trigger: 'blur' }
           ]
-        }
+        },
+        loading: true
       };
     },
     methods: {
@@ -119,6 +120,9 @@ export default {
             if (reponse.data == 'Already Logged In'){
               alert('you are already logged in.')
               this.$router.push({path:'/'})
+            }
+            else {
+              this.loading = false
             }
           })
     }

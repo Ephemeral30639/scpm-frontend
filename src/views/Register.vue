@@ -1,6 +1,6 @@
 <template>
 <!-- Form -->
-<el-row>
+<el-row v-loading="loading">
 
   <el-col :span="12">
     <div style="padding-top: 100px;">
@@ -131,7 +131,8 @@ import axios from 'axios'
           checkPass: [
             { validator: validatePass2, trigger: 'blur' }
           ]
-        }
+        },
+        loading: true
       };
     },
     methods: {
@@ -176,6 +177,19 @@ import axios from 'axios'
       resetForm(formName) {
         this.$refs[formName].resetFields();
       }
+    },
+    mounted(){
+      axios.get('http://localhost:5000/register', { withCredentials: true })
+          .then(reponse => {
+            console.log(reponse.data)
+            if (reponse.data == 'Already Logged In'){
+              alert('Alright registered. Log out first if you want to create a new account.')
+              this.$router.push({path:'/'})
+            }
+            else {
+              this.loading = false
+            }
+          })
     }
   }
 </script>

@@ -1,6 +1,6 @@
 <template>
 
-<div>
+<div v-loading="loading">
   <br>
   <!-- Collapse -->
   <el-collapse v-model="activeNames" @change="handleChange" style="margin:30px;">
@@ -79,6 +79,8 @@ export default {
         SocialSciTotalCredit: 0,
         PETotalCredit: 0,
 
+        loading: true,
+
         user: {
           name: 'Student'
         }
@@ -100,6 +102,7 @@ export default {
             axios.get('http://localhost:5000/getuser', {withCredentials: true})
             .then((res => {
               this.user.name = res.data.user.firstname
+              this.loading = false
             }))
 
             //filter JSON data

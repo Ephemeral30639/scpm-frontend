@@ -8,6 +8,7 @@
     style="width: 100%"
     @selection-change="handleSelectionChange"
     max-height="400"
+    v-loading="loading"
   >
     <el-table-column type="selection" width="55"> </el-table-column>
     <el-table-column label="ID">
@@ -33,6 +34,7 @@ import axios from 'axios'
       return {
         tableData: [],
         multipleSelection: [],
+        loading: true
       }
     },
 
@@ -56,7 +58,7 @@ import axios from 'axios'
         .then(response => {
             if (response.data == 'Success'){
                 alert('Enroll Success')
-                this.#router.push({path: '/'})
+               this.$router.push({path: '/'})
             }
         })
       }
@@ -99,6 +101,7 @@ import axios from 'axios'
             for (var j = 0; j < newTableData.length; j++) {
                 this.tableData.push({id: newTableData[j][0].id, name: newTableData[j][0].name, day: newTableData[j][0].day, time: newTableData[j][0].time})
             }
+            this.loading = false
         })
     }
   }
