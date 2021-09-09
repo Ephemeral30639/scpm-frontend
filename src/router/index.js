@@ -6,7 +6,8 @@ import TakenCourses from '../views/TakenCourses.vue'
 import Makeup from '../views/Makeup.vue'
 import Login from '../views/Login.vue'
 import GPCC from '../views/GPCC.vue'
-import Suggestion from '../views/courseSuggestion.vue'
+import Suggestion from '../views/CourseSuggestion.vue'
+import Enroll from '../views/Enroll.vue'
 
 const routes = [
     {
@@ -48,6 +49,12 @@ const routes = [
         path: '/coursesuggestion',
         name: 'CourseSuggestion',
         component: Suggestion
+    }
+    ,
+    {
+        path: '/enroll',
+        name: 'Enrollment',
+        component: Enroll
     }
 ]
 

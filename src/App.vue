@@ -19,6 +19,7 @@
       <el-menu-item index="/gpcc"><router-link style="text-decoration: none; color: inherit;" to='/gpcc'>Generation Per Course Counter</router-link></el-menu-item>
       <el-menu-item index="/makeup"><router-link style="text-decoration: none; color: inherit;" to='/makeup'>Makeup Finder</router-link></el-menu-item>
     </el-submenu>
+    <el-menu-item index="/enroll"><router-link style="text-decoration: none; color: inherit;" to='/enroll'>Enroll</router-link></el-menu-item>
     <el-menu-item index="/login"><router-link style="text-decoration: none; color: inherit;" to='/login'>Login</router-link></el-menu-item>
     <el-menu-item index="/register"><router-link style="text-decoration: none; color: inherit;" to='/register'>Register</router-link></el-menu-item>
   </el-menu>
