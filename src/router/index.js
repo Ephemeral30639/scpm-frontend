@@ -8,6 +8,7 @@ import Login from '../views/Login.vue'
 import GPCC from '../views/GPCC.vue'
 import Suggestion from '../views/CourseSuggestion.vue'
 import Enroll from '../views/Enroll.vue'
+import Logout from '../views/Logout.vue'
 
 const routes = [
     {
@@ -49,12 +50,16 @@ const routes = [
         path: '/coursesuggestion',
         name: 'CourseSuggestion',
         component: Suggestion
-    }
-    ,
+    },
     {
         path: '/enroll',
         name: 'Enrollment',
         component: Enroll
+    },
+    {
+        path: '/logout',
+        name: 'Logout',
+        component: Logout
     }
 ]
 
