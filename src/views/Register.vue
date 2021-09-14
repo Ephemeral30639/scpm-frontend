@@ -183,7 +183,7 @@ import axios from 'axios'
           .then(reponse => {
             console.log(reponse.data)
             if (reponse.data == 'Already Logged In'){
-              alert('Alright registered. Log out first if you want to create a new account.')
+              alert('Already registered. Log out first if you want to create a new account.')
               this.$router.push({path:'/'})
             }
             else {
