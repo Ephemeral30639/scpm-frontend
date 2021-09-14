@@ -13,8 +13,8 @@ export default {
               this.$router.push({path:'/'})
           }
           else {
-              alert('You are not logged in.')
-              this.$router.push({path:'/'})
+              alert('You are not logged in. Nothing to log out.')
+              this.$router.push({path:'/'}) 
           }
         })
     }
