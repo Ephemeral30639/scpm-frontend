@@ -215,7 +215,19 @@ export default defineComponent({
       }
     },
     mounted(){
-
+        this.loading = true
+        axios.get('http://localhost:5000/getuser', {withCredentials: true})
+        .then(response => {
+            if (response.data == "Not Logged In") {
+              this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
+              this.$router.push({path: '/login'})
+            } else if (response.data.user.firstname != 'admin'){
+                this.$message.error({message: 'You are not the administrator.', duration: 4000})
+                this.$router.push({path: '/'})
+            } else if (response.data.user.firstname == 'admin'){
+                this.loading = false
+            }
+        })
     }
 });
 </script>
