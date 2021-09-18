@@ -100,10 +100,10 @@ export default {
             }
 
             axios.get('http://localhost:5000/getuser', {withCredentials: true})
-            .then((res => {
+            .then(res => {
               this.user.name = res.data.user.firstname
               this.loading = false
-            }))
+            })
 
             //filter JSON data
             this.CoreCourses = res.data.filter(course => course.Category =="Core Courses")
