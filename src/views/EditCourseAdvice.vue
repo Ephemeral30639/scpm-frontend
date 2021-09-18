@@ -154,7 +154,7 @@ export default defineComponent({
                 axios.post('http://localhost:5000/advice/createadvice', null, {params: this.form})
                 .then(response => {
                     if(response.data == 'Successfully Created'){
-                        alert('Created Successful')
+                        this.$message.success({message: 'Successfully Created', duration: 4000})
                         this.resetForm('form')
                         this.loading = false
                     }
@@ -172,7 +172,7 @@ export default defineComponent({
                 axios.post('http://localhost:5000/advice/editadvice', null, {params: this.editForm})
                 .then(response => {
                     if(response.data == 'Successfully Edit'){
-                        alert('Edit Successful')
+                        this.$message.success({message: 'Successfully Edited', duration: 4000})
                         this.editFormDisabled = true
                         this.resetForm('editForm')
                         this.loading = false
@@ -189,7 +189,7 @@ export default defineComponent({
         axios.delete('http://localhost:5000/advice/deleteadvice', {params: this.editForm})
         .then(response => {
             if(response.data == 'Successfully Delete'){
-                alert('Delete Successful')
+                this.$message.success({message: 'Successfully Deleted', duration: 4000})
                 this.editFormDisabled = true
                 this.resetForm('editForm')
                 this.loading = false

@@ -95,7 +95,7 @@ export default {
             .then((res) => {
 
             if (res.data == "Not Logged In") {
-              alert("You are not logged in. Please log in first.")
+              this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
               this.$router.push({path: '/login'})
             }
 

@@ -1,5 +1,6 @@
 <template>
-    
+    <div v-loading="true">
+    </div>
 </template>
 
 <script>
@@ -9,12 +10,12 @@ export default {
         axios.delete('http://localhost:5000/logout', {withCredentials: true})
         .then(response => {
           if (response.data == 'Log out successful'){
-              alert('Log out Successful.')
+              this.$message.success({message: 'Successfully Logged Out', duration: 4000})
               this.$root.adminChange('adminToolShow Off')
               this.$router.push({path:'/'})
           }
           else {
-              alert('You are not logged in. Nothing to log out.')
+              this.$message.warning({message: 'Not logged in. Nothing to log out of.', duration: 4000})
               this.$router.push({path:'/'}) 
           }
         })

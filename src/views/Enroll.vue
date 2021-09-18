@@ -1,35 +1,14 @@
 <template>
-<h1>Current Trimester</h1>
-<h3>T2 2020-2021</h3>
+<div v-loading="allLoading">
+  <h1>Current Trimester</h1>
+  <h3>T2 2020-2021</h3>
 
-  <el-table
-    ref="multipleTable"
-    :data="tableData"
-    style="width: 100%"
-    @selection-change="handleSelectionChange"
-    max-height="400"
-    v-loading="loading"
-  >
-    <el-table-column type="selection" width="55"> </el-table-column>
-    <el-table-column label="ID">
-      <template #default="scope">{{ scope.row.id }}</template>
-    </el-table-column>
-    <el-table-column property="name" label="Name">
-    </el-table-column>
-    <el-table-column property="day" label="Day">
-    </el-table-column>
-    <el-table-column property="time" label="Time">
-    </el-table-column>
-  </el-table>
-
-  <el-dialog title="Your Current Enrollment" v-model="dialogTableVisible">
     <el-table
       ref="multipleTable"
-      :data="gridData"
+      :data="tableData"
       style="width: 100%"
       @selection-change="handleSelectionChange"
       max-height="400"
-      v-loading="dialogTableloading"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column label="ID">
@@ -42,20 +21,42 @@
       <el-table-column property="time" label="Time">
       </el-table-column>
     </el-table>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogTableVisible = false">Cancel</el-button>
-        <el-button type="danger" @click="unenroll()">Unenroll</el-button
-        >
-      </span>
-    </template>
-  </el-dialog>
 
-  <div style="margin-top: 20px">
-    <el-button type="primary" @click="enroll()">Enroll</el-button>
-    <el-button @click="toggleSelection()">Clear selection</el-button>
-    <el-button type="danger" @click="openDialog()">Unenroll</el-button>
-  </div>
+    <el-dialog title="Your Current Enrollment" v-model="dialogTableVisible">
+      <el-table
+        ref="multipleTable"
+        :data="gridData"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+        max-height="400"
+        v-loading="dialogTableloading"
+      >
+        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column label="ID">
+          <template #default="scope">{{ scope.row.id }}</template>
+        </el-table-column>
+        <el-table-column property="name" label="Name">
+        </el-table-column>
+        <el-table-column property="day" label="Day">
+        </el-table-column>
+        <el-table-column property="time" label="Time">
+        </el-table-column>
+      </el-table>
+      <template #footer>
+        <span class="dialog-footer" v-loading="dialogLoading">
+          <el-button @click="dialogTableVisible = false">Cancel</el-button>
+          <el-button type="danger" @click="unenroll()">Unenroll</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
+
+    <div style="margin-top: 20px">
+      <el-button type="primary" @click="enroll()">Enroll</el-button>
+      <el-button @click="toggleSelection()">Clear selection</el-button>
+      <el-button type="danger" @click="openDialog()">Unenroll</el-button>
+    </div>
+</div>
 </template>
 
 <script>
@@ -65,8 +66,9 @@ import axios from 'axios'
       return {
         tableData: [],
         multipleSelection: [],
-        loading: true,
+        allLoading: true,
         dialogTableloading: false,
+        dialogLoading: false,
         gridData: [],
         dialogTableVisible: false
       }
@@ -87,20 +89,24 @@ import axios from 'axios'
         this.multipleSelection = val
       },
       unenroll(){
+        this.dialogLoading = true
         axios.post('http://localhost:5000/enrollment/unenroll', this.multipleSelection, {withCredentials: true})
         .then(response => {
             if (response.data == 'Success'){
-                alert('UnEnroll Success')
-               this.$router.push({path: '/'})
+                this.$message.success({message: 'Successfully Unenrolled', duration: 4000})
+                this.$router.push({path: '/'})
+                this.dialogLoading = false
             }
         })
       },
       enroll(){
+        this.allLoading = true
         axios.post('http://localhost:5000/enrollment/enroll', this.multipleSelection, {withCredentials: true})
         .then(response => {
             if (response.data == 'Success'){
-                alert('Enroll Success')
-               this.$router.push({path: '/'})
+                this.$message.success({message: 'Successfully Enrolled', duration: 4000})
+                this.$router.push({path: '/'})
+                this.allLoading = false
             }
         })
       },
@@ -158,7 +164,7 @@ import axios from 'axios'
 
           // Check if the user is logged in.
           if (response.data == "Not Logged In") {
-            alert("You are not logged in. Please log in first.")
+            this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
             this.$router.push({path: '/login'})
           }
 
@@ -196,7 +202,7 @@ import axios from 'axios'
           for (var j = 0; j < newTableData.length; j++){
             this.tableData.push({id: newTableData[j].ID, name: newTableData[j].Name, day: newTableData[j].Date, time: newTableData[j].Time})
           }
-          this.loading = false
+          this.allLoading = false
       })
     }
   }
