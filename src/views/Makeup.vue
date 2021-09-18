@@ -7,7 +7,7 @@
         v-model="state2"
         :fetch-suggestions="querySearch"
         placeholder="Select the cancelled class"
-        :trigger-on-focus="false"
+        :trigger-on-focus="true"
         @select="handleSelect"
       ></el-autocomplete>
     </div>
