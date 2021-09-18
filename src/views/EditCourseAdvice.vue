@@ -1,74 +1,75 @@
 <template>
-<h1>Course Advice Editor</h1>
-<el-switch
-  style="display: block"
-  v-model="switchState"
-  active-color="#808080"
-  inactive-color="#808080"
-  active-text="Edit"
-  inactive-text="Create"
-  @change="switchChanged"
->
-</el-switch>
-<el-row>
+<div v-loading="loading">
+    <h1>Course Advice Editor</h1>
+    <el-switch
+    style="display: block"
+    v-model="switchState"
+    active-color="#808080"
+    inactive-color="#808080"
+    active-text="Edit"
+    inactive-text="Create"
+    @change="switchChanged"
+    >
+    </el-switch>
+    <el-row>
 
-    <el-col :span="12">
-        <h2>Add New Advice</h2>
-        <div style="padding-top: 60px;">
-            <el-form ref="form" :model="form" label-width="120px" :disabled="createFormDisabled">
-                <el-form-item label="Category" prop="category" :rules="[{required: true, message: 'Cannot be empty.'}]">
-                    <el-input v-model="form.category"></el-input>
-                </el-form-item>
-                <el-form-item label="Course ID" prop="courseID" :rules="[{required: true, message: 'Cannot be empty.'}]">
-                    <el-input v-model="form.courseID"></el-input>
-                </el-form-item>
-                <el-form-item label="Advice Text" prop="adviceText" :rules="[{required: true, message: 'Cannot be empty.'}]">
-                    <el-input type="textarea" v-model="form.adviceText" :autosize="{ minRows: 2, maxRows: 6}"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onSubmit('form')">Create</el-button>
-                    <el-button @click="resetForm('form')">Reset</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
-    </el-col>
-
-    <el-col :span="12">
-        <h2>Edit Advice</h2>
-        <div>
-            <div style="padding-bottom: 20px;">
-                <el-autocomplete
-                    class="inline-input"
-                    v-model="state2"
-                    :fetch-suggestions="querySearch"
-                    placeholder="Select Course"
-                    :trigger-on-focus="true"
-                    @select="handleSelect"
-                    :clearable="true"
-                    :disabled="editCourseInputDisabled"
-                ></el-autocomplete>
+        <el-col :span="12">
+            <h2>Add New Advice</h2>
+            <div style="padding-top: 60px;">
+                <el-form ref="form" :model="form" label-width="120px" :disabled="createFormDisabled">
+                    <el-form-item label="Category" prop="category" :rules="[{required: true, message: 'Cannot be empty.'}]">
+                        <el-input v-model="form.category"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Course ID" prop="courseID" :rules="[{required: true, message: 'Cannot be empty.'}]">
+                        <el-input v-model="form.courseID"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Advice Text" prop="adviceText" :rules="[{required: true, message: 'Cannot be empty.'}]">
+                        <el-input type="textarea" v-model="form.adviceText" :autosize="{ minRows: 2, maxRows: 6}"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit('form')">Create</el-button>
+                        <el-button @click="resetForm('form')">Reset</el-button>
+                    </el-form-item>
+                </el-form>
             </div>
-            <el-form ref="editForm" :model="editForm" label-width="120px" :disabled="editFormDisabled">
-                <el-form-item label="Category" prop="category" :rules="[{required: true, message: 'Cannot be empty.'}]">
-                    <el-input v-model="editForm.category"></el-input>
-                </el-form-item>
-                <el-form-item label="Course ID" prop="courseID" :rules="[{required: true, message: 'Cannot be empty.'}]">
-                    <el-input v-model="editForm.courseID" disabled=true></el-input>
-                </el-form-item>
-                <el-form-item label="Advice Text" prop="adviceText" :rules="[{required: true, message: 'Cannot be empty.'}]">
-                    <el-input type="textarea" v-model="editForm.adviceText" :autosize="{ minRows: 2, maxRows: 6}"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onConfirm('editForm')">Confirm</el-button>
-                    <el-button @click="resetForm('editForm')">Reset</el-button>
-                    <el-button type="danger" @click="onDelete">Delete</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
-    </el-col>
+        </el-col>
 
-</el-row>
+        <el-col :span="12">
+            <h2>Edit Advice</h2>
+            <div>
+                <div style="padding-bottom: 20px;">
+                    <el-autocomplete
+                        class="inline-input"
+                        v-model="state2"
+                        :fetch-suggestions="querySearch"
+                        placeholder="Select Course"
+                        :trigger-on-focus="true"
+                        @select="handleSelect"
+                        :clearable="true"
+                        :disabled="editCourseInputDisabled"
+                    ></el-autocomplete>
+                </div>
+                <el-form ref="editForm" :model="editForm" label-width="120px" :disabled="editFormDisabled">
+                    <el-form-item label="Category" prop="category" :rules="[{required: true, message: 'Cannot be empty.'}]">
+                        <el-input v-model="editForm.category"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Course ID" prop="courseID" :rules="[{required: true, message: 'Cannot be empty.'}]">
+                        <el-input v-model="editForm.courseID" disabled=true></el-input>
+                    </el-form-item>
+                    <el-form-item label="Advice Text" prop="adviceText" :rules="[{required: true, message: 'Cannot be empty.'}]">
+                        <el-input type="textarea" v-model="editForm.adviceText" :autosize="{ minRows: 2, maxRows: 6}"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onConfirm('editForm')">Confirm</el-button>
+                        <el-button @click="resetForm('editForm')">Reset</el-button>
+                        <el-button type="danger" @click="onDelete">Delete</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-col>
 
+    </el-row>
+</div>
 </template>
 
 <script>
@@ -90,7 +91,8 @@ export default defineComponent({
         editFormDisabled: true,
         createFormDisabled: false,
         switchState: false,
-        editCourseInputDisabled: true
+        editCourseInputDisabled: true,
+        loading: false
       }
     },
     setup() {
@@ -148,11 +150,13 @@ export default defineComponent({
       onSubmit(formName) {
         this.$refs[formName].validate((valid) => {
             if (valid) {
+                this.loading = true
                 axios.post('http://localhost:5000/advice/createadvice', null, {params: this.form})
                 .then(response => {
                     if(response.data == 'Successfully Created'){
                         alert('Created Successful')
                         this.resetForm('form')
+                        this.loading = false
                     }
                 })
             } else {
@@ -164,12 +168,14 @@ export default defineComponent({
       onConfirm(formName){
         this.$refs[formName].validate((valid) => {
             if (valid) {
+                this.loading = true
                 axios.post('http://localhost:5000/advice/editadvice', null, {params: this.editForm})
                 .then(response => {
                     if(response.data == 'Successfully Edit'){
                         alert('Edit Successful')
                         this.editFormDisabled = true
                         this.resetForm('editForm')
+                        this.loading = false
                     }
                 })
             } else {
@@ -179,12 +185,14 @@ export default defineComponent({
         })
       },
       onDelete(){
+        this.loading = true
         axios.delete('http://localhost:5000/advice/deleteadvice', {params: this.editForm})
         .then(response => {
             if(response.data == 'Successfully Delete'){
                 alert('Delete Successful')
                 this.editFormDisabled = true
                 this.resetForm('editForm')
+                this.loading = false
             }
         })
       },
