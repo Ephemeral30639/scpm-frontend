@@ -1,6 +1,6 @@
 <template>
 <!-- Form -->
-<el-row v-loading="loading">
+<el-row>
 
   <el-col :span="12">
     <div style="padding-top: 50px;">
@@ -72,8 +72,7 @@ export default {
           pass: [
             { validator: validatePass, trigger: 'blur' }
           ]
-        },
-        loading: true
+        }
       };
     },
     methods: {
@@ -119,18 +118,7 @@ export default {
       },
     },
     mounted(){
-      // Sending a GET request to login. This is use to check if the user is already logged. If they are already logged in, redict to homepage.
-      // Cookies need to be send as well. If backend can identify the cookie, means that the user already logged in.
-      axios.get('http://localhost:5000/login', { withCredentials: true })
-          .then(reponse => {
-            if (reponse.data == 'Already Logged In'){
-              alert('you are already logged in.')
-              this.$router.push({path:'/'})
-            }
-            else {
-              this.loading = false
-            }
-          })
+
     }
   }
 </script>
