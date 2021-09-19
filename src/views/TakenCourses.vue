@@ -1,28 +1,31 @@
 <template>
 
 <div v-loading="loading">
+  
   <br>
-  <!-- Collapse -->
-  <el-collapse v-model="activeNames" @change="handleChange" style="margin:30px;">
 
+  <h1>{{user.name}}'s Taken Courses</h1>
 
-      <!-- To make our code cleaner and easier to debug, we are turning big chunk of repetitve code into a component. -->
-      <!-- To see where the original code is, check inside the component folder. -->
+  <div class="container">
 
-      <!-- We are turing from this.... -->
+    <!-- Collapse -->
+    <el-collapse v-model="activeNames" @change="handleChange" style="margin:30px; border:none;">
 
-    <!-- <el-collapse-item title="Core Courses" name="1">
-      <el-table :data="CoreCourses" stripe style="width: 100%; justify-content: space-between;"> 
-        <el-table-column prop="ID" label="Course ID" ></el-table-column>
-        <el-table-column prop="Name" label="Name" ></el-table-column>
-        <el-table-column prop="Credit" label="Credit"></el-table-column>
-      </el-table>
-      <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{CoreTotalCredit}}</el-tag>
-    </el-collapse-item> -->
+      <!-- buttons -->
+      <el-row>
 
-      <!-- ....to this -->
+        <el-tooltip class="item" effect="dark" content="Add a course" placement="top">
+          <el-button type="primary" icon="el-icon-plus" circle @click="dialogAddVisible = true"></el-button>
+        </el-tooltip>
+        
 
-      <h1>{{user.name}}'s Taken Courses</h1>
+        <el-tooltip class="item" effect="dark" content="Delete a course" placement="top">
+          <el-button type="danger" icon="el-icon-delete" circle @click="dialogDeleteVisible = true"></el-button>
+        </el-tooltip>
+
+      </el-row>
+      
+      <br>
 
       <h2 style="text-align:left;">General Education</h2>
 
@@ -35,6 +38,8 @@
       <TakenCourseTable title="Social Sciences" name="7" :courses="SocialSciCourses" :totalCredit="SocialSciTotalCredit"></TakenCourseTable>
 
       <TakenCourseTable title="Health Science and Physical Education" name="8" :courses="PECourses" :totalCredit="PETotalCredit"></TakenCourseTable>
+      
+      <br><br>
 
       <h2 style="text-align:left;">Majour Courses</h2>
 
@@ -43,22 +48,55 @@
       <TakenCourseTable title="Required Major Courses" name="2" :courses="RequiredCourses" :totalCredit="RequiredTotalCredit"></TakenCourseTable>
 
       <TakenCourseTable title="Elective Major Courses" name="3" :courses="ElectiveCourses" :totalCredit="ElectiveTotalCredit"></TakenCourseTable>
+      
+      <br>
 
-  </el-collapse>
+    </el-collapse>
+
+  </div>
+
+  <!-- Add dialog box -->
+  <el-dialog title="Adding a course" v-model="dialogAddVisible" width="30%" center>
+    <!-- input -->
+     <div class="sub-title">Add a course to the table</div>
+    <el-autocomplete class="inline-input" style="width:100%" v-model="state1" :fetch-suggestions="querySearch" placeholder="Select a course" @select="addSelect" clearable></el-autocomplete>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogAddVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="confirmAdd">Add {{addChoice.value}}</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+  <!-- Delete dialog box -->
+  <el-dialog title="Deleting a course" v-model="dialogDeleteVisible" width="30%" center>
+    <!-- input -->
+     <div class="sub-title">Delete a course from the table</div>
+    <el-autocomplete class="inline-input" style="width:100%" v-model="state2" :fetch-suggestions="querySearch2" placeholder="Select a course" @select="deleteSelect" clearable></el-autocomplete>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogDeleteVisible = false">Cancel</el-button>
+        <el-button type="danger" @click="confirmDelete">Delete {{deleteChoice.value}}</el-button>
+      </span>
+    </template>
+  </el-dialog>
 
 </div>
 
 </template>
 
 <script>
+ import { reactive, defineComponent, ref, onMounted } from 'vue'
 import axios from 'axios'
 import TakenCourseTable from '../components/TakenCoursesComponent/TakenCourseTable.vue'
-export default {
+export default defineComponent({
     components: {
       TakenCourseTable
     },
     data() {
       return {
+        dialogAddVisible: false,
+        dialogDeleteVisible: false,
         activeIndex: '2',
 
         CoreCourses:[],
@@ -91,8 +129,9 @@ export default {
       // Allow cookie to pass through CORS with " {withCredentials: true} ". Without this, there will either be CORS error or the backend will not be able to identy the
       // logged in session since no cookies was pass if we don't put " {withCredentials: true} ". This was the reason why "req.user.studentID" in backend was "undefined".
       // No cookies was send to the backend to identify the logged in user.
-      axios.get('http://localhost:5000/taken-courses', {withCredentials: true})
+      axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
             .then((res) => {
+            console.log(res)
 
             if (res.data == "Not Logged In") {
               alert("You are not logged in. Please log in first.")
@@ -145,12 +184,149 @@ export default {
               console.log(err)
             })
     },
+    //logical concern for add and delete button
+    setup() {
+      //vue composition api "setup" passing in variables to component 
+      //ref:https://www.codegrepper.com/code-examples/javascript/vue+composition+api+%22setup%22+passing+in+variables+to+component
+      const addChoice = reactive({value: ''})
+      const deleteChoice = reactive({value: ''})
+
+      const restaurants = ref([]);
+      const restaurants2 = ref([]);
+      const querySearch = (queryString, cb) => {
+        var results = queryString
+          ? restaurants.value.filter(createFilter(queryString))
+          : restaurants.value;
+          // call callback function to return suggestions
+          cb(results);
+      };
+       const querySearch2 = (queryString, cb) => {
+        var results = queryString
+          ? restaurants2.value.filter(createFilter(queryString))
+          : restaurants2.value;
+          // call callback function to return suggestions
+          cb(results);
+      };
+      const createFilter = (queryString) => {
+        return (restaurant) => {
+          return (
+            restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+          );
+        };
+      };
+      // This function is called immediately when user loads the page.
+      const loadAll = () => {
+        //load all non taken courses for adding
+        axios.get('http://localhost:5000/taken-courses/loadcourselist', {withCredentials: true})
+        .then((response) => {
+          console.log('hello')
+          console.log(response)
+          var data = []
+          for (var i = 0; i < response.data.length; i++){
+            data.push({value: response.data[i].ID + ' ' + response.data[i].Name})
+          }
+          restaurants.value = data
+          console.log(restaurants)
+          return
+        })
+        //load all taken courses for deleting
+        axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
+        .then((response) => {
+          console.log('hello')
+          console.log(response)
+          var data = []
+          for (var i = 0; i < response.data.length; i++){
+            data.push({value: response.data[i].ID + ' ' + response.data[i].Name})
+          }
+          restaurants2.value = data
+          console.log(restaurants2)
+          return
+        })
+      };
+      //function for add button
+      const addSelect = (item) => {
+        let choice = item.value.split(' ')      
+        addChoice.value = choice[0]
+        console.log("select " + addChoice.value)
+      };
+      const confirmAdd = () => {
+        if(addChoice.value == ''){
+          alert("Please select a course.")
+        }
+        else{
+          console.log("confirm add " + addChoice.value)
+          axios.get("http://localhost:5000/taken-courses/addtakencourse/" + addChoice.value , {withCredentials: true})
+          .then((res) => {
+            console.log('adding..')
+            console.log(res.data)
+            if(res.data == "add success"){
+              alert("Added success.")
+              window.location.reload()
+            }
+            else{
+              alert("An error has occured.")
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+        }
+      };
+      //function for delete button
+      const deleteSelect = (item) => {
+        let choice = item.value.split(' ')      
+        deleteChoice.value = choice[0]
+        console.log("select " + deleteChoice.value)
+      };
+      const confirmDelete = () => {
+        if(deleteChoice.value == ''){
+          alert("Please select a course.")
+        }
+        else{
+          console.log("confirm delete " + deleteChoice.value)
+          axios.delete("http://localhost:5000/taken-courses/deletetakencourse/" + deleteChoice.value , {withCredentials: true})
+          .then((res) => {
+            console.log('deleting..')
+            console.log(res.data)
+            if(res.data == "delete success"){
+              alert("Delete success.")
+              window.location.reload()
+            }
+            else{
+              alert("An error has occured.")
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+        }
+      };
+      onMounted(() => {
+        loadAll();
+      });
+      return {
+        restaurants,
+        restaurants2,
+        state1: ref(''),
+        state2: ref(''),
+        addChoice,
+        deleteChoice,
+        querySearch,
+        querySearch2,
+        createFilter,
+        loadAll,
+        addSelect,
+        confirmAdd,
+        deleteSelect,
+        confirmDelete
+      };
+    },
     methods: {
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
-      }
+      },
     }
-  }
+  });
 </script>
 
 <style>

@@ -3,6 +3,8 @@ import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
 import App from './App.vue';
 import router from './router'
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 // const Welcome = "./views/Welcome.vue"
 
