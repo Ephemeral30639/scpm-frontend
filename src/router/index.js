@@ -11,6 +11,7 @@ import CourseComment from '../views/CourseComment.vue'
 import Enroll from '../views/Enroll.vue'
 import Logout from '../views/Logout.vue'
 import EditCourseAdvice from '../views/EditCourseAdvice.vue'
+import EditCurrentTrimester from '../views/EditCurrentTrimester.vue'
 
 const routes = [
     {
@@ -72,6 +73,11 @@ const routes = [
         path: '/editcourseadvice',
         name: 'EditCourseAdvice',
         component: EditCourseAdvice
+    },
+    {
+        path: '/editcurrenttrimester',
+        name: 'EditCurrentTrimester',
+        component: EditCurrentTrimester
     }
 ]
 

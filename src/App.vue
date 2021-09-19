@@ -39,6 +39,7 @@
     <el-submenu index="5" v-show="adminToolShow">
       <template #title>Admin Tools</template>
       <el-menu-item index="/editcourseadvice"><router-link style="text-decoration: none; color: inherit;" to='/editcourseadvice'>Edit Course Advice</router-link></el-menu-item>
+      <el-menu-item index="/editcurrenttrimester"><router-link style="text-decoration: none; color: inherit;" to='/editcurrenttrimester'>Edit Current Trimester</router-link></el-menu-item>
     </el-submenu>
   </el-menu>
 
