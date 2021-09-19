@@ -75,6 +75,7 @@ import axios from 'axios'
 export default defineComponent({
   data() {
       return {
+        trimester: '',
         tableData: [{
           time: '8:00',
           mon: '',
@@ -224,15 +225,20 @@ export default defineComponent({
     const loadAll = () => {
       // This function is called immediately when user loads the page.
       // This is probably where you connect backend to ask for active courses in the active trimeester.
-      axios.get('http://localhost:5000/makeup/getactivecourses')
-      .then((response) => {
-        var data = []
-        for (var i = 0; i < response.data.length; i++){
-          data.push({value: response.data[i].id})
-        }
-        restaurants.value = data
-        return
-      })
+      axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
+        .then(response => {
+            var trimester = response.data[0].trimester
+
+            axios.get('http://localhost:5000/makeup/getactivecourses', {params:{trimester: trimester}})
+            .then((response) => {
+              var data = []
+              for (var i = 0; i < response.data.length; i++){
+                data.push({value: response.data[i].id})
+              }
+              restaurants.value = data
+              return
+            })
+        })
     };
     onMounted(() => {
       loadAll();
@@ -250,7 +256,7 @@ export default defineComponent({
     handleSelect (item) {
       // This function is called when the user selects from the suggested output.
       // This is probably where you edit the table to mark x or o depending on what they chose.
-      axios.get('http://localhost:5000/makeup/getmakeup', {params:{course: item.value}})
+      axios.get('http://localhost:5000/makeup/getmakeup', {params:{course: item.value, trimester: this.trimester}})
       .then(response => {
         var data = response.data
         console.log(data)
@@ -446,6 +452,12 @@ export default defineComponent({
         }
       })
     }
+  },
+  mounted(){
+    axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
+        .then(response => {
+            this.trimester = response.data[0].trimester
+        })
   }
 });
 </script>

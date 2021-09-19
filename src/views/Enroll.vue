@@ -1,7 +1,7 @@
 <template>
 <div v-loading="allLoading">
   <h1>Current Trimester</h1>
-  <h3>T2 2020-2021</h3>
+  <h3>{{trimester}}</h3>
 
     <el-table
       ref="multipleTable"
@@ -70,7 +70,8 @@ import axios from 'axios'
         dialogTableloading: false,
         dialogLoading: false,
         gridData: [],
-        dialogTableVisible: false
+        dialogTableVisible: false,
+        trimester: ''
       }
     },
 
@@ -90,7 +91,8 @@ import axios from 'axios'
       },
       unenroll(){
         this.dialogLoading = true
-        axios.post('http://localhost:5000/enrollment/unenroll', this.multipleSelection, {withCredentials: true})
+        axios.defaults.withCredentials = true
+        axios.post('http://localhost:5000/enrollment/unenroll', this.multipleSelection, {params:{trimester: this.trimester}})
         .then(response => {
             if (response.data == 'Success'){
                 this.$message.success({message: 'Successfully Unenrolled', duration: 4000})
@@ -101,7 +103,8 @@ import axios from 'axios'
       },
       enroll(){
         this.allLoading = true
-        axios.post('http://localhost:5000/enrollment/enroll', this.multipleSelection, {withCredentials: true})
+        axios.defaults.withCredentials = true
+        axios.post('http://localhost:5000/enrollment/enroll', this.multipleSelection, {params:{trimester: this.trimester}})
         .then(response => {
             if (response.data == 'Success'){
                 this.$message.success({message: 'Successfully Enrolled', duration: 4000})
@@ -115,7 +118,8 @@ import axios from 'axios'
         this.dialogTableVisible = true
         this.dialogTableloading = true
         this.gridData = []
-        axios.get('http://localhost:5000/getcurrenttrimester/studentcurrentenrollment', {withCredentials: true})
+        axios.defaults.withCredentials = true
+        axios.get('http://localhost:5000/getcurrenttrimester/studentcurrentenrollment', {params:{trimester: this.trimester}})
         .then(response => {
             // console.log(response.data)
 
@@ -159,51 +163,57 @@ import axios from 'axios'
     },
 
     mounted(){
-      axios.get('http://localhost:5000/getcurrenttrimester/timetable', {withCredentials: true})
-      .then(response => {
+      axios.defaults.withCredentials = true
+      axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
+        .then(response => {
+            this.trimester = response.data[0].trimester
 
-          // Check if the user is logged in.
-          if (response.data == "Not Logged In") {
-            this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
-            this.$router.push({path: '/login'})
-          }
+            axios.get('http://localhost:5000/getcurrenttrimester/timetable', {params:{trimester: this.trimester}})
+            .then(response => {
 
-          var data = response.data
-          var course = []
-          var newTableData = []
+                // Check if the user is logged in.
+                if (response.data == "Not Logged In") {
+                  this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
+                  this.$router.push({path: '/login'})
+                }
 
-          // Filtering out dupicate courses.
-          // This is basically finding activeCourses but without connecting to the backend for it. Thus, optimizing the performance (reduce calling backend).
-          // Reference: https://stackoverflow.com/questions/2218999/how-to-remove-all-duplicates-from-an-array-of-objects
-          const ids = data.map(o => o.ID)
-          const activeCourses = data.filter(({ID}, index) => !ids.includes(ID, index + 1))
+                var data = response.data
+                var course = []
+                var newTableData = []
 
-          for (var i = 0; i < activeCourses.length; i++){
-            // For each activeCourses, you filter the courses to only consist of that specific course.
-            course = data.filter(x => x.ID == activeCourses[i].ID)
+                // Filtering out dupicate courses.
+                // This is basically finding activeCourses but without connecting to the backend for it. Thus, optimizing the performance (reduce calling backend).
+                // Reference: https://stackoverflow.com/questions/2218999/how-to-remove-all-duplicates-from-an-array-of-objects
+                const ids = data.map(o => o.ID)
+                const activeCourses = data.filter(({ID}, index) => !ids.includes(ID, index + 1))
 
-            // If the course length is more than one, that means that this course has two blocks. So we need to combine it.
-            if (course.length > 1){
-              // If the time is the same for both blocks, then just combine the days.
-              if (course[0].Time == course[1].Time){
-                course[0].Date = `${course[0].Date} and ${course[1].Date}`
-              } else { // Else, combine the two time and two days together.
-                course[0].Date = `${course[0].Date} and ${course[1].Date}`
-                course[0].Time = `${course[0].Time} | ${course[1].Time}`
-              }
-              // Push into the variable.
-              newTableData.push(course[0])
-            } else { // Getting here would mean that the course length is 1 or lower. This would indicate a course with single block. Simply push it into the new variable since we don't have to combine anything.
-              newTableData.push(course[0])
-            }
-          }
+                for (var i = 0; i < activeCourses.length; i++){
+                    // For each activeCourses, you filter the courses to only consist of that specific course.
+                    course = data.filter(x => x.ID == activeCourses[i].ID)
 
-          // After the processing is finished, we push it into the variable that frontend will read from.
-          for (var j = 0; j < newTableData.length; j++){
-            this.tableData.push({id: newTableData[j].ID, name: newTableData[j].Name, day: newTableData[j].Date, time: newTableData[j].Time})
-          }
-          this.allLoading = false
-      })
+                    // If the course length is more than one, that means that this course has two blocks. So we need to combine it.
+                    if (course.length > 1){
+                    // If the time is the same for both blocks, then just combine the days.
+                    if (course[0].Time == course[1].Time){
+                        course[0].Date = `${course[0].Date} and ${course[1].Date}`
+                    } else { // Else, combine the two time and two days together.
+                        course[0].Date = `${course[0].Date} and ${course[1].Date}`
+                        course[0].Time = `${course[0].Time} | ${course[1].Time}`
+                    }
+                    // Push into the variable.
+                    newTableData.push(course[0])
+                    } else { // Getting here would mean that the course length is 1 or lower. This would indicate a course with single block. Simply push it into the new variable since we don't have to combine anything.
+                    newTableData.push(course[0])
+                    }
+                }
+
+                // After the processing is finished, we push it into the variable that frontend will read from.
+                for (var j = 0; j < newTableData.length; j++){
+                    this.tableData.push({id: newTableData[j].ID, name: newTableData[j].Name, day: newTableData[j].Date, time: newTableData[j].Time})
+                }
+                this.allLoading = false
+            })
+        })
     }
   }
 </script>
