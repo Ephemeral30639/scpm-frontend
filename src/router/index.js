@@ -6,8 +6,12 @@ import TakenCourses from '../views/TakenCourses.vue'
 import Makeup from '../views/Makeup.vue'
 import Login from '../views/Login.vue'
 import GPCC from '../views/GPCC.vue'
-import Suggestion from '../views/CourseSuggestion.vue'
+import CourseAdvice from '../views/CourseAdvice.vue'
+import CourseComment from '../views/CourseComment.vue'
 import Enroll from '../views/Enroll.vue'
+import Logout from '../views/Logout.vue'
+import EditCourseAdvice from '../views/EditCourseAdvice.vue'
+import EditCurrentTrimester from '../views/EditCurrentTrimester.vue'
 
 const routes = [
     {
@@ -46,15 +50,34 @@ const routes = [
         component: GPCC
     },
     {
-        path: '/coursesuggestion',
-        name: 'CourseSuggestion',
-        component: Suggestion
-    }
-    ,
+        path: '/courseadvice',
+        name: 'CourseAdvice',
+        component: CourseAdvice
+    },
+    {
+        path: '/coursecomment',
+        name: 'CourseComment',
+        component: CourseComment
+    },
     {
         path: '/enroll',
         name: 'Enrollment',
         component: Enroll
+    },
+    {
+        path: '/logout',
+        name: 'Logout',
+        component: Logout
+    },
+    {
+        path: '/editcourseadvice',
+        name: 'EditCourseAdvice',
+        component: EditCourseAdvice
+    },
+    {
+        path: '/editcurrenttrimester',
+        name: 'EditCurrentTrimester',
+        component: EditCurrentTrimester
     }
 ]
 

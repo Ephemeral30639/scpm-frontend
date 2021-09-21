@@ -151,25 +151,27 @@ import axios from 'axios'
               "password": this.ruleForm.pass
               }
 
+            this.loading = true
             //Post to backend
             axios.post('http://localhost:5000/register', registerData)
               .then(response => {
                 if (response.data == "Registration Successful"){
-                  alert('Registration Successful')
+                  this.$message.success({message: 'Successfully Registered', duration: 4000})
                   this.$router.push({path: '/login'})
                 }
                 else {
                   var error = String(response.data)
                   if (error.match(".*\\d.*")){
-                    alert('Duplicate student ID')
+                    this.$message.error({message: 'Duplicate Student ID', duration: 4000})
+                    this.loading = false
                   }
                   if (error.includes('student.mahidol.edu')){
-                    alert('Duplicate Email')
+                    this.$message.error({message: 'Duplicate Email', duration: 4000})
+                    this.loading = false
                   }
                 }
               })
           } else {
-            alert("Registration failed. Check the errors.")
             return false;
           }
         });
@@ -183,7 +185,7 @@ import axios from 'axios'
           .then(reponse => {
             console.log(reponse.data)
             if (reponse.data == 'Already Logged In'){
-              alert('Alright registered. Log out first if you want to create a new account.')
+              this.$message.warning({message: 'Already registered. Log out first if you want to create a new account.', duration: 6000})
               this.$router.push({path:'/'})
             }
             else {

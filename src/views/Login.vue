@@ -87,23 +87,30 @@ export default {
             var loginData = {
               "email": this.ruleForm.email,
               "password": this.ruleForm.pass
-              }
+            }
             
+            this.loading = true
             //Post to backend for authentication. If Successful, return to homepage.
             // " { withCredentials: true } " is a piece of code that tells CORS to accept incoming cookies. 
             //We need to accept cookies because that's what identify the "session" that the user is logged into.
             axios.post('http://localhost:5000/login', loginData, { withCredentials: true })
               .then(reponse => {
                 if(reponse.data == "Successful Log In"){
-                  alert('Logged In');
-                  this.$router.push({path:'/'})
+                  if(loginData.email == 'admin@student.mahidol.edu'){
+                    this.$message.success({message: 'Welcome, Administrator', duration: 4000})
+                    this.$root.adminChange('adminToolShow On')
+                    this.$router.push({path:'/'})
+                  } else {
+                    this.$message.success({message: 'Successfully Logged In', duration: 4000})
+                    this.$router.push({path:'/'})
+                  }
                 }
               })
               .catch(error => {
-                alert("Log in failed. Check your credentials.")
+                this.$message.error({message: 'Log in failed. Check your credentials.', duration: 4000})
+                this.loading = false
               })
           } else {
-              alert("Log in failed. Please check the errors.")
               return false;
             }
         });
@@ -118,7 +125,7 @@ export default {
       axios.get('http://localhost:5000/login', { withCredentials: true })
           .then(reponse => {
             if (reponse.data == 'Already Logged In'){
-              alert('you are already logged in.')
+              this.$message.warning({message: 'You are already logged in.', duration: 4000})
               this.$router.push({path:'/'})
             }
             else {

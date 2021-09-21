@@ -134,15 +134,15 @@ export default defineComponent({
             console.log(res)
 
             if (res.data == "Not Logged In") {
-              alert("You are not logged in. Please log in first.")
+              this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
               this.$router.push({path: '/login'})
             }
 
             axios.get('http://localhost:5000/getuser', {withCredentials: true})
-            .then((res => {
+            .then(res => {
               this.user.name = res.data.user.firstname
               this.loading = false
-            }))
+            })
 
             //filter JSON data
             this.CoreCourses = res.data.filter(course => course.Category =="Core Courses")
