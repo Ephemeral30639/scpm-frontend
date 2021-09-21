@@ -1,5 +1,5 @@
 <template>
-
+<el-input v-model="search" size="mini" placeholder="Type to search" />
 <el-row :gutter="5">
   <el-col :span="5">
   <div class="grid-content"></div>
@@ -7,14 +7,14 @@
     class="inline-input"
     v-model="state2"
     :fetch-suggestions="querySearch"
-    placeholder="Please Input"
+    placeholder="Input course"
     :trigger-on-focus="false"
     @select="handleSelect"
   ></el-autocomplete></el-col>
 </el-row>
 
   <el-table
-    :data="tableData"
+    :data="tableData.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
     :default-sort = "{prop: 'id', order: 'asending'}"
     stripe
     style="width: 100%"
@@ -58,6 +58,7 @@ import axios from 'axios'
 export default defineComponent({
   data() {
       return {
+        search: '',
         tableData: [
         //   {
         //   id: 'EGCI204',
@@ -197,11 +198,7 @@ export default defineComponent({
   },
   methods: {
     handleSelect (item) {
-      // 2
-      // tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))
-
-      // This function is called when the user selects from the suggested output.
-      // This is probably where you edit the table to mark x or o depending on what they chose.
+      this.search = item.value
     }
   },
   mounted() {
