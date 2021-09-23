@@ -3,7 +3,9 @@
     <el-container style="margin-right: 250px; margin-left: 250px">
 
         <el-aside width="200px">
-            <h1>Categories</h1>
+            <el-header style="background-color: #d3dce6;">
+                <b style="font-size: 30px">Categories</b>
+            </el-header>
             <el-tree
             :data="adviceCategory"
             :props="defaultProps"
@@ -14,7 +16,7 @@
 
         <el-container>
             <el-header>
-                <b style="font-size:20px">Senior Advice</b>
+                <b style="font-size:25px">Senior Advice</b>
             </el-header>
             <el-main>
                 <transition name="el-zoom-in-center">
