@@ -1,6 +1,6 @@
 <template>
     <h1>Course Comments</h1>
-    <el-container style="margin-right: 150px; margin-left: 150px">
+    <el-container style="margin-right: 150px; margin-left: 150px; max-height: 70vh;">
 
         <el-aside width="200px">
             <el-header style="background-color: #d3dce6;">
@@ -8,11 +8,10 @@
             </el-header>
             <el-input v-model="filterText" placeholder="Filter keyword"></el-input>
             <div>
-                <el-scrollbar height="50vh">
+                <el-scrollbar height="56.8vh">
                     <el-tree
                     ref="tree"
                     :data="courses"
-                    :props="defaultProps"
                     @node-click="handleNodeClick"
                     :filter-node-method="filterNode"
                     ></el-tree>
@@ -24,13 +23,30 @@
             <el-header>
                 <b style="font-size: 25px">Comments</b>
             </el-header>
-            <el-main>
-                <transition name="el-zoom-in-center">
+            <el-main style="height: 70vh;">
+                <!-- <transition name="el-zoom-in-center">
                     <h1 style="margin-top: 0em; word-break: keep-all;" v-show="show"></h1>
                 </transition>
                 <transition name="el-zoom-in-center">
                     <p style="word-break: keep-all; font-size: 20px; margin: 20px; text-align: justify;" v-show="show"></p>
-                </transition>
+                </transition> -->
+                
+                <div v-for="o in commentData.length" :key="o" class="text item">
+                    <el-card class="box-card">
+                        <template #header>
+                            <el-container>
+                                <p style="text-align: left;">{{commentData[parseInt(o-1)].date}}&nbsp;</p>
+                                <em style="text-align: left;">{{commentData[parseInt(o-1)].time}}</em>
+                                <b>&nbsp;({{commentData[parseInt(o-1)].studentID}})</b>
+                            </el-container>
+                        </template>
+                        <el-container>
+                            <p style="font-size: 20px;">{{commentData[parseInt(o-1)].comment}}</p>
+                        </el-container>
+                    </el-card>
+                    <el-divider></el-divider>
+                </div>
+                
             </el-main>
             <el-footer>
                 <el-container>
@@ -46,7 +62,7 @@
         </el-container>
 
         <el-aside width="300px">
-            <h2 style="padding-top: 70%;">{{courseDisplay.ID}}</h2>
+            <h2 style="padding-top: 30vh;">{{courseDisplay.ID}}</h2>
             <p>{{courseDisplay.Name}}</p>
         </el-aside>
         
@@ -62,7 +78,8 @@ export default {
           show: true,
           filterText: '',
           courseDisplay: {},
-          commmentInput: ''
+          commmentInput: '',
+          commentData: []
       };
     },
     watch: {
@@ -86,6 +103,28 @@ export default {
             axios.get('http://localhost:5000/comments/getcoursename', {params:{course: data.label}})
             .then(response => {
                 this.courseDisplay = {ID: data.label, Name: response.data[0].Name}
+            })
+
+            // List of available Locales
+            // https://stackoverflow.com/a/9893752/12861725
+            // Locale Options
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
+            axios.get('http://localhost:5000/comments/getcoursecomments', {params:{course: data.label}})
+            .then(response => {
+
+                var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' }
+                this.commentData = []
+
+                for(var i = 0; i < response.data.length; i++){
+                    var timestamp = new Date(parseInt(response.data[i].timestamp))
+                    this.commentData.push({
+                        comment: response.data[i].comment,
+                        date: timestamp.toLocaleDateString('en-US', options).substring(5),
+                        time: timestamp.toLocaleTimeString('en-US', {hour12: false, hour: '2-digit', minute:'2-digit'}),
+                        studentID: response.data[i].studentID
+                    })
+                }
+                console.log(this.commentData)
             })
         },
         filterNode(value, data) {
@@ -131,8 +170,9 @@ export default {
     line-height: 320px;
   }
 
-  /* .center {
-  justify-content: center;
-  align-items: center;
-  } */
+  .centered { 
+    display: grid;
+    flex-direction: column;
+    justify-content: center;
+  }
 </style>
