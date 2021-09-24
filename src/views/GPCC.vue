@@ -1,17 +1,5 @@
 <template>
 <el-input v-model="search" size="mini" placeholder="Type to search" />
-<el-row :gutter="5">
-  <el-col :span="5">
-  <div class="grid-content"></div>
-  <el-autocomplete
-    class="inline-input"
-    v-model="state2"
-    :fetch-suggestions="querySearch"
-    placeholder="Input course"
-    :trigger-on-focus="false"
-    @select="handleSelect"
-  ></el-autocomplete></el-col>
-</el-row>
 
   <el-table
     :data="tableData.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
@@ -59,97 +47,7 @@ export default defineComponent({
   data() {
       return {
         search: '',
-        tableData: [
-        //   {
-        //   id: 'EGCI204',
-        //   name: 'Engineering Mechanics',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // }, {
-        //   id: 'EGCI321',
-        //   name: 'Database Systems',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },{
-        //   id: 'EGCI252',
-        //   name: 'System Programming',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },{
-        //   id: 'ICMA215',
-        //   name: 'Calculus',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },{
-        //   id: 'EGCI212',
-        //   name: 'Programming Techniques',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },{
-        //   id: 'EGCI100',
-        //   name: 'Introduction to computer engineering',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },{
-        //   id: 'EGCI463',
-        //   name: 'Pattern Recognition',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },{
-        //   id: 'EGCI233',
-        //   name: 'Digital Circuit Design Lab',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },{
-        //   id: 'EGCI234',
-        //   name: '',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },{
-        //   id: 'EGCI321',
-        //   name: 'Database Systems ',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },{
-        //   id: 'EGCI201',
-        //   name: 'Discrete Mathematics',
-        //   gen598: '',
-        //   gen608: '',
-        //   gen618: '',
-        //   gen628: '',
-        //   gen638: ''
-        // },
-        ]
+        tableData: []
       }
     },
     setup() {
