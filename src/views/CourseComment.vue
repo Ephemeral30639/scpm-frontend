@@ -6,16 +6,18 @@
             <el-header style="background-color: #d3dce6;">
                 <b style="font-size: 30px">Courses</b>
             </el-header>
-            <el-input v-model="filterText" placeholder="Filter keyword"></el-input>
-            <div>
-                <el-scrollbar height="56.8vh">
-                    <el-tree
-                    ref="tree"
-                    :data="courses"
-                    @node-click="handleNodeClick"
-                    :filter-node-method="filterNode"
-                    ></el-tree>
-                </el-scrollbar>
+            <div v-loading="coursesLoading">
+                <el-input v-model="filterText" placeholder="Filter Courses"></el-input>
+                <div>
+                    <el-scrollbar height="56.8vh">
+                        <el-tree
+                        ref="tree"
+                        :data="courses"
+                        @node-click="handleNodeClick"
+                        :filter-node-method="filterNode"
+                        ></el-tree>
+                    </el-scrollbar>
+                </div>
             </div>
         </el-aside>
 
@@ -23,16 +25,10 @@
             <el-header>
                 <b style="font-size: 25px">Comments</b>
             </el-header>
-            <el-main style="height: 70vh;">
-                <!-- <transition name="el-zoom-in-center">
-                    <h1 style="margin-top: 0em; word-break: keep-all;" v-show="show"></h1>
-                </transition>
-                <transition name="el-zoom-in-center">
-                    <p style="word-break: keep-all; font-size: 20px; margin: 20px; text-align: justify;" v-show="show"></p>
-                </transition> -->
+            <el-main style="height: 70vh;" v-loading="commentDisplayLoading">
                 
                 <div v-for="o in commentData.length" :key="o" class="text item">
-                    <el-card class="box-card">
+                    <el-card class="box-card" shadow="always">
                         <template #header>
                             <el-container>
                                 <p style="text-align: left;">{{commentData[parseInt(o-1)].date}}&nbsp;</p>
@@ -54,14 +50,27 @@
                         v-model="commmentInput"
                         placeholder="Your Comment Here"
                         style="margin-top: 11px;"
+                        :disabled="commentInputDisabled"
                     >
                     </el-input>
-                    <el-button type="primary" icon="el-icon-s-promotion" style="margin-top: 12px; margin-left: 10px;"></el-button>
+                    <el-popconfirm
+                        confirm-button-text="Yes"
+                        cancel-button-text="No"
+                        icon="el-icon-info"
+                        icon-color="red"
+                        title="Do you want to comment anonymously?"
+                        @confirm="sendAnonymously"
+                        @cancel="sendNotAnonymously"
+                    >
+                        <template #reference>
+                            <el-button type="primary" icon="el-icon-s-promotion" style="margin-top: 12px; margin-left: 10px;" :disabled="commentSendButtonDisabled"></el-button>
+                        </template>
+                    </el-popconfirm>
                 </el-container>
             </el-footer>
         </el-container>
 
-        <el-aside width="300px">
+        <el-aside width="300px" v-loading="courseInfoDisplayLoading">
             <h2 style="padding-top: 30vh;">{{courseDisplay.ID}}</h2>
             <p>{{courseDisplay.Name}}</p>
         </el-aside>
@@ -71,6 +80,7 @@
 
 <script>
 import axios from 'axios'
+import { v4 as uuidv4 } from 'uuid'
 export default {
     data() {
       return {
@@ -79,19 +89,50 @@ export default {
           filterText: '',
           courseDisplay: {},
           commmentInput: '',
-          commentData: []
+          commentData: [],
+          coursesLoading: true,
+          commentDisplayLoading: false,
+          courseInfoDisplayLoading: false,
+          commentInputDisabled: true,
+          commentSendButtonDisabled: true,
+          loggedIn: false,
+          studentID: ''
       };
     },
     watch: {
         filterText(val) {
+            // Watch the filter input. If value changes, update the filtering of the tree.
             this.$refs.tree.filter(val)
+        },
+        commmentInput(val){
+            // A function to watch the comment input area.
+            // If it is empty, disable the send button. Otherwise, enable it.
+            if(val != ''){
+                this.commentSendButtonDisabled = false
+            } else {
+                this.commentSendButtonDisabled = true
+            }
         }
     },
     mounted() {
+        axios.defaults.withCredentials = true
+
+        // Load all the courses
         axios.get('http://localhost:5000/comments/getallcourses')
         .then(response => {
             for(var i = 0; i < response.data.length; i++){
                 this.courses.push({label: response.data[i].ID})
+            }
+            this.coursesLoading = false
+        })
+
+        // Get StudentID
+        // Also serve as a way to check if user can comment or not (must be logged in to comment)
+        axios.get('http://localhost:5000/getuser')
+        .then(response => {
+            if (response.data != "Not Logged In") {
+                this.loggedIn = true
+                this.studentID = response.data.user.studentID
             }
         })
     },
@@ -100,6 +141,12 @@ export default {
           console.log(key, keyPath);
         },
         handleNodeClick(data) {
+            axios.defaults.withCredentials = true
+            this.courseInfoDisplayLoading = true
+            this.commentDisplayLoading = true
+            this.commentInputDisabled = true
+
+            // Get course name to display on the right side.
             axios.get('http://localhost:5000/comments/getcoursename', {params:{course: data.label}})
             .then(response => {
                 this.courseDisplay = {ID: data.label, Name: response.data[0].Name}
@@ -111,10 +158,21 @@ export default {
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
             axios.get('http://localhost:5000/comments/getcoursecomments', {params:{course: data.label}})
             .then(response => {
+                
+                // If the selected Course has no comment, warn the user.
+                if(response.data == ''){
+                    this.$alert('No comments in this course.', 'No Comments!', {center: true})
+                    this.commentData = []
+                    this.courseInfoDisplayLoading = false
+                    this.commentDisplayLoading = false
+                    return
+                }
 
-                var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' }
+                // Reset commentData whenever we load new comment. Otherwise, it stacks up.
                 this.commentData = []
+                var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' }
 
+                // For each comments found, parse the timestamp back to human language, pre-process the data, push it to commentData for display.
                 for(var i = 0; i < response.data.length; i++){
                     var timestamp = new Date(parseInt(response.data[i].timestamp))
                     this.commentData.push({
@@ -124,7 +182,55 @@ export default {
                         studentID: response.data[i].studentID
                     })
                 }
-                console.log(this.commentData)
+                this.courseInfoDisplayLoading = false
+                this.commentDisplayLoading = false
+
+                // If user is logged in, enable the comment input area.
+                if(this.loggedIn){
+                    this.commentInputDisabled = false
+                }
+            })
+        },
+        sendAnonymously(){
+            var commentID = uuidv4()
+            var timestamp = Date.now()
+            axios.post('http://localhost:5000/comments/inputcomment', null, {params:{commentID: commentID, courseID: this.courseDisplay.ID, comment: this.commmentInput, timestamp: timestamp, studentID: 'Anonymous'}})
+            .then(response => {
+
+                // If comment was a success, push the comment to commentData to visualize succession.
+                if (response.data == 'Comment Successful'){
+                    this.$message.success({message: 'Successfully Commented', duration: 4000})
+                    var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' }
+                    var timestampToPush = new Date (parseInt(timestamp))
+                    this.commentData.push({
+                        comment: this.commmentInput,
+                        date: timestampToPush.toLocaleDateString('en-US', options).substring(5),
+                        time: timestampToPush.toLocaleTimeString('en-US', {hour12: false, hour: '2-digit', minute:'2-digit'}),
+                        studentID: 'Anonymous'
+                    })
+                    this.commmentInput = ''
+                }
+            })
+        },
+        sendNotAnonymously(){
+            var commentID = uuidv4()
+            var timestamp = Date.now()
+            axios.post('http://localhost:5000/comments/inputcomment', null, {params:{commentID: commentID, courseID: this.courseDisplay.ID, comment: this.commmentInput, timestamp: timestamp, studentID: 'Not Anonymous'}})
+            .then(response => {
+
+                // If comment was a success, push the comment to commentData to visualize succession.
+                if (response.data == 'Comment Successful'){
+                    this.$message.success({message: 'Successfully Commented', duration: 4000})
+                    var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' }
+                    var timestampToPush = new Date (parseInt(timestamp))
+                    this.commentData.push({
+                        comment: this.commmentInput,
+                        date: timestampToPush.toLocaleDateString('en-US', options).substring(5),
+                        time: timestampToPush.toLocaleTimeString('en-US', {hour12: false, hour: '2-digit', minute:'2-digit'}),
+                        studentID: this.studentID
+                    })
+                    this.commmentInput = ''
+                }
             })
         },
         filterNode(value, data) {
