@@ -127,6 +127,7 @@ import axios from 'axios'
 
             // Filtering out dupicate courses.
             // This is basically finding activeCourses but without connecting to the backend for it. Thus, optimizing the performance (reduce calling backend).
+            // Please note that the filtered data will still contain other data. Hence why we need to still specify what field we want (e.g. activeCourses.ID).
             // Reference: https://stackoverflow.com/questions/2218999/how-to-remove-all-duplicates-from-an-array-of-objects
             const ids = data.map(o => o.ID)
             const activeCourses = data.filter(({ID}, index) => !ids.includes(ID, index + 1))
@@ -183,6 +184,7 @@ import axios from 'axios'
 
                 // Filtering out dupicate courses.
                 // This is basically finding activeCourses but without connecting to the backend for it. Thus, optimizing the performance (reduce calling backend).
+                // Please note that the filtered data will still contain other data. Hence why we need to still specify what field we want (e.g. activeCourses.ID).
                 // Reference: https://stackoverflow.com/questions/2218999/how-to-remove-all-duplicates-from-an-array-of-objects
                 const ids = data.map(o => o.ID)
                 const activeCourses = data.filter(({ID}, index) => !ids.includes(ID, index + 1))
