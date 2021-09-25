@@ -118,6 +118,7 @@ export default defineComponent({
         PETotalCredit: 0,
 
         loading: true,
+        categories: [],
 
         user: {
           name: 'Student'
@@ -131,7 +132,7 @@ export default defineComponent({
       // No cookies was send to the backend to identify the logged in user.
       axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
             .then((res) => {
-            console.log(res)
+            // console.log(res.data)
 
             if (res.data == "Not Logged In") {
               this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
@@ -141,7 +142,11 @@ export default defineComponent({
             axios.get('http://localhost:5000/getuser', {withCredentials: true})
             .then(res => {
               this.user.name = res.data.user.firstname
-              this.loading = false
+              if(res.data.user.studentID.includes('60') == false){
+                this.$router.push({path: `/takencourses${res.data.user.studentID.substring(0,2)}`})
+              } else {
+                this.loading = false
+              }
             })
 
             //filter JSON data
@@ -219,27 +224,27 @@ export default defineComponent({
         //load all non taken courses for adding
         axios.get('http://localhost:5000/taken-courses/loadcourselist', {withCredentials: true})
         .then((response) => {
-          console.log('hello')
-          console.log(response)
+          // console.log('hello')
+          // console.log(response)
           var data = []
           for (var i = 0; i < response.data.length; i++){
             data.push({value: response.data[i].ID + ' ' + response.data[i].Name})
           }
           restaurants.value = data
-          console.log(restaurants)
+          // console.log(restaurants)
           return
         })
         //load all taken courses for deleting
         axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
         .then((response) => {
-          console.log('hello')
-          console.log(response)
+          // console.log('hello')
+          // console.log(response)
           var data = []
           for (var i = 0; i < response.data.length; i++){
             data.push({value: response.data[i].ID + ' ' + response.data[i].Name})
           }
           restaurants2.value = data
-          console.log(restaurants2)
+          // console.log(restaurants2)
           return
         })
       };
