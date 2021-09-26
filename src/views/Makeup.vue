@@ -273,183 +273,407 @@ export default defineComponent({
         }
 
         for (var i = 0; i < data.length; i++){
+          if (data[i].date.includes('and') && data[i].time.includes(' | ') == false){
+            var days = data[i].date.split(' and ')
+            var time = data[i].time
 
-          if (data[i].Date == 'Monday'){
-            // Take the time
-            var time = data[i].Time
-
-            // Split it to get start and end time
             var startEndTime = time.split('-')
 
-            // Format the spaces out
             startEndTime[0] = startEndTime[0].replace(' ','')
             startEndTime[1] = startEndTime[1].replace(' ','')
 
-            // Get startTime and Duration
             var startTime = String(startEndTime[0])
             startTime = startTime.concat(':00')
             var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
 
-            // Find the Correct Time according to the data we got
-            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
-            
-            // Loop according to the duration. Start from startTime.
-            for (var j = 0; j < duration; j++){
-              this.tableData[foundIndex+j].mon = 'X';
+            var foundTimeIndex = this.tableData.findIndex(x => x.time == startTime);
+
+            for (var j = 0; j < days.length; j++){
+              switch(days[j]) {
+                case 'Monday':
+                  for (var m = 0; m < duration; m++){
+                    this.tableData[foundTimeIndex+m].mon = 'X';
+                  }
+                  break;
+                case 'Tuesday':
+                  for (var m = 0; m < duration; m++){
+                    this.tableData[foundTimeIndex+m].tue = 'X';
+                  }
+                  break;
+                case 'Wednesday':
+                  for (var m = 0; m < duration; m++){
+                    this.tableData[foundTimeIndex+m].wed = 'X';
+                  }
+                  break;
+                case 'Thursday':
+                  for (var m = 0; m < duration; m++){
+                    this.tableData[foundTimeIndex+m].thurs = 'X';
+                  }
+                  break;
+                case 'Friday':
+                  for (var m = 0; m < duration; m++){
+                    this.tableData[foundTimeIndex+m].fri = 'X';
+                  }
+                  break;
+                case 'Saturday':
+                  for (var m = 0; m < duration; m++){
+                    this.tableData[foundTimeIndex+m].sat = 'X';
+                  }
+                  break;
+                case 'Sunday':
+                  for (var m = 0; m < duration; m++){
+                    this.tableData[foundTimeIndex+m].sun = 'X';
+                  }
+                  break;
+              }
             }
           }
 
-          if (data[i].Date == 'Tuesday'){
-            // Take the time
-            var time = data[i].Time
+          if (data[i].date.includes('and') && data[i].time.includes(' | ') == true){
+            var days = data[i].date.split(' and ')
+            var times = data[i].time.split(' | ')
 
-            // Split it to get start and end time
+            var startEndTime1 = times[0].split('-')
+            var startEndTime2 = times[1].split('-')
+
+            startEndTime1[0] = startEndTime1[0].replace(' ','')
+            startEndTime1[1] = startEndTime1[1].replace(' ','')
+
+            startEndTime2[0] = startEndTime2[0].replace(' ','')
+            startEndTime2[1] = startEndTime2[1].replace(' ','')
+
+            var startTime1 = String(startEndTime1[0])
+            var startTime2 = String(startEndTime2[0])
+            startTime1 = startTime1.concat(':00')
+            startTime2 = startTime2.concat(':00')
+
+            var duration1 = parseInt(startEndTime1[1]) - parseInt(startEndTime1[0])
+            var duration2 = parseInt(startEndTime2[1]) - parseInt(startEndTime2[0])
+
+            var foundTimeIndex1 = this.tableData.findIndex(x => x.time == startTime1)
+            var foundTimeIndex2 = this.tableData.findIndex(x => x.time == startTime2)
+
+            for (var j = 0; j < days.length; j++){
+
+              if (days[j] == "Monday" && j == 0){
+                for (var m = 0; m < duration1; m++){
+                  this.tableData[foundTimeIndex1+m].mon = 'X';
+                }
+              }
+
+              if (days[j] == "Monday" && j == 1){
+                for (var m = 0; m < duration2; m++){
+                  this.tableData[foundTimeIndex2+m].mon = 'X';
+                }
+              }
+
+              if (days[j] == "Tuesday" && j == 0){
+                for (var m = 0; m < duration1; m++){
+                  this.tableData[foundTimeIndex1+m].tue = 'X';
+                }
+              }
+
+              if (days[j] == "Tuesday" && j == 1){
+                for (var m = 0; m < duration2; m++){
+                  this.tableData[foundTimeIndex2+m].tue = 'X';
+                }
+              }
+
+              if (days[j] == "Wednesday" && j == 0){
+                for (var m = 0; m < duration1; m++){
+                  this.tableData[foundTimeIndex1+m].wed = 'X';
+                }
+              }
+
+              if (days[j] == "Wednesday" && j == 1){
+                for (var m = 0; m < duration2; m++){
+                  this.tableData[foundTimeIndex2+m].wed = 'X';
+                }
+              }
+
+              if (days[j] == "Thursday" && j == 0){
+                for (var m = 0; m < duration1; m++){
+                  this.tableData[foundTimeIndex1+m].thurs = 'X';
+                }
+              }
+
+              if (days[j] == "Thursday" && j == 1){
+                for (var m = 0; m < duration2; m++){
+                  this.tableData[foundTimeIndex2+m].thurs = 'X';
+                }
+              }
+
+              if (days[j] == "Friday" && j == 0){
+                for (var m = 0; m < duration1; m++){
+                  this.tableData[foundTimeIndex1+m].fri = 'X';
+                }
+              }
+
+              if (days[j] == "Friday" && j == 1){
+                for (var m = 0; m < duration2; m++){
+                  this.tableData[foundTimeIndex2+m].fri = 'X';
+                }
+              }
+
+              if (days[j] == "Saturday" && j == 0){
+                for (var m = 0; m < duration1; m++){
+                  this.tableData[foundTimeIndex1+m].sat = 'X';
+                }
+              }
+
+              if (days[j] == "Saturday" && j == 1){
+                for (var m = 0; m < duration2; m++){
+                  this.tableData[foundTimeIndex2+m].sat = 'X';
+                }
+              }
+
+              if (days[j] == "Sunday" && j == 0){
+                for (var m = 0; m < duration1; m++){
+                  this.tableData[foundTimeIndex1+m].sun = 'X';
+                }
+              }
+
+              if (days[j] == "Sunday" && j == 1){
+                for (var m = 0; m < duration2; m++){
+                  this.tableData[foundTimeIndex2+m].sun = 'X';
+                }
+              }
+            }
+          }
+
+          if (data[i].date.includes('and') == false && data[i].time.includes(' | ') == false){
+            var day = data[i].date
+            var time = data[i].time
+
             var startEndTime = time.split('-')
 
-            // Format the spaces out
             startEndTime[0] = startEndTime[0].replace(' ','')
             startEndTime[1] = startEndTime[1].replace(' ','')
 
-            // Get startTime and Duration
             var startTime = String(startEndTime[0])
             startTime = startTime.concat(':00')
             var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
 
-            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+            var foundTimeIndex = this.tableData.findIndex(x => x.time == startTime);
 
-            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
-            
-            for (var j = 0; j < duration; j++){
-              this.tableData[foundIndex+j].tue = 'X';
+            switch(day) {
+              case 'Monday':
+                for (var m = 0; m < duration; m++){
+                  this.tableData[foundTimeIndex+m].mon = 'X';
+                }
+                break;
+              case 'Tuesday':
+                for (var m = 0; m < duration; m++){
+                  this.tableData[foundTimeIndex+m].tue = 'X';
+                }
+                break;
+              case 'Wednesday':
+                for (var m = 0; m < duration; m++){
+                  this.tableData[foundTimeIndex+m].wed = 'X';
+                }
+                break;
+              case 'Thursday':
+                for (var m = 0; m < duration; m++){
+                  this.tableData[foundTimeIndex+m].thurs = 'X';
+                }
+                break;
+              case 'Friday':
+                for (var m = 0; m < duration; m++){
+                  this.tableData[foundTimeIndex+m].fri = 'X';
+                }
+                break;
+              case 'Saturday':
+                for (var m = 0; m < duration; m++){
+                  this.tableData[foundTimeIndex+m].sat = 'X';
+                }
+                break;
+              case 'Sunday':
+                for (var m = 0; m < duration; m++){
+                  this.tableData[foundTimeIndex+m].sun = 'X';
+                }
+                break;
             }
           }
-
-          if (data[i].Date == 'Wednesday'){
-            // Take the time
-            var time = data[i].Time
-
-            // Split it to get start and end time
-            var startEndTime = time.split('-')
-
-            // Format the spaces out
-            startEndTime[0] = startEndTime[0].replace(' ','')
-            startEndTime[1] = startEndTime[1].replace(' ','')
-
-            // Get startTime and Duration
-            var startTime = String(startEndTime[0])
-            startTime = startTime.concat(':00')
-            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
-
-            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
-
-            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
-            
-            for (var j = 0; j < duration; j++){
-              this.tableData[foundIndex+j].wed = 'X';
-            }
-          }
-
-          if (data[i].Date == 'Thursday'){
-            // Take the time
-            var time = data[i].Time
-
-            // Split it to get start and end time
-            var startEndTime = time.split('-')
-
-            // Format the spaces out
-            startEndTime[0] = startEndTime[0].replace(' ','')
-            startEndTime[1] = startEndTime[1].replace(' ','')
-
-            // Get startTime and Duration
-            var startTime = String(startEndTime[0])
-            startTime = startTime.concat(':00')
-            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
-
-            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
-
-            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
-            
-            for (var j = 0; j < duration; j++){
-              this.tableData[foundIndex+j].thurs = 'X';
-            }
-          }
-
-          if (data[i].Date == 'Friday'){
-            // Take the time
-            var time = data[i].Time
-
-            // Split it to get start and end time
-            var startEndTime = time.split('-')
-
-            // Format the spaces out
-            startEndTime[0] = startEndTime[0].replace(' ','')
-            startEndTime[1] = startEndTime[1].replace(' ','')
-
-            // Get startTime and Duration
-            var startTime = String(startEndTime[0])
-            startTime = startTime.concat(':00')
-            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
-
-            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
-
-            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
-            
-            for (var j = 0; j < duration; j++){
-              this.tableData[foundIndex+j].fri = 'X';
-            }
-          }
-
-          if (data[i].Date == 'Saturday'){
-            // Take the time
-            var time = data[i].Time
-
-            // Split it to get start and end time
-            var startEndTime = time.split('-')
-
-            // Format the spaces out
-            startEndTime[0] = startEndTime[0].replace(' ','')
-            startEndTime[1] = startEndTime[1].replace(' ','')
-
-            // Get startTime and Duration
-            var startTime = String(startEndTime[0])
-            startTime = startTime.concat(':00')
-            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
-
-            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
-
-            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
-            
-            for (var j = 0; j < duration; j++){
-              this.tableData[foundIndex+j].sat = 'X';
-            }
-          }
-
-          if (data[i].Date == 'Sunday'){
-            // Take the time
-            var time = data[i].Time
-
-            // Split it to get start and end time
-            var startEndTime = time.split('-')
-
-            // Format the spaces out
-            startEndTime[0] = startEndTime[0].replace(' ','')
-            startEndTime[1] = startEndTime[1].replace(' ','')
-
-            // Get startTime and Duration
-            var startTime = String(startEndTime[0])
-            startTime = startTime.concat(':00')
-            var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
-
-            console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
-
-            var foundIndex = this.tableData.findIndex(x => x.time == startTime);
-            
-            for (var j = 0; j < duration; j++){
-              this.tableData[foundIndex+j].sun = 'X';
-            }
-          }
-
         }
+
+        // for (var i = 0; i < data.length; i++){
+
+        //   if (data[i].Date == 'Monday'){
+        //     // Take the time
+        //     var time = data[i].Time
+
+        //     // Split it to get start and end time
+        //     var startEndTime = time.split('-')
+
+        //     // Format the spaces out
+        //     startEndTime[0] = startEndTime[0].replace(' ','')
+        //     startEndTime[1] = startEndTime[1].replace(' ','')
+
+        //     // Get startTime and Duration
+        //     var startTime = String(startEndTime[0])
+        //     startTime = startTime.concat(':00')
+        //     var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+        //     // Find the Correct Time according to the data we got
+        //     var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+        //     // Loop according to the duration. Start from startTime.
+        //     for (var j = 0; j < duration; j++){
+        //       this.tableData[foundIndex+j].mon = 'X';
+        //     }
+        //   }
+
+        //   if (data[i].Date == 'Tuesday'){
+        //     // Take the time
+        //     var time = data[i].Time
+
+        //     // Split it to get start and end time
+        //     var startEndTime = time.split('-')
+
+        //     // Format the spaces out
+        //     startEndTime[0] = startEndTime[0].replace(' ','')
+        //     startEndTime[1] = startEndTime[1].replace(' ','')
+
+        //     // Get startTime and Duration
+        //     var startTime = String(startEndTime[0])
+        //     startTime = startTime.concat(':00')
+        //     var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+        //     console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+        //     var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+        //     for (var j = 0; j < duration; j++){
+        //       this.tableData[foundIndex+j].tue = 'X';
+        //     }
+        //   }
+
+        //   if (data[i].Date == 'Wednesday'){
+        //     // Take the time
+        //     var time = data[i].Time
+
+        //     // Split it to get start and end time
+        //     var startEndTime = time.split('-')
+
+        //     // Format the spaces out
+        //     startEndTime[0] = startEndTime[0].replace(' ','')
+        //     startEndTime[1] = startEndTime[1].replace(' ','')
+
+        //     // Get startTime and Duration
+        //     var startTime = String(startEndTime[0])
+        //     startTime = startTime.concat(':00')
+        //     var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+        //     console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+        //     var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+        //     for (var j = 0; j < duration; j++){
+        //       this.tableData[foundIndex+j].wed = 'X';
+        //     }
+        //   }
+
+        //   if (data[i].Date == 'Thursday'){
+        //     // Take the time
+        //     var time = data[i].Time
+
+        //     // Split it to get start and end time
+        //     var startEndTime = time.split('-')
+
+        //     // Format the spaces out
+        //     startEndTime[0] = startEndTime[0].replace(' ','')
+        //     startEndTime[1] = startEndTime[1].replace(' ','')
+
+        //     // Get startTime and Duration
+        //     var startTime = String(startEndTime[0])
+        //     startTime = startTime.concat(':00')
+        //     var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+        //     console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+        //     var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+        //     for (var j = 0; j < duration; j++){
+        //       this.tableData[foundIndex+j].thurs = 'X';
+        //     }
+        //   }
+
+        //   if (data[i].Date == 'Friday'){
+        //     // Take the time
+        //     var time = data[i].Time
+
+        //     // Split it to get start and end time
+        //     var startEndTime = time.split('-')
+
+        //     // Format the spaces out
+        //     startEndTime[0] = startEndTime[0].replace(' ','')
+        //     startEndTime[1] = startEndTime[1].replace(' ','')
+
+        //     // Get startTime and Duration
+        //     var startTime = String(startEndTime[0])
+        //     startTime = startTime.concat(':00')
+        //     var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+        //     console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+        //     var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+        //     for (var j = 0; j < duration; j++){
+        //       this.tableData[foundIndex+j].fri = 'X';
+        //     }
+        //   }
+
+        //   if (data[i].Date == 'Saturday'){
+        //     // Take the time
+        //     var time = data[i].Time
+
+        //     // Split it to get start and end time
+        //     var startEndTime = time.split('-')
+
+        //     // Format the spaces out
+        //     startEndTime[0] = startEndTime[0].replace(' ','')
+        //     startEndTime[1] = startEndTime[1].replace(' ','')
+
+        //     // Get startTime and Duration
+        //     var startTime = String(startEndTime[0])
+        //     startTime = startTime.concat(':00')
+        //     var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+        //     console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+        //     var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+        //     for (var j = 0; j < duration; j++){
+        //       this.tableData[foundIndex+j].sat = 'X';
+        //     }
+        //   }
+
+        //   if (data[i].Date == 'Sunday'){
+        //     // Take the time
+        //     var time = data[i].Time
+
+        //     // Split it to get start and end time
+        //     var startEndTime = time.split('-')
+
+        //     // Format the spaces out
+        //     startEndTime[0] = startEndTime[0].replace(' ','')
+        //     startEndTime[1] = startEndTime[1].replace(' ','')
+
+        //     // Get startTime and Duration
+        //     var startTime = String(startEndTime[0])
+        //     startTime = startTime.concat(':00')
+        //     var duration = parseInt(startEndTime[1]) - parseInt(startEndTime[0])
+
+        //     console.log(`${startEndTime[0].replace(' ','')} ${startEndTime[1].replace(' ','')}`)
+
+        //     var foundIndex = this.tableData.findIndex(x => x.time == startTime);
+            
+        //     for (var j = 0; j < duration; j++){
+        //       this.tableData[foundIndex+j].sun = 'X';
+        //     }
+        //   }
+
+        // }
       })
     }
   },

@@ -140,8 +140,8 @@ import axios from 'axios'
             for (var i = 0; i < activeCourses.length; i++){
               // For each activeCourses, you filter the courses to only consist of that specific course.
               course = data.filter(x => x.ID == activeCourses[i].ID)
-              // console.log(course[0].ID)
-              // console.log(course)
+              console.log(course[0].ID)
+              console.log(course)
 
               // ICPE are special case, hence why we need to separate the logic from the rest of the courses
               if(activeCourses[i].ID.substring(0,4) != 'ICPE'){
@@ -158,13 +158,20 @@ import axios from 'axios'
                         course[j].Time = `${course[j].Time} | ${course[j+1].Time}`
                       }
                     } else { // Else if the course length is odd, we run this logic instead.
-                      if (course[j].Time == course[j+1].Time){
-                        course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
-                      } else {
-                        newTableData.push(course[j])
-                        j -= 1
-                        continue
-                      }
+                      newTableData.push(course[j])
+                      j -= 1
+                      continue
+
+                      // The below code is the previous logic for more than 1 and is odd course length.
+                      // However, there are way too much possible combination of course timetable and there are no standadized input.
+                      // So we opt for just literally putting in raw data without combining like other courses for sanity sake.
+                      // if (course[j].Time == course[j+1].Time){
+                      //   course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
+                      // } else {
+                      //   newTableData.push(course[j])
+                      //   j -= 1
+                      //   continue
+                      // }
                     }
 
                     // Push into the variable.
@@ -185,8 +192,9 @@ import axios from 'axios'
             }
 
             // After the processing is finished, we push it into the variable that frontend will read from.
+            console.log(newTableData)
             for (var j = 0; j < newTableData.length; j++){
-              this.gridData.push({id: newTableData[j].ID, name: newTableData[j].Name, day: newTableData[j].Date, time: newTableData[j].Time})
+              this.gridData.push({id: newTableData[j].ID, name: newTableData[j].Name, day: newTableData[j].date, time: newTableData[j].time})
             }
             this.dialogTableloading = false
         })
