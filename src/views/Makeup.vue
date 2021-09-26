@@ -272,6 +272,7 @@ export default defineComponent({
           this.tableData[x].sun = ''
         }
 
+        // Case One: different day | same time
         for (var i = 0; i < data.length; i++){
           if (data[i].date.includes('and') && data[i].time.includes(' | ') == false){
             var days = data[i].date.split(' and ')
@@ -329,6 +330,7 @@ export default defineComponent({
             }
           }
 
+          // Case Two: different day | different time
           if (data[i].date.includes('and') && data[i].time.includes(' | ') == true){
             var days = data[i].date.split(' and ')
             var times = data[i].time.split(' | ')
@@ -441,6 +443,7 @@ export default defineComponent({
             }
           }
 
+          // Case Three: one day | one time
           if (data[i].date.includes('and') == false && data[i].time.includes(' | ') == false){
             var day = data[i].date
             var time = data[i].time
