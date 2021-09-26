@@ -2,11 +2,12 @@
 <div v-loading="allLoading">
   <h1>Current Trimester</h1>
   <h3>{{trimester}}</h3>
+  <el-input v-model="search" style="width: 80%; margin: auto;" size="medium" placeholder="Type a Course ID to search (e.g. EGCI201)" />
 
     <el-table
       ref="multipleTable"
-      :data="tableData"
-      style="width: 100%"
+      :data="tableData.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
+      style="width: 80%; margin: auto; box-shadow: 0 8px 6px rgba(0,0,0,0.12),0 0 6px rgba(0,0,0,0.04);"
       @selection-change="handleSelectionChange"
       max-height="400"
     >
@@ -71,7 +72,8 @@ import axios from 'axios'
         dialogLoading: false,
         gridData: [],
         dialogTableVisible: false,
-        trimester: ''
+        trimester: '',
+        search: ''
       }
     },
 
@@ -124,34 +126,62 @@ import axios from 'axios'
             // console.log(response.data)
 
             var data = response.data
+            var course = []
+            var newTableData = []
+
+            // console.log(data)
 
             // Filtering out dupicate courses.
             // This is basically finding activeCourses but without connecting to the backend for it. Thus, optimizing the performance (reduce calling backend).
-            // Please note that the filtered data will still contain other data. Hence why we need to still specify what field we want (e.g. activeCourses.ID).
             // Reference: https://stackoverflow.com/questions/2218999/how-to-remove-all-duplicates-from-an-array-of-objects
             const ids = data.map(o => o.ID)
             const activeCourses = data.filter(({ID}, index) => !ids.includes(ID, index + 1))
 
-            var course = []
-            var newTableData = []
             for (var i = 0; i < activeCourses.length; i++){
               // For each activeCourses, you filter the courses to only consist of that specific course.
               course = data.filter(x => x.ID == activeCourses[i].ID)
+              // console.log(course[0].ID)
+              // console.log(course)
 
-              // If the course length is more than one, that means that this course has two blocks. So we need to combine it.
-              if (course.length > 1){
-                // If the time is the same for both blocks, then just combine the days.
-                if (course[0].Time == course[1].Time){
-                  course[0].Date = `${course[0].Date} and ${course[1].Date}`
-                } else { // Else, combine the two time and two days together.
-                  course[0].Date = `${course[0].Date} and ${course[1].Date}`
-                  course[0].Time = `${course[0].Time} | ${course[1].Time}`
+              // ICPE are special case, hence why we need to separate the logic from the rest of the courses
+              if(activeCourses[i].ID.substring(0,4) != 'ICPE'){
+                for(var j = 0; j < course.length; j += 2){
+                  // If the course length is more than one, that means that this course has two blocks. So we need to combine it.
+                  if (course.length > 1){
+                    // If the time is the same for both blocks, then just combine the days.
+                    // We also have to make sure that it's even. If it's not even, this logic will not work and will require other logic to deal with it.
+                    if (course.length % 2 == 0){
+                      if (course[j].Time == course[j+1].Time){
+                        course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
+                      } else { // Else, combine the two time and two days together.
+                        course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
+                        course[j].Time = `${course[j].Time} | ${course[j+1].Time}`
+                      }
+                    } else { // Else if the course length is odd, we run this logic instead.
+                      if (course[j].Time == course[j+1].Time){
+                        course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
+                      } else {
+                        newTableData.push(course[j])
+                        j -= 1
+                        continue
+                      }
+                    }
+
+                    // Push into the variable.
+                    newTableData.push(course[j])
+                  } else { // Getting here would mean that the course length is 1 or lower. This would indicate a course with single block. Simply push it into the new variable since we don't have to combine anything.
+                  newTableData.push(course[j])
+                  }
                 }
-                // Push into the variable.
-                newTableData.push(course[0])
-              } else { // Getting here would mean that the course length is 1 or lower. This would indicate a course with single block. Simply push it into the new variable.
-                newTableData.push(course[0])
               }
+
+              // If this course is a ICPE course then run this logic
+              if(activeCourses[i].ID.substring(0,4) == 'ICPE'){
+                for(var j = 0; j < course.length; j++){
+                  newTableData.push(course[j])
+                }
+              }
+
             }
 
             // After the processing is finished, we push it into the variable that frontend will read from.
@@ -182,31 +212,66 @@ import axios from 'axios'
                 var course = []
                 var newTableData = []
 
+                console.log(data)
+
                 // Filtering out dupicate courses.
                 // This is basically finding activeCourses but without connecting to the backend for it. Thus, optimizing the performance (reduce calling backend).
-                // Please note that the filtered data will still contain other data. Hence why we need to still specify what field we want (e.g. activeCourses.ID).
                 // Reference: https://stackoverflow.com/questions/2218999/how-to-remove-all-duplicates-from-an-array-of-objects
                 const ids = data.map(o => o.ID)
                 const activeCourses = data.filter(({ID}, index) => !ids.includes(ID, index + 1))
 
                 for (var i = 0; i < activeCourses.length; i++){
-                    // For each activeCourses, you filter the courses to only consist of that specific course.
-                    course = data.filter(x => x.ID == activeCourses[i].ID)
+                  // For each activeCourses, you filter the courses to only consist of that specific course.
+                  course = data.filter(x => x.ID == activeCourses[i].ID)
+                  console.log(course[0].ID)
+                  console.log(course)
 
-                    // If the course length is more than one, that means that this course has two blocks. So we need to combine it.
-                    if (course.length > 1){
-                    // If the time is the same for both blocks, then just combine the days.
-                    if (course[0].Time == course[1].Time){
-                        course[0].Date = `${course[0].Date} and ${course[1].Date}`
-                    } else { // Else, combine the two time and two days together.
-                        course[0].Date = `${course[0].Date} and ${course[1].Date}`
-                        course[0].Time = `${course[0].Time} | ${course[1].Time}`
+                  // ICPE are special case, hence why we need to separate the logic from the rest of the courses
+                  if(activeCourses[i].ID.substring(0,4) != 'ICPE'){
+                    for(var j = 0; j < course.length; j += 2){
+                      // If the course length is more than one, that means that this course has two blocks. So we need to combine it.
+                      if (course.length > 1){
+                        // If the time is the same for both blocks, then just combine the days.
+                        // We also have to make sure that it's even. If it's not even, this logic will not work and will require other logic to deal with it.
+                        if (course.length % 2 == 0){
+                          if (course[j].Time == course[j+1].Time){
+                            course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
+                          } else { // Else, combine the two time and two days together.
+                            course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
+                            course[j].Time = `${course[j].Time} | ${course[j+1].Time}`
+                          }
+                        } else { // Else if the course length is odd, we run this logic instead.
+                          newTableData.push(course[j])
+                          j -= 1
+                          continue
+
+                          // The below code is the previous logic for more than 1 and is odd course length.
+                          // However, there are way too much possible combination of course timetable and there are no standadized input.
+                          // So we opt for just literally putting in raw data without combining like other courses for sanity sake.
+                          // if (course[j].Time == course[j+1].Time){
+                          //   course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
+                          // } else {
+                          //   newTableData.push(course[j])
+                          //   j -= 1
+                          //   continue
+                          // }
+                        }
+
+                        // Push into the variable.
+                        newTableData.push(course[j])
+                      } else { // Getting here would mean that the course length is 1 or lower. This would indicate a course with single block. Simply push it into the new variable since we don't have to combine anything.
+                      newTableData.push(course[j])
+                      }
                     }
-                    // Push into the variable.
-                    newTableData.push(course[0])
-                    } else { // Getting here would mean that the course length is 1 or lower. This would indicate a course with single block. Simply push it into the new variable since we don't have to combine anything.
-                    newTableData.push(course[0])
+                  }
+
+                  // If this course is a ICPE course then run this logic
+                  if(activeCourses[i].ID.substring(0,4) == 'ICPE'){
+                    for(var j = 0; j < course.length; j++){
+                      newTableData.push(course[j])
                     }
+                  }
+
                 }
 
                 // After the processing is finished, we push it into the variable that frontend will read from.
