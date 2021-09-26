@@ -142,7 +142,7 @@ export default defineComponent({
             axios.get('http://localhost:5000/getuser', {withCredentials: true})
             .then(res => {
               this.user.name = res.data.user.firstname
-              if(res.data.user.studentID.includes('60') == false){
+              if(res.data.user.studentID.substring(0,2) != '60'){
                 this.$router.push({path: `/takencourses${res.data.user.studentID.substring(0,2)}`})
               } else {
                 this.loading = false
