@@ -38,10 +38,10 @@
       <TakenCourseTable title="Social Sciences" name="7" :courses="SocialSciCourses" :totalCredit="SocialSciTotalCredit"></TakenCourseTable>
 
       <TakenCourseTable title="Health Science and Physical Education" name="8" :courses="PECourses" :totalCredit="PETotalCredit"></TakenCourseTable>
-      
+
       <br><br>
 
-      <h2 style="text-align:left;">Majour Courses</h2>
+      <h2 style="text-align:left;">Major Courses</h2>
 
       <TakenCourseTable title="Core Courses" name="1" :courses="CoreCourses" :totalCredit="CoreTotalCredit"></TakenCourseTable>
 
@@ -49,7 +49,14 @@
 
       <TakenCourseTable title="Elective Major Courses" name="3" :courses="ElectiveCourses" :totalCredit="ElectiveTotalCredit"></TakenCourseTable>
       
-      <br>
+      <br><br>
+
+      <h2 style="text-align:left;">Special</h2>
+
+      <TakenCourseTable title="Free Elective Courses" name="9" :courses="FreeElectiveCourses" :totalCredit="FreeElectiveTotalCredit"></TakenCourseTable>
+
+      <TakenCourseTable title="I-Design Elective Courses" name="10" :courses="IDesignCourses" :totalCredit="IDesignTotalCredit"></TakenCourseTable>
+      
 
     </el-collapse>
 
@@ -58,12 +65,17 @@
   <!-- Add dialog box -->
   <el-dialog title="Adding a course" v-model="dialogAddVisible" width="30%" center>
     <!-- input -->
-     <div class="sub-title">Add a course to the table</div>
+    <div class="sub-title">Add a course to the table</div>
     <el-autocomplete class="inline-input" style="width:100%" v-model="state1" :fetch-suggestions="querySearch" placeholder="Select a course" @select="addSelect" clearable></el-autocomplete>
+    <el-radio-group v-model="special" style="margin-top:25px;">
+      <el-radio :label="1">Normal</el-radio>
+      <el-radio :label="2">Free Elective</el-radio>
+      <el-radio :label="3">I-Design Elective</el-radio>
+    </el-radio-group>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogAddVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="confirmAdd">Add {{addChoice.value}}</el-button>
+        <el-button type="primary" :loading= addLoading.value @click="confirmAdd">Add {{addChoice.value}}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -71,12 +83,12 @@
   <!-- Delete dialog box -->
   <el-dialog title="Deleting a course" v-model="dialogDeleteVisible" width="30%" center>
     <!-- input -->
-     <div class="sub-title">Delete a course from the table</div>
+    <div class="sub-title">Delete a course from the table</div>
     <el-autocomplete class="inline-input" style="width:100%" v-model="state2" :fetch-suggestions="querySearch2" placeholder="Select a course" @select="deleteSelect" clearable></el-autocomplete>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogDeleteVisible = false">Cancel</el-button>
-        <el-button type="danger" @click="confirmDelete">Delete {{deleteChoice.value}}</el-button>
+        <el-button type="danger" :loading= deleteLoading.value @click="confirmDelete">Delete {{deleteChoice.value}}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -86,7 +98,7 @@
 </template>
 
 <script>
- import { reactive, defineComponent, ref, onMounted } from 'vue'
+import { reactive, defineComponent, ref, onMounted } from 'vue'
 import axios from 'axios'
 import TakenCourseTable from '../components/TakenCoursesComponent/TakenCourseTable.vue'
 export default defineComponent({
@@ -107,6 +119,8 @@ export default defineComponent({
         HumanityCourses:[],
         SocialSciCourses:[],
         PECourses:[],
+        FreeElectiveCourses:[],
+        IDesignCourses:[],
 
         CoreTotalCredit: 0,
         RequiredTotalCredit: 0,
@@ -116,6 +130,8 @@ export default defineComponent({
         HumanityTotalCredit: 0,
         SocialSciTotalCredit: 0,
         PETotalCredit: 0,
+        FreeElectiveTotalCredit: 0,
+        IDesignTotalCredit: 0,
 
         loading: true,
 
@@ -145,21 +161,25 @@ export default defineComponent({
             })
 
             //filter JSON data
-            this.CoreCourses = res.data.filter(course => course.Category =="Core Courses")
+            this.CoreCourses = res.data.filter(course => course.Category =="Core Courses" && course.remark == "none")
 
-            this.RequiredCourses = res.data.filter(course => course.Category =="Required Major Courses")
+            this.RequiredCourses = res.data.filter(course => course.Category =="Required Major Courses" && course.remark == "none")
 
-            this.ElectiveCourses = res.data.filter(course => course.Category =="Elective Major Courses")
+            this.ElectiveCourses = res.data.filter(course => course.Category =="Elective Major Courses" && course.remark == "none")
 
-            this.EnglishCourses = res.data.filter(course => course.Category =="English Communication")
+            this.EnglishCourses = res.data.filter(course => course.Category =="English Communication" && course.remark == "none")
                   
-            this.NatSciCourses = res.data.filter(course => course.Category =="Natural Sciences")
+            this.NatSciCourses = res.data.filter(course => course.Category =="Natural Sciences" && course.remark == "none")
                         
-            this.HumanityCourses = res.data.filter(course => course.Category =="Humanities")
+            this.HumanityCourses = res.data.filter(course => course.Category =="Humanities" && course.remark == "none")
 
-            this.SocialSciCourses = res.data.filter(course => course.Category =="Social Sciences")
+            this.SocialSciCourses = res.data.filter(course => course.Category =="Social Sciences" && course.remark == "none")
 
-            this.PECourses = res.data.filter(course => course.Category =="Health Science and Physical Education")
+            this.PECourses = res.data.filter(course => course.Category =="Health Science and Physical Education" && course.remark == "none")
+
+            this.FreeElectiveCourses = res.data.filter(course => course.remark == "free elective")
+            
+            this.IDesignCourses = res.data.filter(course => course.remark == "i-design elective")
 
             //sum JSON object keys
             //Fixed reduce empty array by adding initial value ref:https://stackoverflow.com/questions/23359173/javascript-reduce-an-empty-array
@@ -179,6 +199,10 @@ export default defineComponent({
 
             this.PETotalCredit = this.PECourses.map(PECourses => PECourses.Credit).reduce((total, PECourses) => PECourses + total, 0)
 
+            this.FreeElectiveTotalCredit = this.FreeElectiveCourses.map(FreeElectiveCourses => FreeElectiveCourses.Credit).reduce((total, FreeElectiveCourses) => FreeElectiveCourses + total, 0)
+
+            this.IDesignTotalCredit = this.IDesignCourses.map(IDesignCourses => IDesignCourses.Credit).reduce((total, IDesignCourses) => IDesignCourses + total, 0)
+
             })
             .catch((err) => {
               console.log(err)
@@ -190,6 +214,10 @@ export default defineComponent({
       //ref:https://www.codegrepper.com/code-examples/javascript/vue+composition+api+%22setup%22+passing+in+variables+to+component
       const addChoice = reactive({value: ''})
       const deleteChoice = reactive({value: ''})
+      const special = ref(1)
+
+      const addLoading = reactive({value: false})
+      const deleteLoading = reactive({value: false})
 
       const restaurants = ref([]);
       const restaurants2 = ref([]);
@@ -247,15 +275,30 @@ export default defineComponent({
       const addSelect = (item) => {
         let choice = item.value.split(' ')      
         addChoice.value = choice[0]
-        console.log("select " + addChoice.value)
+        console.log("select " + addChoice.value + ", radio choice:" + special.value)
       };
       const confirmAdd = () => {
         if(addChoice.value == ''){
           alert("Please select a course.")
         }
         else{
-          console.log("confirm add " + addChoice.value)
-          axios.get("http://localhost:5000/taken-courses/addtakencourse/" + addChoice.value , {withCredentials: true})
+          addLoading.value = true
+          let remark = ''
+          switch (special.value) {
+            case 1:
+              remark = "none";
+              break; 
+            case 2:
+              remark = "free elective";
+              break; 
+            case 3: 
+              remark = "i-design elective";
+              break;
+            default:
+              remark = "none"; 
+}
+          console.log("confirm add " + addChoice.value + " as " + remark)
+          axios.get("http://localhost:5000/taken-courses/addtakencourse/" + addChoice.value + '/' + remark, {withCredentials: true})
           .then((res) => {
             console.log('adding..')
             console.log(res.data)
@@ -283,6 +326,7 @@ export default defineComponent({
           alert("Please select a course.")
         }
         else{
+          deleteLoading.value = true
           console.log("confirm delete " + deleteChoice.value)
           axios.delete("http://localhost:5000/taken-courses/deletetakencourse/" + deleteChoice.value , {withCredentials: true})
           .then((res) => {
@@ -309,6 +353,9 @@ export default defineComponent({
         restaurants2,
         state1: ref(''),
         state2: ref(''),
+        addLoading,
+        deleteLoading,
+        special,
         addChoice,
         deleteChoice,
         querySearch,
