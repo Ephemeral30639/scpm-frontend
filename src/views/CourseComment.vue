@@ -37,14 +37,14 @@
                             </el-container>
                         </template>
                         <el-container>
-                            <p style="font-size: 20px;">{{commentData[parseInt(o-1)].comment}}</p>
+                            <p style="font-size: 20px; text-align: left;">{{commentData[parseInt(o-1)].comment}}</p>
                         </el-container>
                     </el-card>
                     <el-divider></el-divider>
                 </div>
                 
             </el-main>
-            <el-footer>
+            <el-footer v-loading="footerLoading">
                 <el-container>
                     <el-input
                         v-model="commmentInput"
@@ -79,6 +79,7 @@ export default {
           commmentInput: '',
           commentData: [],
           coursesLoading: true,
+          footerLoading: false,
           commentDisplayLoading: false,
           courseInfoDisplayLoading: false,
           commentInputDisabled: true,
@@ -188,6 +189,8 @@ export default {
             })
         },
         sendComment(){
+            this.coursesLoading = true
+            this.footerLoading = true
             var commentID = uuidv4()
             var timestamp = Date.now()
             axios.post('http://localhost:5000/comments/inputcomment', null, {params:{commentID: commentID, courseID: this.courseDisplay.ID, comment: this.commmentInput, timestamp: timestamp, studentID: 'Not Anonymous'}})
@@ -206,6 +209,8 @@ export default {
                     })
                     this.commmentInput = ''
                 }
+                this.footerLoading = false
+                this.coursesLoading = false
             })
         },
         filterNode(value, data) {
