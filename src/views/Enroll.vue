@@ -138,63 +138,62 @@ import axios from 'axios'
             const activeCourses = data.filter(({ID}, index) => !ids.includes(ID, index + 1))
 
             for (var i = 0; i < activeCourses.length; i++){
-              // For each activeCourses, you filter the courses to only consist of that specific course.
+              // For each activeCourses, you filter the data to only consist of that specific course.
               course = data.filter(x => x.ID == activeCourses[i].ID)
+
+              // For each specific course, filter out the uuid duplicates
+              const ids2 = course.map(o => o.uuid)
+              const activeuuid = course.filter(({uuid}, index) => !ids2.includes(uuid, index + 1))
               // console.log(course[0].ID)
               // console.log(course)
 
-              // ICPE are special case, hence why we need to separate the logic from the rest of the courses
-              if(activeCourses[i].ID.substring(0,4) != 'ICPE'){
-                for(var j = 0; j < course.length; j += 2){
-                  // If the course length is more than one, that means that this course has two blocks. So we need to combine it.
-                  if (course.length > 1){
-                    // If the time is the same for both blocks, then just combine the days.
-                    // We also have to make sure that it's even. If it's not even, this logic will not work and will require other logic to deal with it.
-                    if (course.length % 2 == 0){
-                      if (course[j].Time == course[j+1].Time){
-                        course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
-                      } else { // Else, combine the two time and two days together.
-                        course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
-                        course[j].Time = `${course[j].Time} | ${course[j+1].Time}`
-                      }
-                    } else { // Else if the course length is odd, we run this logic instead.
-                      newTableData.push(course[j])
-                      j -= 1
-                      continue
+              //For each uuid in the array, combine the timetables as necessary.
+              for (var j = 0; j < activeuuid.length; j++){
+                var specificCourse = course.filter(x => x.uuid == activeuuid[j].uuid)
 
-                      // The below code is the previous logic for more than 1 and is odd course length.
-                      // However, there are way too much possible combination of course timetable and there are no standadized input.
-                      // So we opt for just literally putting in raw data without combining like other courses for sanity sake.
-                      // if (course[j].Time == course[j+1].Time){
-                      //   course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
-                      // } else {
-                      //   newTableData.push(course[j])
-                      //   j -= 1
-                      //   continue
-                      // }
-                    }
+                // This course only has one timetable. E.g.: ICPEs
+                if (specificCourse.length == 1){
+                  newTableData.push(specificCourse[0])
+                }
 
-                    // Push into the variable.
-                    newTableData.push(course[j])
-                  } else { // Getting here would mean that the course length is 1 or lower. This would indicate a course with single block. Simply push it into the new variable since we don't have to combine anything.
-                  newTableData.push(course[j])
+                // This course has two timetables (most MUIC courses are like this).
+                if (specificCourse.length == 2){
+                  // If the two times are the same, combine the days only.
+                  if(specificCourse[0].Time == specificCourse[1].Time){
+                    specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date}`
+                  } else { // Else, combine the days and times
+                    specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date}`
+                    specificCourse[0].Time = `${specificCourse[0].Time} | ${specificCourse[1].Time}`
                   }
+                  newTableData.push(specificCourse[0])
+                }
+
+                // Any course that has more than 2 timetables will have its timetables combined without any conditioning. 
+                // NOTE: We never encountered a course with more than 3 timetables. If, in the future, there is a course with 4 or more timetimables, simply add more "if" statement and combine it all.
+                if (specificCourse.length == 3){
+                  specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date} and ${specificCourse[2].Date}`
+                  specificCourse[0].Time = `${specificCourse[0].Time} | ${specificCourse[1].Time} | ${specificCourse[2].Time}`
+                  newTableData.push(specificCourse[0])
+                }
+
+                if (specificCourse.length == 4){
+                  specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date} and ${specificCourse[2].Date} and ${specificCourse[3].Date}`
+                  specificCourse[0].Time = `${specificCourse[0].Time} | ${specificCourse[1].Time} | ${specificCourse[2].Time} | ${specificCourse[3].Time}`
+                  newTableData.push(specificCourse[0])
+                }
+
+                if (specificCourse.length == 5){
+                  specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date} and ${specificCourse[2].Date} and ${specificCourse[3].Date} and ${specificCourse[4].Date}`
+                  specificCourse[0].Time = `${specificCourse[0].Time} | ${specificCourse[1].Time} | ${specificCourse[2].Time} | ${specificCourse[3].Time} | ${specificCourse[4].Time}`
+                  newTableData.push(specificCourse[0])
                 }
               }
-
-              // If this course is a ICPE course then run this logic
-              if(activeCourses[i].ID.substring(0,4) == 'ICPE'){
-                for(var j = 0; j < course.length; j++){
-                  newTableData.push(course[j])
-                }
-              }
-
             }
 
             // After the processing is finished, we push it into the variable that frontend will read from.
             // console.log(newTableData)
             for (var j = 0; j < newTableData.length; j++){
-              this.gridData.push({id: newTableData[j].ID, name: newTableData[j].Name, day: newTableData[j].Date, time: newTableData[j].Time})
+              this.gridData.push({id: newTableData[j].ID, name: newTableData[j].Name, day: newTableData[j].Date, time: newTableData[j].Time, uuid: newTableData[j].uuid})
             }
             this.dialogTableloading = false
         })
@@ -229,67 +228,61 @@ import axios from 'axios'
                 const activeCourses = data.filter(({ID}, index) => !ids.includes(ID, index + 1))
 
                 for (var i = 0; i < activeCourses.length; i++){
-                  // For each activeCourses, you filter the courses to only consist of that specific course.
+                  // For each activeCourses, you filter the data to only consist of that specific course.
                   course = data.filter(x => x.ID == activeCourses[i].ID)
+
+                  // For each specific course, filter out the uuid duplicates
+                  const ids2 = course.map(o => o.uuid)
+                  const activeuuid = course.filter(({uuid}, index) => !ids2.includes(uuid, index + 1))
                   // console.log(course[0].ID)
                   // console.log(course)
 
-                  // ICPE are special case, hence why we need to separate the logic from the rest of the courses
-                  if(activeCourses[i].ID.substring(0,4) != 'ICPE'){
-                    for(var j = 0; j < course.length; j += 2){
-                      // If the course length is more than one, that means that this course has two blocks. So we need to combine it.
-                      if (course.length > 1){
-                        // If the time is the same for both blocks, then just combine the days.
-                        // We also have to make sure that it's even. If it's not even, this logic will not work and will require other logic to deal with it.
-                        if (course.length % 2 == 0){
-                          if (course[j].Time == course[j+1].Time){
-                            course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
-                          } else { // Else, combine the two time and two days together.
-                            course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
-                            course[j].Time = `${course[j].Time} | ${course[j+1].Time}`
-                          }
-                        } else { // Else if the course length is odd, we run this logic instead.
-                          newTableData.push(course[j])
-                          j -= 1
-                          continue
+                  //For each uuid in the array, combine the timetables as necessary.
+                  for (var j = 0; j < activeuuid.length; j++){
+                    var specificCourse = course.filter(x => x.uuid == activeuuid[j].uuid)
 
-                          // The below code is the previous logic for more than 1 and is odd course length.
-                          // However, there are way too much possible combination of course timetable and there are no standadized input.
-                          // So we opt for just literally putting in raw data without combining like other courses for sanity sake.
-                          // try {
-                          //   if (course[j].Time == course[j+1].Time){
-                          //     course[j].Date = `${course[j].Date} and ${course[j+1].Date}`
-                          //   } else {
-                          //     newTableData.push(course[j])
-                          //     j -= 1
-                          //     continue
-                          //   }
-                          // } catch {
-                          //   newTableData.push(course[j])
-                          //   continue
-                          // }
-                        }
+                    // This course only has one timetable. E.g.: ICPEs
+                    if (specificCourse.length == 1){
+                      newTableData.push(specificCourse[0])
+                    }
 
-                        // Push into the variable.
-                        newTableData.push(course[j])
-                      } else { // Getting here would mean that the course length is 1 or lower. This would indicate a course with single block. Simply push it into the new variable since we don't have to combine anything.
-                      newTableData.push(course[j])
+                    // This course has two timetables (most MUIC courses are like this).
+                    if (specificCourse.length == 2){
+                      // If the two times are the same, combine the days only.
+                      if(specificCourse[0].Time == specificCourse[1].Time){
+                        specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date}`
+                      } else { // Else, combine the days and times
+                        specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date}`
+                        specificCourse[0].Time = `${specificCourse[0].Time} | ${specificCourse[1].Time}`
                       }
+                      newTableData.push(specificCourse[0])
+                    }
+
+                    // Any course that has more than 2 timetables will have its timetables combined without any conditioning. 
+                    // NOTE: We never encountered a course with more than 3 timetables. If, in the future, there is a course with 4 or more timetimables, simply add more "if" statement and combine it all.
+                    if (specificCourse.length == 3){
+                      specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date} and ${specificCourse[2].Date}`
+                      specificCourse[0].Time = `${specificCourse[0].Time} | ${specificCourse[1].Time} | ${specificCourse[2].Time}`
+                      newTableData.push(specificCourse[0])
+                    }
+
+                    if (specificCourse.length == 4){
+                      specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date} and ${specificCourse[2].Date} and ${specificCourse[3].Date}`
+                      specificCourse[0].Time = `${specificCourse[0].Time} | ${specificCourse[1].Time} | ${specificCourse[2].Time} | ${specificCourse[3].Time}`
+                      newTableData.push(specificCourse[0])
+                    }
+
+                    if (specificCourse.length == 5){
+                      specificCourse[0].Date = `${specificCourse[0].Date} and ${specificCourse[1].Date} and ${specificCourse[2].Date} and ${specificCourse[3].Date} and ${specificCourse[4].Date}`
+                      specificCourse[0].Time = `${specificCourse[0].Time} | ${specificCourse[1].Time} | ${specificCourse[2].Time} | ${specificCourse[3].Time} | ${specificCourse[4].Time}`
+                      newTableData.push(specificCourse[0])
                     }
                   }
-
-                  // If this course is a ICPE course then run this logic
-                  if(activeCourses[i].ID.substring(0,4) == 'ICPE'){
-                    for(var j = 0; j < course.length; j++){
-                      newTableData.push(course[j])
-                    }
-                  }
-
                 }
 
                 // After the processing is finished, we push it into the variable that frontend will read from.
                 for (var j = 0; j < newTableData.length; j++){
-                    this.tableData.push({id: newTableData[j].ID, name: newTableData[j].Name, day: newTableData[j].Date, time: newTableData[j].Time})
+                    this.tableData.push({id: newTableData[j].ID, name: newTableData[j].Name, day: newTableData[j].Date, time: newTableData[j].Time, uuid: newTableData[j].uuid})
                 }
                 this.allLoading = false
             })
