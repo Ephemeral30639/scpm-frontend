@@ -2,7 +2,7 @@
 <div v-loading="allLoading">
   <h1>Current Trimester</h1>
   <h3>{{trimester}}</h3>
-  <el-input v-model="search" style="width: 80%; margin: auto;" size="medium" placeholder="Type a Course ID to search (e.g. EGCI201)" />
+  <el-input v-model="search" style="width: 80%; margin: auto;" size="large" placeholder="Type a Course ID to search (e.g. EGCI201)" />
 
     <el-table
       ref="multipleTable"

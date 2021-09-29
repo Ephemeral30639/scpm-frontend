@@ -1,43 +1,41 @@
 <template>
-<el-input v-model="search" size="mini" placeholder="Type to search" />
+<div v-loading='allLoading'>
+  <el-input v-model="search" size="large" placeholder="Type to search" />
 
-  <el-table
-    :data="tableData.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
-    :default-sort = "{prop: 'id', order: 'asending'}"
-    stripe
-    style="width: 100%"
-    >
-    <el-table-column
-      prop="id"
-      label="ID"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="Name"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="gen598"
-      label="Generation 598">
-    </el-table-column>
-        <el-table-column
-      prop="gen608"
-      label="Generation 608">
-    </el-table-column>
-            <el-table-column
-      prop="gen618"
-      label="Generation 618">
-    </el-table-column>
-            <el-table-column
-      prop="gen628"
-      label="Generation 628">
-    </el-table-column>
-            <el-table-column
-      prop="gen638"
-      label="Generation 638">
-    </el-table-column>
-  </el-table>
+    <el-table
+      :data="tableData.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
+      :default-sort = "{prop: 'id', order: 'asending'}"
+      stripe
+      style="width: 100%"
+      >
+      <el-table-column
+        prop="id"
+        label="ID"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="Name"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="gen60"
+        label="Generation 60">
+      </el-table-column>
+      <el-table-column
+        prop="gen61"
+        label="Generation 61">
+      </el-table-column>
+      <el-table-column
+        prop="gen63"
+        label="Generation 63">
+      </el-table-column>
+      <el-table-column
+        prop="gen64"
+        label="Generation 64">
+      </el-table-column>
+    </el-table>
+</div>
 </template>
 
 <script>
@@ -46,6 +44,7 @@ import axios from 'axios'
 export default defineComponent({
   data() {
       return {
+        allLoading: true,
         search: '',
         tableData: []
       }
@@ -83,7 +82,7 @@ export default defineComponent({
       })
     };
     onMounted(() => {
-      loadAll();
+      // loadAll();
     });
     return {
       restaurants,
@@ -100,13 +99,15 @@ export default defineComponent({
     }
   },
   mounted() {
+    this.allLoading = true
     axios.get('http://localhost:5000/gpcc')
     .then(response => {
       var data = response.data
       // Your Code here.
       for (var i = 0; i < data.length; i++){
-        this.tableData.push({id: response.data[i].Course_ID, name: response.data[i].Name,gen598: response.data[i].Gen598, gen608: response.data[i].Gen608,gen618: response.data[i].Gen618,gen628: response.data[i].Gen628, gen638: response.data[i].Gen638})
+        this.tableData.push({id: response.data[i].Course_ID, name: response.data[i].Name,gen60: response.data[i].Gen60, gen61: response.data[i].Gen61, gen63: response.data[i].Gen63, gen64: response.data[i].Gen64})
       }
+      this.allLoading = false
     })
   }
 });
