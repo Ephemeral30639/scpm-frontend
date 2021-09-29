@@ -17,8 +17,15 @@
             <h2>Add New Advice</h2>
             <div style="padding-top: 60px;">
                 <el-form ref="form" :model="form" label-width="120px" :disabled="createFormDisabled">
-                    <el-form-item label="Category" prop="category" :rules="[{required: true, message: 'Cannot be empty.'}]">
-                        <el-input v-model="form.category"></el-input>
+                    <el-form-item label="Category" prop="category">
+                        <el-container>
+                            <el-select v-model="select" placeholder="Select" style="width: 350px">
+                                <div v-for="o in categoryLabels.length" :key="o">
+                                    <el-option :label="categoryLabels[parseInt(o-1)]" :value="categoryLabels[parseInt(o-1)]"></el-option>
+                                </div>
+                            </el-select>
+                            <el-input v-model="form.category" :disabled="categoryInputDisabled"></el-input>
+                        </el-container>
                     </el-form-item>
                     <el-form-item label="Course ID" prop="courseID" :rules="[{required: true, message: 'Cannot be empty.'}]">
                         <el-input v-model="form.courseID"></el-input>
@@ -92,7 +99,10 @@ export default defineComponent({
         createFormDisabled: false,
         switchState: false,
         editCourseInputDisabled: true,
-        loading: false
+        loading: false,
+        select: ref('New Category'),
+        categoryLabels: ['New Category'],
+        categoryInputDisabled: false
       }
     },
     setup() {
@@ -150,15 +160,20 @@ export default defineComponent({
       onSubmit(formName) {
         this.$refs[formName].validate((valid) => {
             if (valid) {
-                this.loading = true
-                axios.post('http://localhost:5000/advice/createadvice', null, {params: this.form})
-                .then(response => {
-                    if(response.data == 'Successfully Created'){
-                        this.$message.success({message: 'Successfully Created', duration: 4000})
-                        this.resetForm('form')
-                        this.loading = false
-                    }
-                })
+                if (this.form.category == '' && this.select == 'New Category'){
+                    this.$message.error({message: 'Category is empty!', duration: 4000})
+                    return
+                } else {
+                    this.loading = true
+                    axios.post('http://localhost:5000/advice/createadvice', null, {params: this.form})
+                    .then(response => {
+                        if(response.data == 'Successfully Created'){
+                            this.$message.success({message: 'Advice Successfully Created', duration: 4000})
+                            this.resetForm('form')
+                            this.loading = false
+                        }
+                    })
+                }
             } else {
                 console.log('error submit!!')
                 return false
@@ -226,8 +241,26 @@ export default defineComponent({
                 this.$router.push({path: '/'})
             } else if (response.data.user.firstname == 'admin'){
                 this.loading = false
+
+                axios.get('http://localhost:5000/advice/getalladvicecategory')
+                .then(response => {
+                    for(var i = 0; i < response.data.length; i++){
+                        this.categoryLabels.push(response.data[i].category)
+                    }
+                })
             }
         })
+    },
+    watch: {
+        select(val){
+            if (val != 'New Category'){
+                this.categoryInputDisabled = true
+                this.form.category = val
+            } else {
+                this.categoryInputDisabled = false
+                this.form.category = ''
+            }
+        }
     }
 });
 </script>

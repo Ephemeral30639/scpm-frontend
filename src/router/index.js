@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Test from '../views/Test.vue'
-import TakenCourses from '../views/TakenCourses.vue'
+import TakenCourses60 from '../views/TakenCourses60.vue'
+import TakenCourses64 from '../views/TakenCourses64.vue'
 import Makeup from '../views/Makeup.vue'
 import Login from '../views/Login.vue'
 import GPCC from '../views/GPCC.vue'
@@ -30,9 +31,14 @@ const routes = [
         component: Test
     },
     {
-        path: '/takencourses',
-        name: 'TakenCourses',
-        component: TakenCourses
+        path: '/takencourses60',
+        name: 'TakenCourses60',
+        component: TakenCourses60
+    },
+    {
+        path: '/takencourses64',
+        name: 'TakenCourses64',
+        component: TakenCourses64
     },
     {
         path: '/makeup',

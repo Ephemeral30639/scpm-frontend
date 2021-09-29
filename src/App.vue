@@ -16,7 +16,7 @@
     
     <el-submenu index="2">
       <template #title>Features</template>
-      <el-menu-item index="/takencourses"><router-link style="text-decoration: none; color: inherit;" to='/takencourses'>Course and Credit Tracking</router-link></el-menu-item>
+      <el-menu-item index="/takencourses60"><router-link style="text-decoration: none; color: inherit;" to='/takencourses60'>Course and Credit Tracking</router-link></el-menu-item>
       <el-submenu inddex="3">
         <template #title>Advice and Comments</template>
           <el-menu-item index="/courseadvice"><router-link style="text-decoration: none; color: inherit;" to='/courseadvice'>Course Advice</router-link></el-menu-item>

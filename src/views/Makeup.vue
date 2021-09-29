@@ -1,72 +1,77 @@
 <template>
-<el-row align="bottom">
-  <el-col :span="8">
-    <div class="grid-content bg-purple" style="text-align:left; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px">
-      <el-autocomplete
-        class="inline-input"
-        v-model="state2"
-        :fetch-suggestions="querySearch"
-        placeholder="Select the cancelled class"
-        :trigger-on-focus="true"
-        @select="handleSelect"
-      ></el-autocomplete>
-    </div>
-  </el-col>
-  <el-col :span="8">
-    <div class="grid-content bg-purple-light" style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px">
-      <h1 style="vertical-align:bottom;">Makeup Finder</h1>
-    </div>
-  </el-col>
-  <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-</el-row>
+  <div v-loading="allLoading">
+    <el-row align="bottom">
+      <el-col :span="8">
+        <div class="grid-content bg-purple" style="text-align:left; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px">
+          <p style="text-align: left; margin-left: 5px; font-size: 12px; margin-bottom: 0px;">*You may need to wait for dropdown menu to load*</p>
+          <el-autocomplete
+            class="inline-input"
+            v-model="state2"
+            :fetch-suggestions="querySearch"
+            placeholder="Select Cancelled Class ID"
+            :trigger-on-focus="true"
+            @select="handleSelect"
+            clearable
+          ></el-autocomplete>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple-light" style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px">
+          <h1 style="vertical-align:bottom;">Makeup Finder</h1>
+        </div>
+      </el-col>
+      <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+    </el-row>
 
-  <el-table
-    :data="tableData"
-    border
-    style="width: 100%">
-    <el-table-column
-      prop="time"
-      label=""
-      width="180"
-      align="right">
-    </el-table-column>
-    <el-table-column
-      prop="mon"
-      label="Mon"
-      width="180"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      prop="tue"
-      label="Tue"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      prop="wed"
-      label="Wed"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      prop="thurs"
-      label="Thurs"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      prop="fri"
-      label="Fri"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      prop="sat"
-      label="Sat"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      prop="sun"
-      label="Sun"
-      align="center">
-    </el-table-column>
-  </el-table>
+    <el-table
+      :data="tableData"
+      border
+      style="width: 100%"
+      v-loading="tableLoading">
+      <el-table-column
+        prop="time"
+        label=""
+        width="180"
+        align="right">
+      </el-table-column>
+      <el-table-column
+        prop="mon"
+        label="Mon"
+        width="180"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="tue"
+        label="Tue"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="wed"
+        label="Wed"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="thurs"
+        label="Thurs"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="fri"
+        label="Fri"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="sat"
+        label="Sat"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="sun"
+        label="Sun"
+        align="center">
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
@@ -75,6 +80,8 @@ import axios from 'axios'
 export default defineComponent({
   data() {
       return {
+        tableLoading: false,
+        allLoading: true,
         trimester: '',
         tableData: [{
           time: '8:00',
@@ -226,19 +233,23 @@ export default defineComponent({
       // This function is called immediately when user loads the page.
       // This is probably where you connect backend to ask for active courses in the active trimeester.
       axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
-        .then(response => {
+      .then(response => {
+          if (response.data == "Error"){
+            this.$message.error({message: 'An Error has occured. Please refresh the page.', duration: 4000})
+          } else {
             var trimester = response.data[0].trimester
+          }
 
-            axios.get('http://localhost:5000/makeup/getactivecourses', {params:{trimester: trimester}})
-            .then((response) => {
-              var data = []
-              for (var i = 0; i < response.data.length; i++){
-                data.push({value: response.data[i].id})
-              }
-              restaurants.value = data
-              return
-            })
-        })
+          axios.get('http://localhost:5000/makeup/getactivecourses', {params:{trimester: trimester}})
+          .then((response) => {
+            var data = []
+            for (var i = 0; i < response.data.length; i++){
+              data.push({value: response.data[i].Course_ID})
+            }
+            restaurants.value = data
+            return
+          })
+      })
     };
     onMounted(() => {
       loadAll();
@@ -256,6 +267,7 @@ export default defineComponent({
     handleSelect (item) {
       // This function is called when the user selects from the suggested output.
       // This is probably where you edit the table to mark x or o depending on what they chose.
+      this.tableLoading = true
       axios.get('http://localhost:5000/makeup/getmakeup', {params:{course: item.value, trimester: this.trimester}})
       .then(response => {
         var data = response.data
@@ -450,14 +462,21 @@ export default defineComponent({
           }
 
         }
+        this.tableLoading = false
       })
     }
   },
   mounted(){
+    this.allLoading = true
     axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
-        .then(response => {
-            this.trimester = response.data[0].trimester
-        })
+    .then(response => {
+      if (response.data == "Error"){
+        this.$message.error({message: 'An Error has occured. Please refresh the page.', duration: 4000})
+      } else {
+        this.trimester = response.data[0].trimester
+        this.allLoading = false
+      }
+    })
   }
 });
 </script>

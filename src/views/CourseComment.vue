@@ -27,7 +27,7 @@
             </el-header>
             <el-main style="height: 70vh;" v-loading="commentDisplayLoading">
                 
-                <div v-for="o in commentData.length" :key="o" class="text item">
+                <div v-for="o in commentData.length" :key="o" class="text item" v-loading="commentDisplayLoading">
                     <el-card class="box-card" shadow="always">
                         <template #header>
                             <el-container>
@@ -37,14 +37,14 @@
                             </el-container>
                         </template>
                         <el-container>
-                            <p style="font-size: 20px;">{{commentData[parseInt(o-1)].comment}}</p>
+                            <p style="font-size: 20px; text-align: left;">{{commentData[parseInt(o-1)].comment}}</p>
                         </el-container>
                     </el-card>
                     <el-divider></el-divider>
                 </div>
                 
             </el-main>
-            <el-footer>
+            <el-footer v-loading="footerLoading">
                 <el-container>
                     <el-input
                         v-model="commmentInput"
@@ -53,19 +53,7 @@
                         :disabled="commentInputDisabled"
                     >
                     </el-input>
-                    <el-popconfirm
-                        confirm-button-text="Yes"
-                        cancel-button-text="No"
-                        icon="el-icon-info"
-                        icon-color="red"
-                        title="Do you want to comment anonymously?"
-                        @confirm="sendAnonymously"
-                        @cancel="sendNotAnonymously"
-                    >
-                        <template #reference>
-                            <el-button type="primary" icon="el-icon-s-promotion" style="margin-top: 12px; margin-left: 10px;" :disabled="commentSendButtonDisabled"></el-button>
-                        </template>
-                    </el-popconfirm>
+                    <el-button type="primary" icon="el-icon-s-promotion" style="margin-top: 12px; margin-left: 10px;" :disabled="commentSendButtonDisabled" @click="sendComment()"></el-button>
                 </el-container>
             </el-footer>
         </el-container>
@@ -91,6 +79,7 @@ export default {
           commmentInput: '',
           commentData: [],
           coursesLoading: true,
+          footerLoading: false,
           commentDisplayLoading: false,
           courseInfoDisplayLoading: false,
           commentInputDisabled: true,
@@ -145,6 +134,7 @@ export default {
             this.courseInfoDisplayLoading = true
             this.commentDisplayLoading = true
             this.commentInputDisabled = true
+            this.coursesLoading = true
 
             // Get course name to display on the right side.
             axios.get('http://localhost:5000/comments/getcoursename', {params:{course: data.label}})
@@ -165,6 +155,12 @@ export default {
                     this.commentData = []
                     this.courseInfoDisplayLoading = false
                     this.commentDisplayLoading = false
+                    this.coursesLoading = false
+                    if(this.loggedIn == false){
+                        this.commentInputDisabled = true
+                    } else {
+                        this.commentInputDisabled = false
+                    }
                     return
                 }
 
@@ -184,6 +180,7 @@ export default {
                 }
                 this.courseInfoDisplayLoading = false
                 this.commentDisplayLoading = false
+                this.coursesLoading = false
 
                 // If user is logged in, enable the comment input area.
                 if(this.loggedIn){
@@ -191,28 +188,9 @@ export default {
                 }
             })
         },
-        sendAnonymously(){
-            var commentID = uuidv4()
-            var timestamp = Date.now()
-            axios.post('http://localhost:5000/comments/inputcomment', null, {params:{commentID: commentID, courseID: this.courseDisplay.ID, comment: this.commmentInput, timestamp: timestamp, studentID: 'Anonymous'}})
-            .then(response => {
-
-                // If comment was a success, push the comment to commentData to visualize succession.
-                if (response.data == 'Comment Successful'){
-                    this.$message.success({message: 'Successfully Commented', duration: 4000})
-                    var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' }
-                    var timestampToPush = new Date (parseInt(timestamp))
-                    this.commentData.push({
-                        comment: this.commmentInput,
-                        date: timestampToPush.toLocaleDateString('en-US', options).substring(5),
-                        time: timestampToPush.toLocaleTimeString('en-US', {hour12: false, hour: '2-digit', minute:'2-digit'}),
-                        studentID: 'Anonymous'
-                    })
-                    this.commmentInput = ''
-                }
-            })
-        },
-        sendNotAnonymously(){
+        sendComment(){
+            this.coursesLoading = true
+            this.footerLoading = true
             var commentID = uuidv4()
             var timestamp = Date.now()
             axios.post('http://localhost:5000/comments/inputcomment', null, {params:{commentID: commentID, courseID: this.courseDisplay.ID, comment: this.commmentInput, timestamp: timestamp, studentID: 'Not Anonymous'}})
@@ -231,6 +209,8 @@ export default {
                     })
                     this.commmentInput = ''
                 }
+                this.footerLoading = false
+                this.coursesLoading = false
             })
         },
         filterNode(value, data) {
