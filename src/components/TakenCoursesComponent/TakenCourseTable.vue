@@ -7,7 +7,7 @@
             <el-table-column prop="Name" label="Name" ></el-table-column>
             <el-table-column prop="Credit" label="Credit"></el-table-column>
         </el-table>
-        <el-tag :type="success" style="margin-top:25px;">Total Credit Earned: {{totalCredit}}</el-tag>
+        <el-tag type="success" style="margin-top:25px; font-size: 20px">{{totalCredit}}</el-tag>
     </el-collapse-item>
 </template>
 
@@ -17,7 +17,7 @@ export default {
         title: String,
         name: String,
         courses: Object,
-        totalCredit: Number
+        totalCredit: String
     },
 }
 </script>

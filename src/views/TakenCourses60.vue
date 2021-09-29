@@ -23,37 +23,45 @@
           <el-button type="danger" icon="el-icon-delete" circle @click="dialogDeleteVisible = true"></el-button>
         </el-tooltip>
 
+        <el-tooltip class="item" effect="dark" content="Search a taken course" placement="top">
+          <el-button type="info" icon="el-icon-search" circle @click="dialogSearchVisible = true"></el-button>
+        </el-tooltip>
+
       </el-row>
       
       <br>
 
-      <h2 style="text-align:left;">General Education</h2>
+      <h2 style="text-align:left;">General Education ( {{this.totalGECredit}} out of 48 )</h2>
 
-      <TakenCourseTable title="English Communication" name="4" :courses="EnglishCourses" :totalCredit="EnglishTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="English Communication" name="4" :courses="EnglishCourses" :totalCredit="EnglishTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Natural Sciences" name="5" :courses="NatSciCourses" :totalCredit="NatSciTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Natural Sciences" name="5" :courses="NatSciCourses" :totalCredit="NatSciTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Humanities" name="6" :courses="HumanityCourses" :totalCredit="HumanityTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Humanities" name="6" :courses="HumanityCourses" :totalCredit="HumanityTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Social Sciences" name="7" :courses="SocialSciCourses" :totalCredit="SocialSciTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Social Sciences" name="7" :courses="SocialSciCourses" :totalCredit="SocialSciTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Health Science and Physical Education" name="8" :courses="PECourses" :totalCredit="PETotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Health Science and Physical Education" name="8" :courses="PECourses" :totalCredit="PETotalCreditText"></TakenCourseTable>
 
       <br><br>
 
-      <h2 style="text-align:left;">Major Courses</h2>
+      <h2 style="text-align:left;">Major Courses ( {{this.totalMajorCoursesCredit}} out of 130 )</h2>
 
-      <TakenCourseTable title="Core Courses" name="1" :courses="CoreCourses" :totalCredit="CoreTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Core Courses" name="1" :courses="CoreCourses" :totalCredit="CoreTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Required Major Courses" name="2" :courses="RequiredCourses" :totalCredit="RequiredTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Required Major Courses" name="2" :courses="RequiredCourses" :totalCredit="RequiredTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Elective Major Courses" name="3" :courses="ElectiveCourses" :totalCredit="ElectiveTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Elective Major Courses" name="3" :courses="ElectiveCourses" :totalCredit="ElectiveTotalCreditText"></TakenCourseTable>
       
       <br><br>
 
-      <h2 style="text-align:left;">Special</h2>
+      <h2 style="text-align:left;">Special ( {{this.totalSpecialCoursesCredit}} out of 8 )</h2>
 
-      <TakenCourseTable title="Free Elective Courses" name="9" :courses="FreeElectiveCourses" :totalCredit="FreeElectiveTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Free Elective Courses" name="9" :courses="FreeElectiveCourses" :totalCredit="FreeElectiveTotalCreditText"></TakenCourseTable>
+
+      <br><br>
+
+      <el-tag style="font-size: 30px;">Grand Total: {{this.totalGECredit + this.totalMajorCoursesCredit + this.totalSpecialCoursesCredit}} out of 186</el-tag>
       
 
     </el-collapse>
@@ -90,6 +98,19 @@
     </template>
   </el-dialog>
 
+  <!-- Search dialog box -->
+  <el-dialog title="Search a taken course" v-model="dialogSearchVisible" width="30%" center>
+    <!-- input -->
+    <div class="sub-title">Check if you have already taken a course</div>
+    <el-input v-model="searchInput" placeholder="Enter a Course ID" v-on:keyup.enter="search"></el-input>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogSearchVisible = false">Close</el-button>
+        <el-button type="primary" @click="search">Search</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
 </div>
 
 </template>
@@ -106,6 +127,8 @@ export default defineComponent({
       return {
         dialogAddVisible: false,
         dialogDeleteVisible: false,
+        dialogSearchVisible: false,
+        searchInput: ref(''),
         activeIndex: '2',
 
         CoreCourses:[],
@@ -127,6 +150,10 @@ export default defineComponent({
         SocialSciTotalCredit: 0,
         PETotalCredit: 0,
         FreeElectiveTotalCredit: 0,
+
+        totalGECredit: 0,
+        totalMajorCoursesCredit: 0,
+        totalSpecialCoursesCredit: 0,
 
         loading: true,
         categories: [],
@@ -196,6 +223,30 @@ export default defineComponent({
 
             this.FreeElectiveTotalCredit = this.FreeElectiveCourses.map(FreeElectiveCourses => FreeElectiveCourses.Credit).reduce((total, FreeElectiveCourses) => FreeElectiveCourses + total, 0)
 
+            this.totalGECredit = this.EnglishTotalCredit + this.NatSciTotalCredit + this.HumanityTotalCredit + this.SocialSciTotalCredit + this.PETotalCredit
+
+            this.totalMajorCoursesCredit = this.CoreTotalCredit + this.RequiredTotalCredit + this.ElectiveTotalCredit
+
+            this.totalSpecialCoursesCredit = this.FreeElectiveTotalCredit
+
+            this.EnglishTotalCreditText = `Total Credit Earned: ${this.EnglishTotalCredit} out of 12 - 16`
+
+            this.NatSciTotalCreditText = `Total Credit Earned: ${this.NatSciTotalCredit} out of 12`
+
+            this.HumanityTotalCreditText = `Total Credit Earned: ${this.HumanityTotalCredit} out of 8`
+
+            this.SocialSciTotalCreditText = `Total Credit Earned: ${this.SocialSciTotalCredit} out of 8`
+
+            this.PETotalCreditText = `Total Credit Earned: ${this.PETotalCredit} out of 4`
+            
+            this.CoreTotalCreditText = `Total Credit Earned: ${this.CoreTotalCredit} out of 41`
+
+            this.RequiredTotalCreditText = `Total Credit Earned: ${this.RequiredTotalCredit} out of 65`
+
+            this.ElectiveTotalCreditText = `Total Credit Earned: ${this.ElectiveTotalCredit} out of 24`
+
+            this.FreeElectiveTotalCreditText = `Total Credit Earned: ${this.FreeElectiveTotalCredit} out of 8`
+            
             this.loading = false
             })
             .catch((err) => {
@@ -369,6 +420,19 @@ export default defineComponent({
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
       },
+      search(){
+        var allCourses = this.EnglishCourses.concat(this.NatSciCourses).concat(this.HumanityCourses)
+        .concat(this.SocialSciCourses).concat(this.PECourses).concat(this.CoreCourses).concat(this.RequiredCourses)
+        .concat(this.ElectiveCourses).concat(this.FreeElectiveCourses)
+        
+        const result = allCourses.find( ({ ID }) => ID == this.searchInput.toUpperCase() )
+        
+        if (result === undefined){
+          this.$notify.error({message: 'You have NOT taken that course yet!', title: 'Not Found!', duration: 6000})
+        } else {
+          this.$notify.success({message: 'You have ALREADY taken that course!', title: 'Found!', duration: 6000})
+        }
+      }
     }
   });
 </script>

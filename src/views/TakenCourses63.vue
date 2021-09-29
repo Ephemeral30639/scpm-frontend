@@ -23,47 +23,55 @@
           <el-button type="danger" icon="el-icon-delete" circle @click="dialogDeleteVisible = true"></el-button>
         </el-tooltip>
 
+        <el-tooltip class="item" effect="dark" content="Search a taken course" placement="top">
+          <el-button type="info" icon="el-icon-search" circle @click="dialogSearchVisible = true"></el-button>
+        </el-tooltip>
+
       </el-row>
       
       <br>
 
       <h2 style="text-align:left;">Refresher Courses</h2>
 
-      <TakenCourseTable title="Foundation Courses" name="4" :courses="foundationCourses" :totalCredit="foundationTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Foundation Courses" name="11" :courses="foundationCourses" :totalCredit="foundationTotalCreditText"></TakenCourseTable>
 
       <br><br>
 
-      <h2 style="text-align:left;">General Education</h2>
+      <h2 style="text-align:left;">General Education ( {{this.totalGECredit}} out of 38)</h2>
 
-      <TakenCourseTable title="English Communication" name="4" :courses="EnglishCourses" :totalCredit="EnglishTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="English Communication" name="4" :courses="EnglishCourses" :totalCredit="EnglishTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Life Appreciation" name="5" :courses="lifeAppreciationCourses" :totalCredit="lifeAppreciationTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Life Appreciation" name="5" :courses="lifeAppreciationCourses" :totalCredit="lifeAppreciationTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Global Citizenship" name="6" :courses="globalCitizenshipCourses" :totalCredit="globalCitizenshipTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Global Citizenship" name="6" :courses="globalCitizenshipCourses" :totalCredit="globalCitizenshipTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Critical Thinking" name="7" :courses="criticalThinkingCourses" :totalCredit="criticalThinkingTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Critical Thinking" name="7" :courses="criticalThinkingCourses" :totalCredit="criticalThinkingTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Leadership" name="8" :courses="leadershipCourses" :totalCredit="leadershipTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Leadership" name="8" :courses="leadershipCourses" :totalCredit="leadershipTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Digital Literacy" name="9" :courses="digitalLiteracyCourses" :totalCredit="digitalLiteracyTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Digital Literacy" name="9" :courses="digitalLiteracyCourses" :totalCredit="digitalLiteracyTotalCreditText"></TakenCourseTable>
 
       <br><br>
 
-      <h2 style="text-align:left;">Major Courses</h2>
+      <h2 style="text-align:left;">Major Courses ( {{this.totalMajorCoursesCredit}} out of 104 )</h2>
 
-      <TakenCourseTable title="Engineering Core Courses" name="1" :courses="engineeringCoreCourses" :totalCredit="engineeringCoreTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Engineering Core Courses" name="1" :courses="engineeringCoreCourses" :totalCredit="engineeringCoreTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Major Required Courses" name="2" :courses="majorRequiredCourses" :totalCredit="majorRequiredTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Major Required Courses" name="2" :courses="majorRequiredCourses" :totalCredit="majorRequiredTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="Computer Engineering Elective Courses" name="3" :courses="computerEngineeringElectiveCourses" :totalCredit="computerEngineeringElectiveTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Computer Engineering Elective Courses" name="3" :courses="computerEngineeringElectiveCourses" :totalCredit="computerEngineeringElectiveTotalCreditText"></TakenCourseTable>
       
       <br><br>
 
-      <h2 style="text-align:left;">Special</h2>
+      <h2 style="text-align:left;">Special ( {{this.totalSpecialCoursesCredit}} out of 28 )</h2>
 
-      <TakenCourseTable title="Free Elective Courses" name="9" :courses="FreeElectiveCourses" :totalCredit="FreeElectiveTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Free Elective Courses" name="9" :courses="FreeElectiveCourses" :totalCredit="FreeElectiveTotalCreditText"></TakenCourseTable>
 
-      <TakenCourseTable title="I-Design Elective Courses" name="10" :courses="IDesignCourses" :totalCredit="IDesignTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="I-Design Elective Courses" name="10" :courses="IDesignCourses" :totalCredit="IDesignTotalCreditText"></TakenCourseTable>
+
+      <br><br>
+
+      <el-tag style="font-size: 30px;">Grand Total: {{this.totalGECredit + this.totalMajorCoursesCredit + this.totalSpecialCoursesCredit}} out of 170</el-tag>
       
 
     </el-collapse>
@@ -101,6 +109,19 @@
     </template>
   </el-dialog>
 
+  <!-- Search dialog box -->
+  <el-dialog title="Search a taken course" v-model="dialogSearchVisible" width="30%" center>
+    <!-- input -->
+    <div class="sub-title">Check if you have already taken a course</div>
+    <el-input v-model="searchInput" placeholder="Enter a Course ID" v-on:keyup.enter="search"></el-input>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogSearchVisible = false">Close</el-button>
+        <el-button type="primary" @click="search">Search</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
 </div>
 
 </template>
@@ -117,6 +138,8 @@ export default defineComponent({
       return {
         dialogAddVisible: false,
         dialogDeleteVisible: false,
+        dialogSearchVisible: false,
+        searchInput: ref(''),
         activeIndex: '2',
 
         foundationCourses: [],
@@ -145,6 +168,10 @@ export default defineComponent({
         IDesignTotalCredit: 0,
         FreeElectiveTotalCredit: 0,
 
+        totalGECredit: 0,
+        totalMajorCoursesCredit: 0,
+        totalSpecialCoursesCredit: 0,
+
         loading: true,
         categories: [],
 
@@ -165,8 +192,8 @@ export default defineComponent({
           this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
           this.$router.push({path: '/login'})
         } else {
-          if(res.data.user.studentID.substring(0,2) != '63'){
-            this.$message.warning({message: `You are not Generation 63. Redirecting you to Generation ${res.data.user.studentID.substring(0,2)}.`, duration: 6000})
+          if(res.data.user.studentID.substring(0,2) != '64'){
+            this.$message.warning({message: `You are not Generation 64. Redirecting you to Generation ${res.data.user.studentID.substring(0,2)}.`, duration: 6000})
             this.$router.push({path: `/takencourses${res.data.user.studentID.substring(0,2)}`})
           } else {
             this.user.name = res.data.user.firstname
@@ -225,6 +252,36 @@ export default defineComponent({
 
             this.IDesignTotalCredit = this.IDesignCourses.map(IDesignCourses => IDesignCourses.Credit).reduce((total, IDesignCourses) => IDesignCourses + total, 0)
 
+            this.totalGECredit = this.EnglishTotalCredit + this.lifeAppreciationTotalCredit + this.globalCitizenshipTotalCredit + this.criticalThinkingTotalCredit + this.leadershipTotalCredit + this.digitalLiteracyTotalCredit
+            
+            this.totalMajorCoursesCredit = this.engineeringCoreTotalCredit + this.majorRequiredTotalCredit + this.computerEngineeringElectiveTotalCredit
+
+            this.totalSpecialCoursesCredit = this.FreeElectiveTotalCredit + this.IDesignTotalCredit
+
+            this.foundationTotalCreditText = `Check with your advisor (or examination result) if you need to take the refresher courses`
+
+            this.EnglishTotalCreditText = `Total Credit Earned: ${this.EnglishTotalCredit} out of 12 - 16`
+            
+            this.lifeAppreciationTotalCreditText = `Total Credit Earned: ${this.lifeAppreciationTotalCredit} out of 4`
+
+            this.globalCitizenshipTotalCreditText = `Total Credit Earned: ${this.globalCitizenshipTotalCredit} out of 4`
+
+            this.criticalThinkingTotalCreditText = `Total Credit Earned: ${this.criticalThinkingTotalCredit} out of 4`
+            
+            this.leadershipTotalCreditText = `Total Credit Earned: ${this.leadershipTotalCredit} out of 4`
+
+            this.digitalLiteracyTotalCreditText = `Total Credit Earned: ${this.digitalLiteracyTotalCredit} out of 4`
+
+            this.engineeringCoreTotalCreditText = `Total Credit Earned: ${this.engineeringCoreTotalCredit} out of 38`
+            
+            this.majorRequiredTotalCreditText = `Total Credit Earned: ${this.majorRequiredTotalCredit} out of 58`
+
+            this.computerEngineeringElectiveTotalCreditText = `Total Credit Earned: ${this.computerEngineeringElectiveTotalCredit} out of 8`
+
+            this.FreeElectiveTotalCreditText = `Total Credit Earned: ${this.FreeElectiveTotalCredit} out of 8`
+
+            this.IDesignTotalCreditText = `Total Credit Earned: ${this.IDesignTotalCredit} out of 20`
+            
             this.loading = false
             })
             .catch((err) => {
@@ -398,6 +455,20 @@ export default defineComponent({
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
       },
+      search(){
+        var allCourses = this.foundationCourses.concat(this.EnglishCourses).concat(this.lifeAppreciationCourses)
+        .concat(this.globalCitizenshipCourses).concat(this.criticalThinkingCourses).concat(this.leadershipCourses)
+        .concat(this.digitalLiteracyCourses).concat(this.engineeringCoreCourses).concat(this.majorRequiredCourses)
+        .concat(this.computerEngineeringElectiveCourses).concat(this.FreeElectiveCourses).concat(this.IDesignCourses)
+        
+        const result = allCourses.find( ({ ID }) => ID == this.searchInput.toUpperCase() )
+        
+        if (result === undefined){
+          this.$notify.error({message: 'You have NOT taken that course yet!', title: 'Not Found!', duration: 6000})
+        } else {
+          this.$notify.success({message: 'You have ALREADY taken that course!', title: 'Found!', duration: 6000})
+        }
+      }
     }
   });
 </script>
