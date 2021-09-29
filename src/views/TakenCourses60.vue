@@ -54,8 +54,6 @@
       <h2 style="text-align:left;">Special</h2>
 
       <TakenCourseTable title="Free Elective Courses" name="9" :courses="FreeElectiveCourses" :totalCredit="FreeElectiveTotalCredit"></TakenCourseTable>
-
-      <TakenCourseTable title="I-Design Elective Courses" name="10" :courses="IDesignCourses" :totalCredit="IDesignTotalCredit"></TakenCourseTable>
       
 
     </el-collapse>
@@ -70,7 +68,6 @@
     <el-radio-group v-model="special" style="margin-top:25px;">
       <el-radio :label="1">Normal</el-radio>
       <el-radio :label="2">Free Elective</el-radio>
-      <el-radio :label="3">I-Design Elective</el-radio>
     </el-radio-group>
     <template #footer>
       <span class="dialog-footer">
@@ -120,7 +117,6 @@ export default defineComponent({
         SocialSciCourses:[],
         PECourses:[],
         FreeElectiveCourses:[],
-        IDesignCourses:[],
 
         CoreTotalCredit: 0,
         RequiredTotalCredit: 0,
@@ -131,7 +127,6 @@ export default defineComponent({
         SocialSciTotalCredit: 0,
         PETotalCredit: 0,
         FreeElectiveTotalCredit: 0,
-        IDesignTotalCredit: 0,
 
         loading: true,
         categories: [],
@@ -146,24 +141,20 @@ export default defineComponent({
       // Allow cookie to pass through CORS with " {withCredentials: true} ". Without this, there will either be CORS error or the backend will not be able to identy the
       // logged in session since no cookies was pass if we don't put " {withCredentials: true} ". This was the reason why "req.user.studentID" in backend was "undefined".
       // No cookies was send to the backend to identify the logged in user.
-      axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
+
+      axios.get('http://localhost:5000/getuser', {withCredentials: true})
+      .then(res => {
+        if (res.data == "Not Logged In") {
+          this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
+          this.$router.push({path: '/login'})
+        } else {
+          if(res.data.user.studentID.substring(0,2) != '60'){
+            this.$router.push({path: `/takencourses${res.data.user.studentID.substring(0,2)}`})
+          } else {
+            this.user.name = res.data.user.firstname
+
+            axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
             .then((res) => {
-            // console.log(res.data)
-
-            if (res.data == "Not Logged In") {
-              this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
-              this.$router.push({path: '/login'})
-            }
-
-            axios.get('http://localhost:5000/getuser', {withCredentials: true})
-            .then(res => {
-              this.user.name = res.data.user.firstname
-              if(res.data.user.studentID.substring(0,2) != '60'){
-                this.$router.push({path: `/takencourses${res.data.user.studentID.substring(0,2)}`})
-              } else {
-                this.loading = false
-              }
-            })
 
             //filter JSON data
             this.CoreCourses = res.data.filter(course => course.Category =="Core Courses" && course.remark == "none")
@@ -183,8 +174,6 @@ export default defineComponent({
             this.PECourses = res.data.filter(course => course.Category =="Health Science and Physical Education" && course.remark == "none")
 
             this.FreeElectiveCourses = res.data.filter(course => course.remark == "free elective")
-            
-            this.IDesignCourses = res.data.filter(course => course.remark == "i-design elective")
 
             //sum JSON object keys
             //Fixed reduce empty array by adding initial value ref:https://stackoverflow.com/questions/23359173/javascript-reduce-an-empty-array
@@ -206,12 +195,14 @@ export default defineComponent({
 
             this.FreeElectiveTotalCredit = this.FreeElectiveCourses.map(FreeElectiveCourses => FreeElectiveCourses.Credit).reduce((total, FreeElectiveCourses) => FreeElectiveCourses + total, 0)
 
-            this.IDesignTotalCredit = this.IDesignCourses.map(IDesignCourses => IDesignCourses.Credit).reduce((total, IDesignCourses) => IDesignCourses + total, 0)
-
+            this.loading = false
             })
             .catch((err) => {
               console.log(err)
             })
+          }
+        }
+      })
     },
     //logical concern for add and delete button
     setup() {
