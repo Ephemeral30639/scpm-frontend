@@ -129,7 +129,7 @@ import { defineComponent, ref } from 'vue'
             .then(response => {
                 if(response.data == 'Successfully Changed'){
                     alert('Change successful. Refreashing the page (changes might take a few seconds to appear). Refresh again a few moments later if update does not appear.')
-                    this.$router.go('/editcurrenttrimester')
+                    window.location.reload()
                 }
             })
         },
