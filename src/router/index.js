@@ -3,6 +3,8 @@ import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Test from '../views/Test.vue'
 import TakenCourses60 from '../views/TakenCourses60.vue'
+import TakenCourses61 from '../views/TakenCourses61.vue'
+import TakenCourses63 from '../views/TakenCourses63.vue'
 import TakenCourses64 from '../views/TakenCourses64.vue'
 import Makeup from '../views/Makeup.vue'
 import Login from '../views/Login.vue'
@@ -34,6 +36,16 @@ const routes = [
         path: '/takencourses60',
         name: 'TakenCourses60',
         component: TakenCourses60
+    },
+    {
+        path: '/takencourses61',
+        name: 'TakenCourses61',
+        component: TakenCourses61
+    },
+    {
+        path: '/takencourses63',
+        name: 'TakenCourses63',
+        component: TakenCourses63
     },
     {
         path: '/takencourses64',

@@ -148,8 +148,8 @@ export default defineComponent({
           this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
           this.$router.push({path: '/login'})
         } else {
-          if(res.data.user.studentID.substring(0,2) != '60'){
-            this.$message.warning({message: `You are not Generation 60. Redirecting you to Generation ${res.data.user.studentID.substring(0,2)}.`, duration: 6000})
+          if(res.data.user.studentID.substring(0,2) != '61'){
+            this.$message.warning({message: `You are not Generation 61. Redirecting you to Generation ${res.data.user.studentID.substring(0,2)}.`, duration: 6000})
             this.$router.push({path: `/takencourses${res.data.user.studentID.substring(0,2)}`})
           } else {
             this.user.name = res.data.user.firstname

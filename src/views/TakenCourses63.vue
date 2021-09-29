@@ -27,33 +27,43 @@
       
       <br>
 
+      <h2 style="text-align:left;">Refresher Courses</h2>
+
+      <TakenCourseTable title="Foundation Courses" name="4" :courses="foundationCourses" :totalCredit="foundationTotalCredit"></TakenCourseTable>
+
+      <br><br>
+
       <h2 style="text-align:left;">General Education</h2>
 
       <TakenCourseTable title="English Communication" name="4" :courses="EnglishCourses" :totalCredit="EnglishTotalCredit"></TakenCourseTable>
 
-      <TakenCourseTable title="Natural Sciences" name="5" :courses="NatSciCourses" :totalCredit="NatSciTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Life Appreciation" name="5" :courses="lifeAppreciationCourses" :totalCredit="lifeAppreciationTotalCredit"></TakenCourseTable>
 
-      <TakenCourseTable title="Humanities" name="6" :courses="HumanityCourses" :totalCredit="HumanityTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Global Citizenship" name="6" :courses="globalCitizenshipCourses" :totalCredit="globalCitizenshipTotalCredit"></TakenCourseTable>
 
-      <TakenCourseTable title="Social Sciences" name="7" :courses="SocialSciCourses" :totalCredit="SocialSciTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Critical Thinking" name="7" :courses="criticalThinkingCourses" :totalCredit="criticalThinkingTotalCredit"></TakenCourseTable>
 
-      <TakenCourseTable title="Health Science and Physical Education" name="8" :courses="PECourses" :totalCredit="PETotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Leadership" name="8" :courses="leadershipCourses" :totalCredit="leadershipTotalCredit"></TakenCourseTable>
+
+      <TakenCourseTable title="Digital Literacy" name="9" :courses="digitalLiteracyCourses" :totalCredit="digitalLiteracyTotalCredit"></TakenCourseTable>
 
       <br><br>
 
       <h2 style="text-align:left;">Major Courses</h2>
 
-      <TakenCourseTable title="Core Courses" name="1" :courses="CoreCourses" :totalCredit="CoreTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Engineering Core Courses" name="1" :courses="engineeringCoreCourses" :totalCredit="engineeringCoreTotalCredit"></TakenCourseTable>
 
-      <TakenCourseTable title="Required Major Courses" name="2" :courses="RequiredCourses" :totalCredit="RequiredTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Major Required Courses" name="2" :courses="majorRequiredCourses" :totalCredit="majorRequiredTotalCredit"></TakenCourseTable>
 
-      <TakenCourseTable title="Elective Major Courses" name="3" :courses="ElectiveCourses" :totalCredit="ElectiveTotalCredit"></TakenCourseTable>
+      <TakenCourseTable title="Computer Engineering Elective Courses" name="3" :courses="computerEngineeringElectiveCourses" :totalCredit="computerEngineeringElectiveTotalCredit"></TakenCourseTable>
       
       <br><br>
 
       <h2 style="text-align:left;">Special</h2>
 
       <TakenCourseTable title="Free Elective Courses" name="9" :courses="FreeElectiveCourses" :totalCredit="FreeElectiveTotalCredit"></TakenCourseTable>
+
+      <TakenCourseTable title="I-Design Elective Courses" name="10" :courses="IDesignCourses" :totalCredit="IDesignTotalCredit"></TakenCourseTable>
       
 
     </el-collapse>
@@ -68,6 +78,7 @@
     <el-radio-group v-model="special" style="margin-top:25px;">
       <el-radio :label="1">Normal</el-radio>
       <el-radio :label="2">Free Elective</el-radio>
+      <el-radio :label="3">I-Design Elective</el-radio>
     </el-radio-group>
     <template #footer>
       <span class="dialog-footer">
@@ -108,24 +119,30 @@ export default defineComponent({
         dialogDeleteVisible: false,
         activeIndex: '2',
 
-        CoreCourses:[],
-        RequiredCourses:[],
-        ElectiveCourses:[],
+        foundationCourses: [],
         EnglishCourses:[],
-        NatSciCourses:[],
-        HumanityCourses:[],
-        SocialSciCourses:[],
-        PECourses:[],
+        lifeAppreciationCourses: [],
+        globalCitizenshipCourses: [],
+        criticalThinkingCourses: [],
+        leadershipCourses: [],
+        digitalLiteracyCourses: [],
+        engineeringCoreCourses: [],
+        majorRequiredCourses: [],
+        computerEngineeringElectiveCourses: [],
+        IDesignCourses:[],
         FreeElectiveCourses:[],
 
-        CoreTotalCredit: 0,
-        RequiredTotalCredit: 0,
-        ElectiveTotalCredit: 0,
+        foundationTotalCredit: 0,
         EnglishTotalCredit: 0,
-        NatSciTotalCredit: 0,
-        HumanityTotalCredit: 0,
-        SocialSciTotalCredit: 0,
-        PETotalCredit: 0,
+        lifeAppreciationTotalCredit: 0,
+        globalCitizenshipTotalCredit: 0,
+        criticalThinkingTotalCredit: 0,
+        leadershipTotalCredit: 0,
+        digitalLiteracyTotalCredit: 0,
+        engineeringCoreTotalCredit: 0,
+        majorRequiredTotalCredit: 0,
+        computerEngineeringElectiveTotalCredit: 0,
+        IDesignTotalCredit: 0,
         FreeElectiveTotalCredit: 0,
 
         loading: true,
@@ -148,8 +165,8 @@ export default defineComponent({
           this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
           this.$router.push({path: '/login'})
         } else {
-          if(res.data.user.studentID.substring(0,2) != '60'){
-            this.$message.warning({message: `You are not Generation 60. Redirecting you to Generation ${res.data.user.studentID.substring(0,2)}.`, duration: 6000})
+          if(res.data.user.studentID.substring(0,2) != '63'){
+            this.$message.warning({message: `You are not Generation 63. Redirecting you to Generation ${res.data.user.studentID.substring(0,2)}.`, duration: 6000})
             this.$router.push({path: `/takencourses${res.data.user.studentID.substring(0,2)}`})
           } else {
             this.user.name = res.data.user.firstname
@@ -158,43 +175,55 @@ export default defineComponent({
             .then((res) => {
 
             //filter JSON data
-            this.CoreCourses = res.data.filter(course => course.Category =="Core Courses" && course.remark == "none")
-
-            this.RequiredCourses = res.data.filter(course => course.Category =="Required Major Courses" && course.remark == "none")
-
-            this.ElectiveCourses = res.data.filter(course => course.Category =="Elective Major Courses" && course.remark == "none")
+            this.foundationCourses = res.data.filter(course => course.Category =="Foundation Courses" && course.remark == "none")
 
             this.EnglishCourses = res.data.filter(course => course.Category =="English Communication" && course.remark == "none")
+
+            this.lifeAppreciationCourses = res.data.filter(course => course.Category =="Life Appreciation" && course.remark == "none")
+
+            this.globalCitizenshipCourses = res.data.filter(course => course.Category =="Global Citizenship" && course.remark == "none")
                   
-            this.NatSciCourses = res.data.filter(course => course.Category =="Natural Sciences" && course.remark == "none")
+            this.criticalThinkingCourses = res.data.filter(course => course.Category =="Critical Thinking" && course.remark == "none")
                         
-            this.HumanityCourses = res.data.filter(course => course.Category =="Humanities" && course.remark == "none")
+            this.leadershipCourses = res.data.filter(course => course.Category =="Leadership" && course.remark == "none")
 
-            this.SocialSciCourses = res.data.filter(course => course.Category =="Social Sciences" && course.remark == "none")
+            this.digitalLiteracyCourses = res.data.filter(course => course.Category =="Digital Literacy" && course.remark == "none")
 
-            this.PECourses = res.data.filter(course => course.Category =="Health Science and Physical Education" && course.remark == "none")
+            this.engineeringCoreCourses = res.data.filter(course => course.Category =="Engineering Core Courses" && course.remark == "none")
+
+            this.majorRequiredCourses = res.data.filter(course => course.Category =="Major Required Courses" && course.remark == "none")
+
+            this.computerEngineeringElectiveCourses = res.data.filter(course => course.Category =="Computer Engineering Elective Courses" && course.remark == "none")
 
             this.FreeElectiveCourses = res.data.filter(course => course.remark == "free elective")
 
+            this.IDesignCourses = res.data.filter(course => course.remark == "i-design elective")
+
             //sum JSON object keys
             //Fixed reduce empty array by adding initial value ref:https://stackoverflow.com/questions/23359173/javascript-reduce-an-empty-array
-            this.CoreTotalCredit = this.CoreCourses.map(CoreCourses => CoreCourses.Credit).reduce((total, CoreCourses) => CoreCourses + total, 0)
-
-            this.RequiredTotalCredit = this.RequiredCourses.map(RequiredCourses => RequiredCourses.Credit).reduce((total, RequiredCourses) => RequiredCourses + total, 0)
-
-            this.ElectiveTotalCredit = this.ElectiveCourses.map(ElectiveCourses => ElectiveCourses.Credit).reduce((total, ElectiveCourses) => ElectiveCourses + total, 0)
+            this.foundationTotalCredit = this.foundationCourses.map(foundationCourses => foundationCourses.Credit).reduce((total, foundationCourses) => foundationCourses + total, 0)
 
             this.EnglishTotalCredit = this.EnglishCourses.map(EnglishCourses => EnglishCourses.Credit).reduce((total, EnglishCourses) => EnglishCourses + total, 0)
 
-            this.NatSciTotalCredit = this.NatSciCourses.map(NatSciCourses => NatSciCourses.Credit).reduce((total, NatSciCourses) => NatSciCourses + total, 0)
+            this.lifeAppreciationTotalCredit = this.lifeAppreciationCourses.map(lifeAppreciationCourses => lifeAppreciationCourses.Credit).reduce((total, lifeAppreciationCourses) => lifeAppreciationCourses + total, 0)
 
-            this.HumanityTotalCredit = this.HumanityCourses.map(HumanityCourses => HumanityCourses.Credit).reduce((total, HumanityCourses) => HumanityCourses + total, 0)
+            this.globalCitizenshipTotalCredit = this.globalCitizenshipCourses.map(globalCitizenshipCourses => globalCitizenshipCourses.Credit).reduce((total, globalCitizenshipCourses) => globalCitizenshipCourses + total, 0)
 
-            this.SocialSciTotalCredit = this.SocialSciCourses.map(SocialSciCourses => SocialSciCourses.Credit).reduce((total, SocialSciCourses) => SocialSciCourses + total, 0)
+            this.criticalThinkingTotalCredit = this.criticalThinkingCourses.map(criticalThinkingCourses => criticalThinkingCourses.Credit).reduce((total, criticalThinkingCourses) => criticalThinkingCourses + total, 0)
 
-            this.PETotalCredit = this.PECourses.map(PECourses => PECourses.Credit).reduce((total, PECourses) => PECourses + total, 0)
+            this.leadershipTotalCredit = this.leadershipCourses.map(leadershipCourses => leadershipCourses.Credit).reduce((total, leadershipCourses) => leadershipCourses + total, 0)
+
+            this.digitalLiteracyTotalCredit = this.digitalLiteracyCourses.map(digitalLiteracyCourses => digitalLiteracyCourses.Credit).reduce((total, digitalLiteracyCourses) => digitalLiteracyCourses + total, 0)
+
+            this.engineeringCoreTotalCredit = this.engineeringCoreCourses.map(engineeringCoreCourses => engineeringCoreCourses.Credit).reduce((total, engineeringCoreCourses) => engineeringCoreCourses + total, 0)
+
+            this.majorRequiredTotalCredit = this.majorRequiredCourses.map(majorRequiredCourses => majorRequiredCourses.Credit).reduce((total, majorRequiredCourses) => majorRequiredCourses + total, 0)
+
+            this.computerEngineeringElectiveTotalCredit = this.computerEngineeringElectiveCourses.map(computerEngineeringElectiveCourses => computerEngineeringElectiveCourses.Credit).reduce((total, computerEngineeringElectiveCourses) => computerEngineeringElectiveCourses + total, 0)
 
             this.FreeElectiveTotalCredit = this.FreeElectiveCourses.map(FreeElectiveCourses => FreeElectiveCourses.Credit).reduce((total, FreeElectiveCourses) => FreeElectiveCourses + total, 0)
+
+            this.IDesignTotalCredit = this.IDesignCourses.map(IDesignCourses => IDesignCourses.Credit).reduce((total, IDesignCourses) => IDesignCourses + total, 0)
 
             this.loading = false
             })
