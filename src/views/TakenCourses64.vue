@@ -114,6 +114,7 @@
     <!-- input -->
     <div class="sub-title">Check if you have already taken a course</div>
     <el-input v-model="searchInput" placeholder="Enter a Course ID" v-on:keyup.enter="search"></el-input>
+    <em class="sub-title">Please check your spelling carefully (case insensitive)</em>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogSearchVisible = false">Close</el-button>
