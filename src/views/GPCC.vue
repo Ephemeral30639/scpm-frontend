@@ -74,6 +74,10 @@ export default defineComponent({
       // This is probably where you connect backend to ask for active courses in the active trimeester.
       axios.get('http://localhost:5000/gpcc')
       .then((response) => {
+        if(response.data == 'Error'){
+          this.$message.error({message: 'Failed to load GPCC data courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+          return
+        }
         var data = response.data
         var courses = []
         for (var i = 0; i < data.length; i++){
@@ -104,6 +108,10 @@ export default defineComponent({
     this.allLoading = true
     axios.get('http://localhost:5000/gpcc')
     .then(response => {
+      if(response.data == 'Error'){
+        this.$message.error({message: 'Failed to load GPCC data. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+        return
+      }
       var data = response.data
       // Your Code here.
       for (var i = 0; i < data.length; i++){

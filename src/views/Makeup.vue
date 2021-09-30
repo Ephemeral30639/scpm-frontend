@@ -235,13 +235,17 @@ export default defineComponent({
       axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
       .then(response => {
           if (response.data == "Error"){
-            this.$message.error({message: 'An Error has occured. Please refresh the page.', duration: 4000})
+            this.$message.error({message: 'Failed to load current trimester. Please wait a moment and refresh the page to try again', duration: 4000})
           } else {
             var trimester = response.data[0].trimester
           }
 
           axios.get('http://localhost:5000/makeup/getactivecourses', {params:{trimester: trimester}})
           .then((response) => {
+            if(response.data == 'Error'){
+              this.$message.error({message: 'Failed to load active courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+              return
+            }
             var data = []
             for (var i = 0; i < response.data.length; i++){
               data.push({value: response.data[i].Course_ID})
@@ -270,6 +274,10 @@ export default defineComponent({
       this.tableLoading = true
       axios.get('http://localhost:5000/makeup/getmakeup', {params:{course: item.value, trimester: this.trimester}})
       .then(response => {
+        if(response.data == 'Error'){
+          this.$message.error({message: 'Failed to load makeup data. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+          return
+        }
         var data = response.data
         console.log(data)
 
@@ -471,7 +479,7 @@ export default defineComponent({
     axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
     .then(response => {
       if (response.data == "Error"){
-        this.$message.error({message: 'An Error has occured. Please refresh the page.', duration: 4000})
+        this.$message.error({message: 'Failed to load current trimester. Please wait a moment and refresh the page to try again.', duration: 4000})
       } else {
         this.trimester = response.data[0].trimester
         this.allLoading = false

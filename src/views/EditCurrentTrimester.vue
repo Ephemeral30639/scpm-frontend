@@ -128,6 +128,10 @@ import { defineComponent, ref } from 'vue'
             axios.defaults.withCredentials = true
             axios.get('http://localhost:5000/getcurrenttrimester/changecurrenttrimester', {params:{current: this.trimester, new: this.value}})
             .then(response => {
+                if(response.data == 'Error'){
+                    this.$message.error({message: 'Failed to change trimester. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                    return
+                }
                 if(response.data == 'Successfully Changed'){
                     alert('Change successful. Refreashing the page (changes might take a few seconds to appear). Refresh again a few moments later if update does not appear.')
                     window.location.reload()
@@ -152,6 +156,10 @@ import { defineComponent, ref } from 'vue'
             var time = `${this.timeStart} - ${this.timeEnd}`
             axios.post('http://localhost:5000/edittrimester/addschedule', null, {params:{id: this.input, date: this.dayRadio, time: time, trimester: this.trimester}})
             .then(response => {
+                if(response.data == 'Error'){
+                    this.$message.error({message: 'Failed to add schedule. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                    return
+                }
                 console.log(response.data)
                 if(response.data == 'Scheduled Added'){
                     this.$notify.success({message: 'Schedule Successfully Added', duration: 6000})
@@ -169,6 +177,10 @@ import { defineComponent, ref } from 'vue'
             }
             axios.post('http://localhost:5000/edittrimester/deleteschedule', null, {params:{trimester: this.trimester, courses: coursesToDelete}}, {withCredentials: true})
             .then(response => {
+                if(response.data == 'Error'){
+                    this.$message.error({message: 'Failed to delte schedule. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                    return
+                }
                 if(response.data == 'Delete Successful'){
                     alert('Successfully Deleted Schedule (changes might take a few seconds to appear). Please wait a moment and refresh again to check.')
                     this.$router.go('/editcurrenttrimester')
@@ -228,6 +240,10 @@ import { defineComponent, ref } from 'vue'
 
         axios.get('http://localhost:5000/getcurrenttrimester/availabletrimesters')
         .then(response => {
+            if(response.data == 'Error'){
+                this.$message.error({message: 'Failed to load all trimesters. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                return
+            }
             console.log(response.data)
             for(var i = 0; i< response.data.length; i++){
                 this.options.push({value: response.data[i].trimester, label: response.data[i].trimester})
@@ -236,10 +252,18 @@ import { defineComponent, ref } from 'vue'
 
         axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
         .then(response => {
+            if(response.data == 'Error'){
+                this.$message.error({message: 'Failed to load current trimester. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                return
+            }
             this.trimester = response.data[0].trimester
 
             axios.get('http://localhost:5000/getcurrenttrimester/timetable', {params:{trimester: this.trimester}})
             .then(response => {
+                if(response.data == 'Error'){
+                    this.$message.error({message: 'Failed to load timetable. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                    return
+                }
 
                 var data = response.data
                 var course = []

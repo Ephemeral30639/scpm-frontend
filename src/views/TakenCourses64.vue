@@ -194,13 +194,17 @@ export default defineComponent({
           this.$router.push({path: '/login'})
         } else {
           if(res.data.user.studentID.substring(0,2) != '64'){
-            this.$message.warning({message: `You are not Generation 64. Redirecting you to Generation ${res.data.user.studentID.substring(0,2)}.`, duration: 6000})
+            this.$message.warning({message: `Redirecting you to Generation ${res.data.user.studentID.substring(0,2)}.`, duration: 6000})
             this.$router.push({path: `/takencourses${res.data.user.studentID.substring(0,2)}`})
           } else {
             this.user.name = res.data.user.firstname
 
             axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
             .then((res) => {
+            if(res.data == 'Error'){
+              this.$message.error({message: 'Failed to load taken courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+              return
+            }
 
             //filter JSON data
             this.foundationCourses = res.data.filter(course => course.Category =="Foundation Courses" && course.remark == "none")
@@ -331,6 +335,10 @@ export default defineComponent({
         //load all non taken courses for adding
         axios.get('http://localhost:5000/taken-courses/loadcourselist', {withCredentials: true})
         .then((response) => {
+          if(response.data == 'Error'){
+            this.$message.error({message: 'Failed to load course list. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+            return
+          }
           // console.log('hello')
           // console.log(response)
           var data = []
@@ -344,6 +352,10 @@ export default defineComponent({
         //load all taken courses for deleting
         axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
         .then((response) => {
+          if(response.data == 'Error'){
+            this.$message.error({message: 'Failed to load taken courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+            return
+          }
           // console.log('hello')
           // console.log(response)
           var data = []
@@ -384,6 +396,10 @@ export default defineComponent({
           console.log("confirm add " + addChoice.value + " as " + remark)
           axios.get("http://localhost:5000/taken-courses/addtakencourse/" + addChoice.value + '/' + remark, {withCredentials: true})
           .then((res) => {
+            if(res.data == 'Error'){
+              this.$message.error({message: 'Failed to add course. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+              return
+            }
             console.log('adding..')
             console.log(res.data)
             if(res.data == "add success"){
@@ -414,6 +430,10 @@ export default defineComponent({
           console.log("confirm delete " + deleteChoice.value)
           axios.delete("http://localhost:5000/taken-courses/deletetakencourse/" + deleteChoice.value , {withCredentials: true})
           .then((res) => {
+            if(res.data == 'Error'){
+              this.$message.error({message: 'Failed to delete course. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+              return
+            }
             console.log('deleting..')
             console.log(res.data)
             if(res.data == "delete success"){

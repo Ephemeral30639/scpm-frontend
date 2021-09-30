@@ -109,6 +109,10 @@ export default {
         // Load all the courses
         axios.get('http://localhost:5000/comments/getallcourses')
         .then(response => {
+            if(response.data == 'Error'){
+              this.$message.error({message: 'Failed to load the courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+              return
+            }
             for(var i = 0; i < response.data.length; i++){
                 this.courses.push({label: response.data[i].ID})
             }
@@ -139,6 +143,10 @@ export default {
             // Get course name to display on the right side.
             axios.get('http://localhost:5000/comments/getcoursename', {params:{course: data.label}})
             .then(response => {
+                if(response.data == 'Error'){
+                    this.$message.error({message: 'Failed to load the course name. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                    return
+                }
                 this.courseDisplay = {ID: data.label, Name: response.data[0].Name}
             })
 
@@ -148,6 +156,10 @@ export default {
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
             axios.get('http://localhost:5000/comments/getcoursecomments', {params:{course: data.label}})
             .then(response => {
+                if(response.data == 'Error'){
+                    this.$message.error({message: 'Failed to load course comments. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                    return
+                }
                 
                 // If the selected Course has no comment, warn the user.
                 if(response.data == ''){
@@ -195,6 +207,10 @@ export default {
             var timestamp = Date.now()
             axios.post('http://localhost:5000/comments/inputcomment', null, {params:{commentID: commentID, courseID: this.courseDisplay.ID, comment: this.commmentInput, timestamp: timestamp, studentID: 'Not Anonymous'}})
             .then(response => {
+                if(response.data == 'Error'){
+                    this.$message.error({message: 'Failed to comment. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                    return
+                }
 
                 // If comment was a success, push the comment to commentData to visualize succession.
                 if (response.data == 'Comment Successful'){

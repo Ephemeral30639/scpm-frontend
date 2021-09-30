@@ -97,6 +97,10 @@ import axios from 'axios'
         axios.defaults.withCredentials = true
         axios.post('http://localhost:5000/enrollment/unenroll', this.multipleSelection, {params:{trimester: this.trimester}})
         .then(response => {
+          if(response.data == 'Error'){
+            this.$message.error({message: 'Failed to unenroll. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+            return
+          }
             if (response.data == 'Success'){
                 this.$message.success({message: 'Successfully Unenrolled', duration: 4000})
                 this.$router.push({path: '/'})
@@ -109,11 +113,15 @@ import axios from 'axios'
         axios.defaults.withCredentials = true
         axios.post('http://localhost:5000/enrollment/enroll', this.multipleSelection, {params:{trimester: this.trimester}})
         .then(response => {
-            if (response.data == 'Success'){
-                this.$message.success({message: 'Successfully Enrolled', duration: 4000})
-                this.$router.push({path: '/'})
-                this.allLoading = false
-            }
+          if(response.data == 'Error'){
+            this.$message.error({message: 'Failed to enroll. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+            return
+          }
+          if (response.data == 'Success'){
+              this.$message.success({message: 'Successfully Enrolled', duration: 4000})
+              this.$router.push({path: '/'})
+              this.allLoading = false
+          }
         })
       },
       openDialog(){
@@ -124,6 +132,10 @@ import axios from 'axios'
         axios.defaults.withCredentials = true
         axios.get('http://localhost:5000/getcurrenttrimester/studentcurrentenrollment', {params:{trimester: this.trimester}})
         .then(response => {
+          if(response.data == 'Error'){
+            this.$message.error({message: 'Failed to load your enrollment. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+            return
+          }
             // console.log(response.data)
 
             var data = response.data
@@ -205,10 +217,18 @@ import axios from 'axios'
       axios.defaults.withCredentials = true
       axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
         .then(response => {
+            if(response.data == 'Error'){
+              this.$message.error({message: 'Failed to load current trimester. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+              return
+            }
             this.trimester = response.data[0].trimester
 
             axios.get('http://localhost:5000/getcurrenttrimester/timetable', {params:{trimester: this.trimester}})
             .then(response => {
+                if(response.data == 'Error'){
+                  this.$message.error({message: 'Failed to load timetable. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                  return
+                }
 
                 // Check if the user is logged in.
                 if (response.data == "Not Logged In") {

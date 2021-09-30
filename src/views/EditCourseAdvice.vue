@@ -127,6 +127,10 @@ export default defineComponent({
       // This is probably where you connect backend to ask for active courses in the active trimeester.
       axios.get('http://localhost:5000/advice/getalladvice')
       .then((response) => {
+        if(response.data == 'Error'){
+            this.$message.error({message: 'Failed to load advices. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+            return
+        }
         var data = []
         for (var i = 0; i < response.data.length; i++){
           data.push({value: response.data[i].courseID})
@@ -151,6 +155,10 @@ export default defineComponent({
       handleSelect(item) {
         axios.get('http://localhost:5000/advice/getspecificadvice', {params:{course: item.value}})
         .then(response =>{
+            if(response.data == 'Error'){
+                this.$message.error({message: 'Failed to load specifc advice. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                return
+            }
             this.editForm.category = response.data[0].category
             this.editForm.courseID = response.data[0].courseID
             this.editForm.adviceText = response.data[0].adviceText
@@ -167,6 +175,10 @@ export default defineComponent({
                     this.loading = true
                     axios.post('http://localhost:5000/advice/createadvice', null, {params: this.form})
                     .then(response => {
+                        if(response.data == 'Error'){
+                            this.$message.error({message: 'Failed to create advice. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                            return
+                        }
                         if(response.data == 'Successfully Created'){
                             this.$message.success({message: 'Advice Successfully Created', duration: 4000})
                             this.resetForm('form')
@@ -186,6 +198,10 @@ export default defineComponent({
                 this.loading = true
                 axios.post('http://localhost:5000/advice/editadvice', null, {params: this.editForm})
                 .then(response => {
+                    if(response.data == 'Error'){
+                        this.$message.error({message: 'Failed to edit an advice. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                        return
+                    }
                     if(response.data == 'Successfully Edit'){
                         this.$message.success({message: 'Successfully Edited', duration: 4000})
                         this.editFormDisabled = true
@@ -203,6 +219,10 @@ export default defineComponent({
         this.loading = true
         axios.delete('http://localhost:5000/advice/deleteadvice', {params: this.editForm})
         .then(response => {
+            if(response.data == 'Error'){
+                this.$message.error({message: 'Failed to delete an advice. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                return
+            }
             if(response.data == 'Successfully Delete'){
                 this.$message.success({message: 'Successfully Deleted', duration: 4000})
                 this.editFormDisabled = true
@@ -244,6 +264,10 @@ export default defineComponent({
 
                 axios.get('http://localhost:5000/advice/getalladvicecategory')
                 .then(response => {
+                    if(response.data == 'Error'){
+                        this.$message.error({message: 'Failed to load advice categories. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                        return
+                    }
                     for(var i = 0; i < response.data.length; i++){
                         this.categoryLabels.push(response.data[i].category)
                     }
