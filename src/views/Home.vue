@@ -25,10 +25,10 @@
   <el-col :span="6">
     <div class="grid-content bg-purple"></div>
     <el-card :body-style="{ padding: '0px' }">
-      <img src="../assets/suggestion-icon.jpg" class="image">
+      <img src="../assets/advice-comment-icon.jpg" class="image">
       <div style="padding: 14px;">
-        <h2>Course Suggestions</h2>
-        <span>Suggest the next course you should take based on your taken courses</span>
+        <h2>Course Advices and Comments</h2>
+        <span>Worry about the next course you should take? Check out advices from seniors or comments from fellow students on how the course will be like</span>
         <div class="center" style="padding-top: 15px;">
           <el-button type="primary">Use</el-button>
         </div>

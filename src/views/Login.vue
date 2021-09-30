@@ -21,7 +21,7 @@
 
   <el-col :span="12">
     <div style="padding-top: 50px;">
-      <img src="../assets/registration-logo.jpg" alt="Girl in a jacket">
+      <img src="../assets/login-logo.jpg" alt="Girl in a jacket">
     </div>
   </el-col>
 
