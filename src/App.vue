@@ -13,11 +13,13 @@
     active-text-color="#ffd04b">
     
     <el-menu-item index="/"><router-link style="text-decoration: none; color: inherit;" to='/'>Home</router-link></el-menu-item>
+
+    <!-- <el-menu-item index="/abouttheweb"><router-link style="text-decoration: none; color: inherit;" to='/'>About the Web</router-link></el-menu-item> -->
     
-    <el-submenu index="2">
+    <el-submenu index="features">
       <template #title>Features</template>
       <el-menu-item index="/takencourses60"><router-link style="text-decoration: none; color: inherit;" to='/takencourses60'>Course and Credit Tracking</router-link></el-menu-item>
-      <el-submenu inddex="3">
+      <el-submenu inddex="advice and comments">
         <template #title>Advice and Comments</template>
           <el-menu-item index="/courseadvice"><router-link style="text-decoration: none; color: inherit;" to='/courseadvice'>Course Advice</router-link></el-menu-item>
           <el-menu-item index="/coursecomment"><router-link style="text-decoration: none; color: inherit;" to='/coursecomment'>Course Comments</router-link></el-menu-item>
@@ -28,7 +30,7 @@
     
     <el-menu-item index="/enroll"><router-link style="text-decoration: none; color: inherit;" to='/enroll'>Enroll</router-link></el-menu-item>
 
-    <el-submenu index="4">
+    <el-submenu index="log in and log out">
       <template #title>Login / Logout</template>
       <el-menu-item index="/login"><router-link style="text-decoration: none; color: inherit;" to='/login'>Login</router-link></el-menu-item>
       <el-menu-item index="/logout"><router-link style="text-decoration: none; color: inherit;" to='/logout'>Logout</router-link></el-menu-item> 
@@ -36,7 +38,7 @@
     
     <el-menu-item index="/register"><router-link style="text-decoration: none; color: inherit;" to='/register'>Register</router-link></el-menu-item>
 
-    <el-submenu index="5" v-show="adminToolShow">
+    <el-submenu index="admintool" v-show="adminToolShow">
       <template #title>Admin Tools</template>
       <el-menu-item index="/editcourseadvice"><router-link style="text-decoration: none; color: inherit;" to='/editcourseadvice'>Edit Course Advice</router-link></el-menu-item>
       <el-menu-item index="/editcurrenttrimester"><router-link style="text-decoration: none; color: inherit;" to='/editcurrenttrimester'>Edit Current Trimester</router-link></el-menu-item>
