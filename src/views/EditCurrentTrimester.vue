@@ -26,12 +26,13 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
         max-height="350"
+        :default-sort = "{prop: 'id', order: 'ascending'}"
         >
         <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column label="ID">
+        <el-table-column label="ID" sortable>
             <template #default="scope">{{ scope.row.id }}</template>
         </el-table-column>
-        <el-table-column property="name" label="Name">
+        <el-table-column property="name" label="Name" sortable>
         </el-table-column>
         <el-table-column property="day" label="Day">
         </el-table-column>

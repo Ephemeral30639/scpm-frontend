@@ -4,19 +4,21 @@
 
     <el-table
       :data="tableData.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
-      :default-sort = "{prop: 'id', order: 'asending'}"
+      :default-sort = "{prop: 'id', order: 'ascending'}"
       stripe
       style="width: 100%"
       >
       <el-table-column
         prop="id"
         label="ID"
-        width="180">
+        width="180"
+        sortable>
       </el-table-column>
       <el-table-column
         prop="name"
         label="Name"
-        width="180">
+        width="450"
+        sortable>
       </el-table-column>
       <el-table-column
         prop="gen60"

@@ -10,12 +10,13 @@
       style="width: 80%; margin: auto; box-shadow: 0 8px 6px rgba(0,0,0,0.12),0 0 6px rgba(0,0,0,0.04);"
       @selection-change="handleSelectionChange"
       max-height="400"
+      :default-sort = "{prop: 'id', order: 'ascending'}"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column label="ID">
+      <el-table-column prop="id" label="ID" width="150" sortable>
         <template #default="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column property="name" label="Name">
+      <el-table-column property="name" label="Name" sortable>
       </el-table-column>
       <el-table-column property="day" label="Day">
       </el-table-column>
