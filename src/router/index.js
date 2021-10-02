@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import About from '../views/AboutTheWeb.vue'
 import Register from '../views/Register.vue'
 import Test from '../views/Test.vue'
+import TakenCoursesJunction from '../views/TakenCoursesJunction.vue'
 import TakenCourses60 from '../views/TakenCourses60.vue'
 import TakenCourses61 from '../views/TakenCourses61.vue'
 import TakenCourses63 from '../views/TakenCourses63.vue'
@@ -37,6 +38,11 @@ const routes = [
         path: '/test',
         name: 'Test',
         component: Test
+    },
+    {
+        path: '/takencoursesjunction',
+        name: 'TakenCoursesJunction',
+        component: TakenCoursesJunction
     },
     {
         path: '/takencourses60',
