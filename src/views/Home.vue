@@ -15,7 +15,7 @@
         <h2>Course and Credit Tracking</h2>
         <span>Keep track of the courses you have taken and the credits you have obtained so far</span>
         <div class="center" style="padding-top: 15px;">
-          <el-button type="primary">Use</el-button>
+          <el-button type="primary" @click="featureCardsUseButtons('takencourses')">Use</el-button>
         </div>
       </div>
     </el-card>
@@ -30,7 +30,8 @@
         <h2>Course Advices and Comments</h2>
         <span>Worry about the next course you should take? Check out advices from seniors or comments from fellow students on how the course will be like</span>
         <div class="center" style="padding-top: 15px;">
-          <el-button type="primary">Use</el-button>
+          <el-button type="primary" @click="featureCardsUseButtons('advice')">Advices</el-button>
+          <el-button type="primary" @click="featureCardsUseButtons('comment')">Comments</el-button>
         </div>
       </div>
     </el-card>
@@ -45,7 +46,7 @@
         <h2>GPCC</h2>
         <span>Generation Per Course Counter. Check how many students in a generation has taken a specific course</span>
         <div class="center" style="padding-top: 15px;">
-          <el-button type="primary">Use</el-button>
+          <el-button type="primary" @click="featureCardsUseButtons('GPCC')">Use</el-button>
         </div>
       </div>
     </el-card>
@@ -60,7 +61,7 @@
         <h2>Makeup Finder</h2>
         <span>Find available timeslots for your cancelled classes in an efficient manner</span>
         <div class="center" style="padding-top: 15px;">
-          <el-button type="primary">Use</el-button>
+          <el-button type="primary" @click="featureCardsUseButtons('makeup')">Use</el-button>
         </div>
       </div>
     </el-card>
@@ -80,6 +81,25 @@
     methods: {
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
+      },
+      featureCardsUseButtons(feature){
+        switch(feature){
+          case 'takencourses':
+            this.$router.push({path: '/takencoursesjunction'})
+            break
+          case 'advice':
+            this.$router.push({path: '/courseadvice'})
+            break
+          case 'comment':
+            this.$router.push({path: '/coursecomment'})
+            break
+          case 'GPCC':
+            this.$router.push({path: '/gpcc'})
+            break
+          case 'makeup':
+            this.$router.push({path: '/makeup'})
+            break
+        }
       }
     }
   }
