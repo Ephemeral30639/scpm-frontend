@@ -58,7 +58,11 @@
                 </div>
                 <el-form ref="editForm" :model="editForm" label-width="120px" :disabled="editFormDisabled">
                     <el-form-item label="Category" prop="category" :rules="[{required: true, message: 'Cannot be empty.'}]">
-                        <el-input v-model="editForm.category"></el-input>
+                        <el-select v-model="selectEdit" placeholder="Select a category" @change="onSelectEdit" style="width: 300px; justify-content: flex-start; display: flex;">
+                            <div v-for="o in categoryLabelsEdit.length" :key="o">
+                                <el-option :label="categoryLabelsEdit[parseInt(o-1)]" :value="categoryLabelsEdit[parseInt(o-1)]"></el-option>
+                            </div>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="Course ID" prop="courseID" :rules="[{required: true, message: 'Cannot be empty.'}]">
                         <el-input v-model="editForm.courseID" disabled=true></el-input>
@@ -102,6 +106,8 @@ export default defineComponent({
         loading: false,
         select: ref('New Category'),
         categoryLabels: ['New Category'],
+        selectEdit: ref(''),
+        categoryLabelsEdit: [],
         categoryInputDisabled: false
       }
     },
@@ -152,6 +158,9 @@ export default defineComponent({
     };
   },
   methods: {
+      onSelectEdit(val){
+          this.editForm.category = val
+      },
       handleSelect(item) {
         axios.get('http://localhost:5000/advice/getspecificadvice', {params:{course: item.value}})
         .then(response =>{
@@ -163,6 +172,7 @@ export default defineComponent({
             this.editForm.courseID = response.data[0].courseID
             this.editForm.adviceText = response.data[0].adviceText
             this.editFormDisabled = false
+            this.selectEdit = response.data[0].category
         })
       },
       onSubmit(formName) {
@@ -177,6 +187,11 @@ export default defineComponent({
                     .then(response => {
                         if(response.data == 'Error'){
                             this.$message.error({message: 'Failed to create advice. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
+                            return
+                        }
+                        if(response.data == 'ER_DUP_ENTRY'){
+                            this.$message.error({message: `No duplication allowed. Duplication on course ${this.form.courseID}.`, duration: 10000, showClose: true})
+                            this.loading = false
                             return
                         }
                         if(response.data == 'Successfully Created'){
@@ -270,6 +285,7 @@ export default defineComponent({
                     }
                     for(var i = 0; i < response.data.length; i++){
                         this.categoryLabels.push(response.data[i].category)
+                        this.categoryLabelsEdit.push(response.data[i].category)
                     }
                 })
             }
