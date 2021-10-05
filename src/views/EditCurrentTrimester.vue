@@ -88,11 +88,11 @@
         </div>
     </el-dialog>
 
-    <div style="margin-top: 20px">
+    <!-- <div style="margin-top: 20px">
         <el-button type="primary" @click="addScheduleDialog()">Add Schedule</el-button>
         <el-button @click="toggleSelection()">Clear selection</el-button>
         <el-button type="danger" @click="deleteSchedule()">Delete Schedule</el-button>
-    </div>
+    </div> -->
 </div>
 </template>
 
