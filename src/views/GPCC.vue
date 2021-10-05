@@ -1,5 +1,6 @@
 <template>
 <div v-loading='allLoading'>
+  <h1 style="padding-top: 20px: padding-bottom: 20px;">Generation Per Course Counter</h1>
   <el-input v-model="search" size="large" placeholder="Type to search" />
 
     <el-table
