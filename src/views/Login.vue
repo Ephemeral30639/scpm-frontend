@@ -4,6 +4,7 @@
 
   <el-col :span="12">
     <div style="padding-top: 50px;">
+      <h1 style="padding-bottom: 30px;">Login</h1>
       <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
         <el-form-item label="Email" prop="email">
           <el-input type="email" v-model="ruleForm.email"></el-input>

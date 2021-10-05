@@ -3,7 +3,8 @@
 <el-row v-loading="loading">
 
   <el-col :span="12">
-    <div style="padding-top: 100px;">
+    <div style="padding-top: 50px;">
+      <h1 style="padding-bottom: 30px;">Registeration</h1>
       <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
         <el-form-item label="First Name" prop="firstName">
           <el-input v-model="ruleForm.firstName"></el-input>
