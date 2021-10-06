@@ -443,6 +443,10 @@ export default defineComponent({
         console.log(key, keyPath);
       },
       search(){
+        if (this.searchInput.length != 7){
+          this.$message.error({message: 'Invalid input. Please type the correct (7 characters) course ID.', duration: 6000})
+          return
+        }
         var allCourses = this.EnglishCourses.concat(this.NatSciCourses).concat(this.HumanityCourses)
         .concat(this.SocialSciCourses).concat(this.PECourses).concat(this.CoreCourses).concat(this.RequiredCourses)
         .concat(this.ElectiveCourses).concat(this.FreeElectiveCourses)

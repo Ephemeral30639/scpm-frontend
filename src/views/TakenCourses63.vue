@@ -477,6 +477,10 @@ export default defineComponent({
         console.log(key, keyPath);
       },
       search(){
+        if (this.searchInput.length != 7){
+          this.$message.error({message: 'Invalid input. Please type the correct (7 characters) course ID.', duration: 6000})
+          return
+        }
         var allCourses = this.foundationCourses.concat(this.EnglishCourses).concat(this.lifeAppreciationCourses)
         .concat(this.globalCitizenshipCourses).concat(this.criticalThinkingCourses).concat(this.leadershipCourses)
         .concat(this.digitalLiteracyCourses).concat(this.engineeringCoreCourses).concat(this.majorRequiredCourses)
