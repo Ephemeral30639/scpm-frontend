@@ -27,6 +27,10 @@
           <el-button type="info" icon="el-icon-search" circle @click="dialogSearchVisible = true"></el-button>
         </el-tooltip>
 
+        <el-tooltip class="item" effect="dark" content="Open your Generation's Catalog" placement="top">
+          <el-button type="info" icon="el-icon-document" circle @click="goToCatalog"></el-button>
+        </el-tooltip>
+
       </el-row>
       
       <br>
@@ -481,6 +485,9 @@ export default defineComponent({
         } else {
           this.$notify.success({message: 'You have ALREADY taken that course!', title: 'Found!', duration: 6000})
         }
+      },
+      goToCatalog(){
+        window.open("https://muic.mahidol.ac.th/eng/wp-content/downloads/catalog/muic_catalog_2017.pdf");
       }
     }
   });
