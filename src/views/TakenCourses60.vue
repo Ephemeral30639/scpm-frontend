@@ -33,31 +33,43 @@
 
       <h2 style="text-align:left;">General Education ( {{this.totalGECredit}} out of 48 )</h2>
 
-      <TakenCourseTable title="English Communication" name="4" :courses="EnglishCourses" :totalCredit="EnglishTotalCreditText"></TakenCourseTable>
+      <el-row :gutter="24">
+        <TakenCourseEnglishGauge :span="8" title="English Communication" :obtainedCredit="EnglishTotalCredit" totalCreditAdvance="12" totalCreditNormal="16" :courses="EnglishCourses"></TakenCourseEnglishGauge>
 
-      <TakenCourseTable title="Natural Sciences" name="5" :courses="NatSciCourses" :totalCredit="NatSciTotalCreditText"></TakenCourseTable>
+        <TakenCourseGauge :span="8" title="Natural Sciences" :obtainedCredit="NatSciTotalCredit" totalCredit="12" :courses="NatSciCourses"></TakenCourseGauge>
 
-      <TakenCourseTable title="Humanities" name="6" :courses="HumanityCourses" :totalCredit="HumanityTotalCreditText"></TakenCourseTable>
+        <TakenCourseGauge :span="8" title="Humanities" :obtainedCredit="HumanityTotalCredit" totalCredit="8" :courses="HumanityCourses"></TakenCourseGauge>
+      </el-row>
 
-      <TakenCourseTable title="Social Sciences" name="7" :courses="SocialSciCourses" :totalCredit="SocialSciTotalCreditText"></TakenCourseTable>
+      <el-divider></el-divider>
 
-      <TakenCourseTable title="Health Science and Physical Education" name="8" :courses="PECourses" :totalCredit="PETotalCreditText"></TakenCourseTable>
+      <el-row :gutter="24">
+        <TakenCourseGauge :span="12" title="Social Sciences" :obtainedCredit="SocialSciTotalCredit" totalCredit="8" :courses="SocialSciCourses"></TakenCourseGauge>
 
-      <br><br>
+        <TakenCourseGauge :span="12" title="Health Science and Physical Education" :obtainedCredit="PETotalCredit" totalCredit="4" :courses="PECourses"></TakenCourseGauge>
+      </el-row>
+
+      <br><br><br><br><br>
+      <el-divider><i v-for="o in 19" :key="o" class="el-icon-caret-bottom" style="font-size: 30px"></i></el-divider>
 
       <h2 style="text-align:left;">Major Courses ( {{this.totalMajorCoursesCredit}} out of 130 )</h2>
 
-      <TakenCourseTable title="Core Courses" name="1" :courses="CoreCourses" :totalCredit="CoreTotalCreditText"></TakenCourseTable>
+      <el-row :gutter="24">
+        <TakenCourseGauge :span="8" title="Core Courses" :obtainedCredit="CoreTotalCredit" totalCredit="41" :courses="CoreCourses"></TakenCourseGauge>
 
-      <TakenCourseTable title="Required Major Courses" name="2" :courses="RequiredCourses" :totalCredit="RequiredTotalCreditText"></TakenCourseTable>
+        <TakenCourseGauge :span="8" title="Required Major Courses" :obtainedCredit="RequiredTotalCredit" totalCredit="65" :courses="RequiredCourses"></TakenCourseGauge>
 
-      <TakenCourseTable title="Elective Major Courses" name="3" :courses="ElectiveCourses" :totalCredit="ElectiveTotalCreditText"></TakenCourseTable>
+        <TakenCourseGauge :span="8" title="Elective Major Courses" :obtainedCredit="ElectiveTotalCredit" totalCredit="24" :courses="ElectiveCourses"></TakenCourseGauge>
+      </el-row>
       
-      <br><br>
+      <br><br><br><br><br>
+      <el-divider><i v-for="o in 19" :key="o" class="el-icon-caret-bottom" style="font-size: 30px"></i></el-divider>
 
       <h2 style="text-align:left;">Special ( {{this.totalSpecialCoursesCredit}} out of 8 )</h2>
 
-      <TakenCourseTable title="Free Elective Courses" name="9" :courses="FreeElectiveCourses" :totalCredit="FreeElectiveTotalCreditText"></TakenCourseTable>
+      <el-row :gutter="24">
+        <TakenCourseGauge :span="8" title="Free Elective Courses" :obtainedCredit="FreeElectiveTotalCredit" totalCredit="8" :courses="FreeElectiveCourses"></TakenCourseGauge>
+      </el-row>
 
       <br><br>
 
@@ -120,9 +132,13 @@
 import { reactive, defineComponent, ref, onMounted } from 'vue'
 import axios from 'axios'
 import TakenCourseTable from '../components/TakenCoursesComponent/TakenCourseTable.vue'
+import TakenCourseGauge from '../components/TakenCoursesComponent/TakenCourseGauge.vue'
+import TakenCourseEnglishGauge from '../components/TakenCoursesComponent/TakenCourseEnglishGauge.vue'
 export default defineComponent({
     components: {
-      TakenCourseTable
+      TakenCourseTable,
+      TakenCourseGauge,
+      TakenCourseEnglishGauge
     },
     data() {
       return {
@@ -161,7 +177,14 @@ export default defineComponent({
 
         user: {
           name: 'Student'
-        }
+        },
+        colors: [
+          { color: '#f56c6c', percentage: 20 },
+          { color: '#e6a23c', percentage: 40 },
+          { color: '#6f7ad3', percentage: 60 },
+          { color: '#1989fa', percentage: 80 },
+          { color: '#5cb87a', percentage: 100 },
+        ]
       };
     },
 
@@ -358,7 +381,7 @@ export default defineComponent({
               break;
             default:
               remark = "none"; 
-}
+          }
           console.log("confirm add " + addChoice.value + " as " + remark)
           axios.get("http://localhost:5000/taken-courses/addtakencourse/" + addChoice.value + '/' + remark, {withCredentials: true})
           .then((res) => {

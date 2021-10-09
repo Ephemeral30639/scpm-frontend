@@ -39,35 +39,53 @@
 
       <h2 style="text-align:left;">General Education ( {{this.totalGECredit}} out of 38)</h2>
 
-      <TakenCourseTable title="English Communication" name="4" :courses="EnglishCourses" :totalCredit="EnglishTotalCreditText"></TakenCourseTable>
+      <el-row :gutter="24">
+        <TakenCourseEnglishGauge :span="8" title="English Communication" :obtainedCredit="EnglishTotalCredit" totalCreditAdvance="12" totalCreditNormal="16" :courses="EnglishCourses"></TakenCourseEnglishGauge>
 
-      <TakenCourseTable title="Life Appreciation" name="5" :courses="lifeAppreciationCourses" :totalCredit="lifeAppreciationTotalCreditText"></TakenCourseTable>
+        <TakenCourseGauge :span="8" title="Life Appreciation" :obtainedCredit="lifeAppreciationTotalCredit" totalCredit="4" :courses="lifeAppreciationCourses"></TakenCourseGauge>
 
-      <TakenCourseTable title="Global Citizenship" name="6" :courses="globalCitizenshipCourses" :totalCredit="globalCitizenshipTotalCreditText"></TakenCourseTable>
+        <TakenCourseGauge :span="8" title="Global Citizenship" :obtainedCredit="globalCitizenshipTotalCredit" totalCredit="4" :courses="globalCitizenshipCourses"></TakenCourseGauge>
+      </el-row>
 
-      <TakenCourseTable title="Critical Thinking" name="7" :courses="criticalThinkingCourses" :totalCredit="criticalThinkingTotalCreditText"></TakenCourseTable>
+      <el-divider></el-divider>
 
-      <TakenCourseTable title="Leadership" name="8" :courses="leadershipCourses" :totalCredit="leadershipTotalCreditText"></TakenCourseTable>
+      <el-row :gutter="24">
+        <TakenCourseGauge :span="8" title="Critical Thinking" :obtainedCredit="criticalThinkingTotalCredit" totalCredit="4" :courses="criticalThinkingCourses"></TakenCourseGauge>
 
-      <TakenCourseTable title="Digital Literacy" name="9" :courses="digitalLiteracyCourses" :totalCredit="digitalLiteracyTotalCreditText"></TakenCourseTable>
+        <TakenCourseGauge :span="8" title="Leadership" :obtainedCredit="leadershipTotalCredit" totalCredit="4" :courses="leadershipCourses"></TakenCourseGauge>
 
-      <br><br>
+        <TakenCourseGauge :span="8" title="Digital Literacy" :obtainedCredit="digitalLiteracyTotalCredit" totalCredit="4" :courses="digitalLiteracyCourses"></TakenCourseGauge>
+      </el-row>
+
+      <el-divider></el-divider>
+
+      <el-row :gutter="24">
+        <TakenCourseGeElectiveGauge :span="8" title="General Education Elective" :obtainedCredit="geElectiveTotalCredit" totalCreditAdvance="6" totalCreditNormal="2" :courses="geElectiveCourses"></TakenCourseGeElectiveGauge>
+      </el-row>
+
+      <br><br><br><br><br>
+      <el-divider><i v-for="o in 19" :key="o" class="el-icon-caret-bottom" style="font-size: 30px"></i></el-divider>
 
       <h2 style="text-align:left;">Major Courses ( {{this.totalMajorCoursesCredit}} out of 104 )</h2>
 
-      <TakenCourseTable title="Engineering Core Courses" name="1" :courses="engineeringCoreCourses" :totalCredit="engineeringCoreTotalCreditText"></TakenCourseTable>
+      <el-row :gutter="24">
+        <TakenCourseGauge :span="8" title="Engineering Core Courses" :obtainedCredit="engineeringCoreTotalCredit" totalCredit="38" :courses="engineeringCoreCourses"></TakenCourseGauge>
 
-      <TakenCourseTable title="Major Required Courses" name="2" :courses="majorRequiredCourses" :totalCredit="majorRequiredTotalCreditText"></TakenCourseTable>
+        <TakenCourseGauge :span="8" title="Major Required Courses" :obtainedCredit="majorRequiredTotalCredit" totalCredit="58" :courses="majorRequiredCourses"></TakenCourseGauge>
 
-      <TakenCourseTable title="Computer Engineering Elective Courses" name="3" :courses="computerEngineeringElectiveCourses" :totalCredit="computerEngineeringElectiveTotalCreditText"></TakenCourseTable>
-      
-      <br><br>
+        <TakenCourseGauge :span="8" title="Computer Engineering Elective Courses" :obtainedCredit="computerEngineeringElectiveTotalCredit" totalCredit="8" :courses="computerEngineeringElectiveCourses"></TakenCourseGauge>
+      </el-row>
+
+      <br><br><br><br><br>
+      <el-divider><i v-for="o in 19" :key="o" class="el-icon-caret-bottom" style="font-size: 30px"></i></el-divider>
 
       <h2 style="text-align:left;">Special ( {{this.totalSpecialCoursesCredit}} out of 28 )</h2>
 
-      <TakenCourseTable title="Free Elective Courses" name="9" :courses="FreeElectiveCourses" :totalCredit="FreeElectiveTotalCreditText"></TakenCourseTable>
+      <el-row :gutter="24">
+        <TakenCourseGauge :span="12" title="Free Elective Courses" :obtainedCredit="FreeElectiveTotalCredit" totalCredit="8" :courses="FreeElectiveCourses"></TakenCourseGauge>
 
-      <TakenCourseTable title="I-Design Elective Courses" name="10" :courses="IDesignCourses" :totalCredit="IDesignTotalCreditText"></TakenCourseTable>
+        <TakenCourseGauge :span="12" title="I-Design Elective Courses" :obtainedCredit="IDesignTotalCredit" totalCredit="20" :courses="IDesignCourses"></TakenCourseGauge>
+      </el-row>
 
       <br><br>
 
@@ -87,6 +105,7 @@
       <el-radio :label="1">Normal</el-radio>
       <el-radio :label="2">Free Elective</el-radio>
       <el-radio :label="3">I-Design Elective</el-radio>
+      <el-radio :label="4" style="margin-top:10px;">GE Elective</el-radio>
     </el-radio-group>
     <template #footer>
       <span class="dialog-footer">
@@ -131,9 +150,15 @@
 import { reactive, defineComponent, ref, onMounted } from 'vue'
 import axios from 'axios'
 import TakenCourseTable from '../components/TakenCoursesComponent/TakenCourseTable.vue'
+import TakenCourseGauge from '../components/TakenCoursesComponent/TakenCourseGauge.vue'
+import TakenCourseEnglishGauge from '../components/TakenCoursesComponent/TakenCourseEnglishGauge.vue'
+import TakenCourseGeElectiveGauge from '../components/TakenCoursesComponent/TakenCourseGeElectiveGauge.vue'
 export default defineComponent({
     components: {
-      TakenCourseTable
+      TakenCourseTable,
+      TakenCourseGauge,
+      TakenCourseEnglishGauge,
+      TakenCourseGeElectiveGauge
     },
     data() {
       return {
@@ -150,6 +175,7 @@ export default defineComponent({
         criticalThinkingCourses: [],
         leadershipCourses: [],
         digitalLiteracyCourses: [],
+        geElectiveCourses: [],
         engineeringCoreCourses: [],
         majorRequiredCourses: [],
         computerEngineeringElectiveCourses: [],
@@ -163,6 +189,7 @@ export default defineComponent({
         criticalThinkingTotalCredit: 0,
         leadershipTotalCredit: 0,
         digitalLiteracyTotalCredit: 0,
+        geElectiveTotalCredit: 0,
         engineeringCoreTotalCredit: 0,
         majorRequiredTotalCredit: 0,
         computerEngineeringElectiveTotalCredit: 0,
@@ -221,6 +248,8 @@ export default defineComponent({
 
             this.digitalLiteracyCourses = res.data.filter(course => course.Category =="Digital Literacy" && course.remark == "none")
 
+            this.geElectiveCourses = res.data.filter(course => course.remark == "ge elective")
+
             this.engineeringCoreCourses = res.data.filter(course => course.Category =="Engineering Core Courses" && course.remark == "none")
 
             this.majorRequiredCourses = res.data.filter(course => course.Category =="Major Required Courses" && course.remark == "none")
@@ -246,6 +275,8 @@ export default defineComponent({
             this.leadershipTotalCredit = this.leadershipCourses.map(leadershipCourses => leadershipCourses.Credit).reduce((total, leadershipCourses) => leadershipCourses + total, 0)
 
             this.digitalLiteracyTotalCredit = this.digitalLiteracyCourses.map(digitalLiteracyCourses => digitalLiteracyCourses.Credit).reduce((total, digitalLiteracyCourses) => digitalLiteracyCourses + total, 0)
+
+            this.geElectiveTotalCredit = this.geElectiveCourses.map(geElectiveCourses => geElectiveCourses.Credit).reduce((total, geElectiveCourses) => geElectiveCourses + total, 0)
 
             this.engineeringCoreTotalCredit = this.engineeringCoreCourses.map(engineeringCoreCourses => engineeringCoreCourses.Credit).reduce((total, engineeringCoreCourses) => engineeringCoreCourses + total, 0)
 
@@ -389,6 +420,9 @@ export default defineComponent({
               break; 
             case 3: 
               remark = "i-design elective";
+              break;
+            case 4:
+              remark = 'ge elective';
               break;
             default:
               remark = "none"; 
