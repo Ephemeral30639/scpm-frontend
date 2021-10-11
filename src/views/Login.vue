@@ -94,6 +94,7 @@ export default {
             //Post to backend for authentication. If Successful, return to homepage.
             // " { withCredentials: true } " is a piece of code that tells CORS to accept incoming cookies. 
             //We need to accept cookies because that's what identify the "session" that the user is logged into.
+            axios.defaults.withCredentials = true
             axios.post('https://scpm2021backend.herokuapp.com/login', loginData, { withCredentials: true })
               .then(reponse => {
                 if(reponse.data == "Successful Log In"){
