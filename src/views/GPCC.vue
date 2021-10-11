@@ -73,7 +73,7 @@ export default defineComponent({
       // 1 (start)
       // This function is called immediately when user loads the page.
       // This is probably where you connect backend to ask for active courses in the active trimeester.
-      axios.get('https://localhost:5000/gpcc')
+      axios.get('http://localhost:5000/gpcc')
       .then((response) => {
         if(response.data == 'Error'){
           this.$message.error({message: 'Failed to load GPCC data courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -107,7 +107,7 @@ export default defineComponent({
   },
   mounted() {
     this.allLoading = true
-    axios.get('https://localhost:5000/gpcc')
+    axios.get('http://localhost:5000/gpcc')
     .then(response => {
       if(response.data == 'Error'){
         this.$message.error({message: 'Failed to load GPCC data. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})

@@ -95,7 +95,7 @@ import axios from 'axios'
       unenroll(){
         this.dialogLoading = true
         axios.defaults.withCredentials = true
-        axios.post('https://localhost:5000/enrollment/unenroll', this.multipleSelection, {params:{trimester: this.trimester}})
+        axios.post('http://localhost:5000/enrollment/unenroll', this.multipleSelection, {params:{trimester: this.trimester}})
         .then(response => {
           if(response.data == 'Error'){
             this.$message.error({message: 'Failed to unenroll. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -111,7 +111,7 @@ import axios from 'axios'
       enroll(){
         this.allLoading = true
         axios.defaults.withCredentials = true
-        axios.post('https://localhost:5000/enrollment/enroll', this.multipleSelection, {params:{trimester: this.trimester}})
+        axios.post('http://localhost:5000/enrollment/enroll', this.multipleSelection, {params:{trimester: this.trimester}})
         .then(response => {
           if(response.data == 'Error'){
             this.$message.error({message: 'Failed to enroll. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -130,7 +130,7 @@ import axios from 'axios'
         this.dialogTableloading = true
         this.gridData = []
         axios.defaults.withCredentials = true
-        axios.get('https://localhost:5000/getcurrenttrimester/studentcurrentenrollment', {params:{trimester: this.trimester}})
+        axios.get('http://localhost:5000/getcurrenttrimester/studentcurrentenrollment', {params:{trimester: this.trimester}})
         .then(response => {
           if(response.data == 'Error'){
             this.$message.error({message: 'Failed to load your enrollment. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -215,7 +215,7 @@ import axios from 'axios'
 
     mounted(){
       axios.defaults.withCredentials = true
-      axios.get('https://localhost:5000/getcurrenttrimester/currenttrimester')
+      axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
         .then(response => {
             if(response.data == 'Error'){
               this.$message.error({message: 'Failed to load current trimester. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -223,7 +223,7 @@ import axios from 'axios'
             }
             this.trimester = response.data[0].trimester
 
-            axios.get('https://localhost:5000/getcurrenttrimester/timetable', {params:{trimester: this.trimester}})
+            axios.get('http://localhost:5000/getcurrenttrimester/timetable', {params:{trimester: this.trimester}})
             .then(response => {
                 if(response.data == 'Error'){
                   this.$message.error({message: 'Failed to load timetable. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})

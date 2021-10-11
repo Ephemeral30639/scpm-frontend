@@ -7,7 +7,7 @@
 import axios from 'axios'
 export default {
     mounted () {
-        axios.delete('https://localhost:5000/logout', {withCredentials: true})
+        axios.delete('http://localhost:5000/logout', {withCredentials: true})
         .then(response => {
           if (response.data == 'Log out successful'){
               this.$message.success({message: 'Successfully Logged Out', duration: 4000})

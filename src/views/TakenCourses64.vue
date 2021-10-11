@@ -218,7 +218,7 @@ export default defineComponent({
       // logged in session since no cookies was pass if we don't put " {withCredentials: true} ". This was the reason why "req.user.studentID" in backend was "undefined".
       // No cookies was send to the backend to identify the logged in user.
 
-      axios.get('https://localhost:5000/getuser', {withCredentials: true})
+      axios.get('http://localhost:5000/getuser', {withCredentials: true})
       .then(res => {
         if (res.data == "Not Logged In") {
           this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
@@ -230,7 +230,7 @@ export default defineComponent({
           } else {
             this.user.name = res.data.user.firstname
 
-            axios.get('https://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
+            axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
             .then((res) => {
             if(res.data == 'Error'){
               this.$message.error({message: 'Failed to load taken courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -368,7 +368,7 @@ export default defineComponent({
       // This function is called immediately when user loads the page.
       const loadAll = () => {
         //load all non taken courses for adding
-        axios.get('https://localhost:5000/taken-courses/loadcourselist', {withCredentials: true})
+        axios.get('http://localhost:5000/taken-courses/loadcourselist', {withCredentials: true})
         .then((response) => {
           if(response.data == 'Error'){
             this.$message.error({message: 'Failed to load course list. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -385,7 +385,7 @@ export default defineComponent({
           return
         })
         //load all taken courses for deleting
-        axios.get('https://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
+        axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
         .then((response) => {
           if(response.data == 'Error'){
             this.$message.error({message: 'Failed to load taken courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -432,7 +432,7 @@ export default defineComponent({
               remark = "none"; 
 }
           console.log("confirm add " + addChoice.value + " as " + remark)
-          axios.get("https://localhost:5000/taken-courses/addtakencourse/" + addChoice.value + '/' + remark, {withCredentials: true})
+          axios.get("http://localhost:5000/taken-courses/addtakencourse/" + addChoice.value + '/' + remark, {withCredentials: true})
           .then((res) => {
             if(res.data == 'Error'){
               this.$message.error({message: 'Failed to add course. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -466,7 +466,7 @@ export default defineComponent({
         else{
           deleteLoading.value = true
           console.log("confirm delete " + deleteChoice.value)
-          axios.delete("https://localhost:5000/taken-courses/deletetakencourse/" + deleteChoice.value , {withCredentials: true})
+          axios.delete("http://localhost:5000/taken-courses/deletetakencourse/" + deleteChoice.value , {withCredentials: true})
           .then((res) => {
             if(res.data == 'Error'){
               this.$message.error({message: 'Failed to delete course. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})

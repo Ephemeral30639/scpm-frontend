@@ -58,7 +58,7 @@ export default {
     },
 
     mounted() {
-        axios.get('https://localhost:5000/advice/getalladvice')
+        axios.get('http://localhost:5000/advice/getalladvice')
         .then(response => {
             if(response.data == 'Error'){
               this.$message.error({message: 'Failed to load advices. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})

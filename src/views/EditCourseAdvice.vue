@@ -131,7 +131,7 @@ export default defineComponent({
     const loadAll = () => {
       // This function is called immediately when user loads the page.
       // This is probably where you connect backend to ask for active courses in the active trimeester.
-      axios.get('https://localhost:5000/advice/getalladvice')
+      axios.get('http://localhost:5000/advice/getalladvice')
       .then((response) => {
         if(response.data == 'Error'){
             this.$message.error({message: 'Failed to load advices. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -162,7 +162,7 @@ export default defineComponent({
           this.editForm.category = val
       },
       handleSelect(item) {
-        axios.get('https://localhost:5000/advice/getspecificadvice', {params:{course: item.value}})
+        axios.get('http://localhost:5000/advice/getspecificadvice', {params:{course: item.value}})
         .then(response =>{
             if(response.data == 'Error'){
                 this.$message.error({message: 'Failed to load specifc advice. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -183,7 +183,7 @@ export default defineComponent({
                     return
                 } else {
                     this.loading = true
-                    axios.post('https://localhost:5000/advice/createadvice', null, {params: this.form})
+                    axios.post('http://localhost:5000/advice/createadvice', null, {params: this.form})
                     .then(response => {
                         if(response.data == 'Error'){
                             this.$message.error({message: 'Failed to create advice. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -211,7 +211,7 @@ export default defineComponent({
         this.$refs[formName].validate((valid) => {
             if (valid) {
                 this.loading = true
-                axios.post('https://localhost:5000/advice/editadvice', null, {params: this.editForm})
+                axios.post('http://localhost:5000/advice/editadvice', null, {params: this.editForm})
                 .then(response => {
                     if(response.data == 'Error'){
                         this.$message.error({message: 'Failed to edit an advice. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -232,7 +232,7 @@ export default defineComponent({
       },
       onDelete(){
         this.loading = true
-        axios.delete('https://localhost:5000/advice/deleteadvice', {params: this.editForm})
+        axios.delete('http://localhost:5000/advice/deleteadvice', {params: this.editForm})
         .then(response => {
             if(response.data == 'Error'){
                 this.$message.error({message: 'Failed to delete an advice. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -266,7 +266,7 @@ export default defineComponent({
     },
     mounted(){
         this.loading = true
-        axios.get('https://localhost:5000/getuser', {withCredentials: true})
+        axios.get('http://localhost:5000/getuser', {withCredentials: true})
         .then(response => {
             if (response.data == "Not Logged In") {
               this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
@@ -277,7 +277,7 @@ export default defineComponent({
             } else if (response.data.user.firstname == 'admin'){
                 this.loading = false
 
-                axios.get('https://localhost:5000/advice/getalladvicecategory')
+                axios.get('http://localhost:5000/advice/getalladvicecategory')
                 .then(response => {
                     if(response.data == 'Error'){
                         this.$message.error({message: 'Failed to load advice categories. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})

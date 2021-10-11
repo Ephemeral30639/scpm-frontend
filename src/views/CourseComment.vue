@@ -107,7 +107,7 @@ export default {
         axios.defaults.withCredentials = true
 
         // Load all the courses
-        axios.get('https://localhost:5000/comments/getallcourses')
+        axios.get('http://localhost:5000/comments/getallcourses')
         .then(response => {
             if(response.data == 'Error'){
               this.$message.error({message: 'Failed to load the courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -121,7 +121,7 @@ export default {
 
         // Get StudentID
         // Also serve as a way to check if user can comment or not (must be logged in to comment)
-        axios.get('https://localhost:5000/getuser')
+        axios.get('http://localhost:5000/getuser')
         .then(response => {
             if (response.data != "Not Logged In") {
                 this.loggedIn = true
@@ -141,7 +141,7 @@ export default {
             this.coursesLoading = true
 
             // Get course name to display on the right side.
-            axios.get('https://localhost:5000/comments/getcoursename', {params:{course: data.label}})
+            axios.get('http://localhost:5000/comments/getcoursename', {params:{course: data.label}})
             .then(response => {
                 if(response.data == 'Error'){
                     this.$message.error({message: 'Failed to load the course name. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -154,7 +154,7 @@ export default {
             // https://stackoverflow.com/a/9893752/12861725
             // Locale Options
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
-            axios.get('https://localhost:5000/comments/getcoursecomments', {params:{course: data.label}})
+            axios.get('http://localhost:5000/comments/getcoursecomments', {params:{course: data.label}})
             .then(response => {
                 if(response.data == 'Error'){
                     this.$message.error({message: 'Failed to load course comments. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -205,7 +205,7 @@ export default {
             this.footerLoading = true
             var commentID = uuidv4()
             var timestamp = Date.now()
-            axios.post('https://localhost:5000/comments/inputcomment', null, {params:{commentID: commentID, courseID: this.courseDisplay.ID, comment: this.commmentInput, timestamp: timestamp, studentID: 'Not Anonymous'}})
+            axios.post('http://localhost:5000/comments/inputcomment', null, {params:{commentID: commentID, courseID: this.courseDisplay.ID, comment: this.commmentInput, timestamp: timestamp, studentID: 'Not Anonymous'}})
             .then(response => {
                 if(response.data == 'Error'){
                     this.$message.error({message: 'Failed to comment. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
