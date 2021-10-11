@@ -154,7 +154,7 @@ import axios from 'axios'
 
             this.loading = true
             //Post to backend
-            axios.post('https://scpm2021backend.herokuapp.com/register', registerData)
+            axios.post('https://localhost:5000/register', registerData)
               .then(response => {
                 if (response.data == "Registration Successful"){
                   this.$message.success({message: 'Successfully Registered', duration: 4000})
@@ -182,7 +182,7 @@ import axios from 'axios'
       }
     },
     mounted(){
-      axios.get('https://scpm2021backend.herokuapp.com/register', { withCredentials: true })
+      axios.get('https://localhost:5000/register', { withCredentials: true })
           .then(reponse => {
             console.log(reponse.data)
             if (reponse.data == 'Already Logged In'){

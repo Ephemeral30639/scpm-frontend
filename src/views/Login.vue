@@ -94,7 +94,7 @@ export default {
             //Post to backend for authentication. If Successful, return to homepage.
             // " { withCredentials: true } " is a piece of code that tells CORS to accept incoming cookies. 
             //We need to accept cookies because that's what identify the "session" that the user is logged into.
-            axios.post('https://scpm2021backend.herokuapp.com/login', loginData, { withCredentials: true })
+            axios.post('https://localhost:5000/login', loginData, { withCredentials: true })
               .then(reponse => {
                 if(reponse.data == "Successful Log In"){
                   if(loginData.email == 'admin@student.mahidol.edu'){
@@ -123,7 +123,7 @@ export default {
     mounted(){
       // Sending a GET request to login. This is use to check if the user is already logged. If they are already logged in, redict to homepage.
       // Cookies need to be send as well. If backend can identify the cookie, means that the user already logged in.
-      axios.get('https://scpm2021backend.herokuapp.com/login', { withCredentials: true })
+      axios.get('https://localhost:5000/login', { withCredentials: true })
           .then(reponse => {
             if (reponse.data == 'Already Logged In'){
               this.$message.warning({message: 'You are already logged in.', duration: 4000})
