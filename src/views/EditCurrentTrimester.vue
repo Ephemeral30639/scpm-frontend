@@ -126,7 +126,7 @@ import { defineComponent, ref } from 'vue'
     methods:{
         onChange(){
             axios.defaults.withCredentials = true
-            axios.get('http://localhost:5000/getcurrenttrimester/changecurrenttrimester', {params:{current: this.trimester, new: this.value}})
+            axios.get('https://scpm2021backend.herokuapp.com/getcurrenttrimester/changecurrenttrimester', {params:{current: this.trimester, new: this.value}})
             .then(response => {
                 if(response.data == 'Error'){
                     this.$message.error({message: 'Failed to change trimester. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -154,7 +154,7 @@ import { defineComponent, ref } from 'vue'
         addSchedule(){
             axios.defaults.withCredentials = true
             var time = `${this.timeStart} - ${this.timeEnd}`
-            axios.post('http://localhost:5000/edittrimester/addschedule', null, {params:{id: this.input, date: this.dayRadio, time: time, trimester: this.trimester}})
+            axios.post('https://scpm2021backend.herokuapp.com/edittrimester/addschedule', null, {params:{id: this.input, date: this.dayRadio, time: time, trimester: this.trimester}})
             .then(response => {
                 if(response.data == 'Error'){
                     this.$message.error({message: 'Failed to add schedule. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -175,7 +175,7 @@ import { defineComponent, ref } from 'vue'
             for (var i = 0; i < this.multipleSelection.length; i++){
                 coursesToDelete.push(this.multipleSelection[i].id)
             }
-            axios.post('http://localhost:5000/edittrimester/deleteschedule', null, {params:{trimester: this.trimester, courses: coursesToDelete}}, {withCredentials: true})
+            axios.post('https://scpm2021backend.herokuapp.com/edittrimester/deleteschedule', null, {params:{trimester: this.trimester, courses: coursesToDelete}}, {withCredentials: true})
             .then(response => {
                 if(response.data == 'Error'){
                     this.$message.error({message: 'Failed to delte schedule. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -225,7 +225,7 @@ import { defineComponent, ref } from 'vue'
     mounted(){
         axios.defaults.withCredentials = true
         this.allLoading = true
-        axios.get('http://localhost:5000/getuser', {withCredentials: true})
+        axios.get('https://scpm2021backend.herokuapp.com/getuser', {withCredentials: true})
         .then(response => {
             if (response.data == "Not Logged In") {
               this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
@@ -238,7 +238,7 @@ import { defineComponent, ref } from 'vue'
             }
         })
 
-        axios.get('http://localhost:5000/getcurrenttrimester/availabletrimesters')
+        axios.get('https://scpm2021backend.herokuapp.com/getcurrenttrimester/availabletrimesters')
         .then(response => {
             if(response.data == 'Error'){
                 this.$message.error({message: 'Failed to load all trimesters. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -250,7 +250,7 @@ import { defineComponent, ref } from 'vue'
             }
         })
 
-        axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
+        axios.get('https://scpm2021backend.herokuapp.com/getcurrenttrimester/currenttrimester')
         .then(response => {
             if(response.data == 'Error'){
                 this.$message.error({message: 'Failed to load current trimester. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -258,7 +258,7 @@ import { defineComponent, ref } from 'vue'
             }
             this.trimester = response.data[0].trimester
 
-            axios.get('http://localhost:5000/getcurrenttrimester/timetable', {params:{trimester: this.trimester}})
+            axios.get('https://scpm2021backend.herokuapp.com/getcurrenttrimester/timetable', {params:{trimester: this.trimester}})
             .then(response => {
                 if(response.data == 'Error'){
                     this.$message.error({message: 'Failed to load timetable. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})

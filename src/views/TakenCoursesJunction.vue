@@ -7,7 +7,7 @@
 import axios from 'axios'
 export default {
     mounted () {
-        axios.get('http://localhost:5000/getuser', {withCredentials: true})
+        axios.get('https://scpm2021backend.herokuapp.com/getuser', {withCredentials: true})
         .then(res => {
             if (res.data == "Not Logged In") {
                 this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})

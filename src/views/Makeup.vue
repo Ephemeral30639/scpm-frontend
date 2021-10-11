@@ -232,7 +232,7 @@ export default defineComponent({
     const loadAll = () => {
       // This function is called immediately when user loads the page.
       // This is probably where you connect backend to ask for active courses in the active trimeester.
-      axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
+      axios.get('https://scpm2021backend.herokuapp.com/getcurrenttrimester/currenttrimester')
       .then(response => {
           if (response.data == "Error"){
             this.$message.error({message: 'Failed to load current trimester. Please wait a moment and refresh the page to try again', duration: 4000})
@@ -240,7 +240,7 @@ export default defineComponent({
             var trimester = response.data[0].trimester
           }
 
-          axios.get('http://localhost:5000/makeup/getactivecourses', {params:{trimester: trimester}})
+          axios.get('https://scpm2021backend.herokuapp.com/makeup/getactivecourses', {params:{trimester: trimester}})
           .then((response) => {
             if(response.data == 'Error'){
               this.$message.error({message: 'Failed to load active courses. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -272,7 +272,7 @@ export default defineComponent({
       // This function is called when the user selects from the suggested output.
       // This is probably where you edit the table to mark x or o depending on what they chose.
       this.tableLoading = true
-      axios.get('http://localhost:5000/makeup/getmakeup', {params:{course: item.value, trimester: this.trimester}})
+      axios.get('https://scpm2021backend.herokuapp.com/makeup/getmakeup', {params:{course: item.value, trimester: this.trimester}})
       .then(response => {
         if(response.data == 'Error'){
           this.$message.error({message: 'Failed to load makeup data. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
@@ -476,7 +476,7 @@ export default defineComponent({
   },
   mounted(){
     this.allLoading = true
-    axios.get('http://localhost:5000/getcurrenttrimester/currenttrimester')
+    axios.get('https://scpm2021backend.herokuapp.com/getcurrenttrimester/currenttrimester')
     .then(response => {
       if (response.data == "Error"){
         this.$message.error({message: 'Failed to load current trimester. Please wait a moment and refresh the page to try again.', duration: 4000})
