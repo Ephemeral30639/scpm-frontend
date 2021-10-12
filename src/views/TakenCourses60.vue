@@ -1,87 +1,69 @@
 <template>
 
 <div v-loading="loading">
-  
+
   <br>
 
   <h1>{{user.name}}'s Taken Courses</h1>
 
-  <div class="container">
+  <!-- Container -->
+  <div class="container" style="padding:40px;">
 
-    <!-- Collapse -->
-    <el-collapse v-model="activeNames" @change="handleChange" style="margin:30px; border:none;">
+    <!-- Buttons -->
+    <el-row>
+      <!-- Add button -->
+      <el-tooltip class="item" effect="dark" content="Add a course" placement="top">
+        <el-button type="primary" icon="el-icon-plus" circle @click="dialogAddVisible = true"></el-button>
+      </el-tooltip>
+      <!-- Delete button -->
+      <el-tooltip class="item" effect="dark" content="Delete a course" placement="top">
+        <el-button type="danger" icon="el-icon-delete" circle @click="dialogDeleteVisible = true"></el-button>
+      </el-tooltip>
+      <!-- Search button -->
+      <el-tooltip class="item" effect="dark" content="Search a taken course" placement="top">
+        <el-button type="info" icon="el-icon-search" circle @click="dialogSearchVisible = true"></el-button>
+      </el-tooltip>
+      <!-- Catalog button -->
+      <el-tooltip class="item" effect="dark" content="Open your Generation's Catalog" placement="top">
+        <el-button type="info" icon="el-icon-document" circle @click="goToCatalog"></el-button>
+      </el-tooltip>
+    </el-row>
+    
+    <br><br>
 
-      <!-- buttons -->
-      <el-row>
+    <!-- General Education Courses -->
+    <el-divider content-position="left"><h2 style="text-align:left;">General Education ( {{this.totalGECredit}} out of 48 )</h2></el-divider>
+    <div class="row align-items-center grid-ish" style="justify-content: space-evenly;">
+      <TakenCourseEnglishGauge title="English Communication" :obtainedCredit="EnglishTotalCredit" totalCreditAdvance="12" totalCreditNormal="16" :courses="EnglishCourses"></TakenCourseEnglishGauge>
+      <TakenCourseGauge title="Natural Sciences" :obtainedCredit="NatSciTotalCredit" totalCredit="12" :courses="NatSciCourses"></TakenCourseGauge>
+      <TakenCourseGauge title="Humanities" :obtainedCredit="HumanityTotalCredit" totalCredit="8" :courses="HumanityCourses"></TakenCourseGauge>
+      <TakenCourseGauge title="Social Sciences" :obtainedCredit="SocialSciTotalCredit" totalCredit="8" :courses="SocialSciCourses"></TakenCourseGauge>
+      <TakenCourseGauge title="Health Science and Physical Education" :obtainedCredit="PETotalCredit" totalCredit="4" :courses="PECourses"></TakenCourseGauge>
+    </div>
 
-        <el-tooltip class="item" effect="dark" content="Add a course" placement="top">
-          <el-button type="primary" icon="el-icon-plus" circle @click="dialogAddVisible = true"></el-button>
-        </el-tooltip>
-        
+    <br><br><br><br><br>
 
-        <el-tooltip class="item" effect="dark" content="Delete a course" placement="top">
-          <el-button type="danger" icon="el-icon-delete" circle @click="dialogDeleteVisible = true"></el-button>
-        </el-tooltip>
+    <!-- Major Courses -->
+    <el-divider content-position="left"><h2 style="text-align:left;">Major Courses ( {{this.totalMajorCoursesCredit}} out of 130 )</h2></el-divider>
+    <div class="row align-items-center grid-ish" style="justify-content: space-evenly;">
+      <TakenCourseGauge title="Core Courses" :obtainedCredit="CoreTotalCredit" totalCredit="41" :courses="CoreCourses"></TakenCourseGauge>
+      <TakenCourseGauge title="Required Major Courses" :obtainedCredit="RequiredTotalCredit" totalCredit="65" :courses="RequiredCourses"></TakenCourseGauge>
+      <TakenCourseGauge title="Elective Major Courses" :obtainedCredit="ElectiveTotalCredit" totalCredit="24" :courses="ElectiveCourses"></TakenCourseGauge>
+    </div>
+    
+    <br><br><br><br><br>
 
-        <el-tooltip class="item" effect="dark" content="Search a taken course" placement="top">
-          <el-button type="info" icon="el-icon-search" circle @click="dialogSearchVisible = true"></el-button>
-        </el-tooltip>
+    <!-- Special -->
+    <el-divider content-position="left"><h2 style="text-align:left;">Special ( {{this.totalSpecialCoursesCredit}} out of 8 )</h2></el-divider>
+    <div class="row align-items-center grid-ish" style="justify-content: space-evenly;">  
+      <TakenCourseGauge title="Free Elective Courses" :obtainedCredit="FreeElectiveTotalCredit" totalCredit="8" :courses="FreeElectiveCourses"></TakenCourseGauge>
+    </div>
 
-        <el-tooltip class="item" effect="dark" content="Open your Generation's Catalog" placement="top">
-          <el-button type="info" icon="el-icon-document" circle @click="goToCatalog"></el-button>
-        </el-tooltip>
+    <br><br>
 
-      </el-row>
-      
-      <br>
-
-      <h2 style="text-align:left;">General Education ( {{this.totalGECredit}} out of 48 )</h2>
-
-      <el-row :gutter="24">
-        <TakenCourseEnglishGauge :span="8" title="English Communication" :obtainedCredit="EnglishTotalCredit" totalCreditAdvance="12" totalCreditNormal="16" :courses="EnglishCourses"></TakenCourseEnglishGauge>
-
-        <TakenCourseGauge :span="8" title="Natural Sciences" :obtainedCredit="NatSciTotalCredit" totalCredit="12" :courses="NatSciCourses"></TakenCourseGauge>
-
-        <TakenCourseGauge :span="8" title="Humanities" :obtainedCredit="HumanityTotalCredit" totalCredit="8" :courses="HumanityCourses"></TakenCourseGauge>
-      </el-row>
-
-      <el-divider></el-divider>
-
-      <el-row :gutter="24">
-        <TakenCourseGauge :span="12" title="Social Sciences" :obtainedCredit="SocialSciTotalCredit" totalCredit="8" :courses="SocialSciCourses"></TakenCourseGauge>
-
-        <TakenCourseGauge :span="12" title="Health Science and Physical Education" :obtainedCredit="PETotalCredit" totalCredit="4" :courses="PECourses"></TakenCourseGauge>
-      </el-row>
-
-      <br><br><br><br><br>
-      <el-divider><i v-for="o in 19" :key="o" class="el-icon-caret-bottom" style="font-size: 30px"></i></el-divider>
-
-      <h2 style="text-align:left;">Major Courses ( {{this.totalMajorCoursesCredit}} out of 130 )</h2>
-
-      <el-row :gutter="24">
-        <TakenCourseGauge :span="8" title="Core Courses" :obtainedCredit="CoreTotalCredit" totalCredit="41" :courses="CoreCourses"></TakenCourseGauge>
-
-        <TakenCourseGauge :span="8" title="Required Major Courses" :obtainedCredit="RequiredTotalCredit" totalCredit="65" :courses="RequiredCourses"></TakenCourseGauge>
-
-        <TakenCourseGauge :span="8" title="Elective Major Courses" :obtainedCredit="ElectiveTotalCredit" totalCredit="24" :courses="ElectiveCourses"></TakenCourseGauge>
-      </el-row>
-      
-      <br><br><br><br><br>
-      <el-divider><i v-for="o in 19" :key="o" class="el-icon-caret-bottom" style="font-size: 30px"></i></el-divider>
-
-      <h2 style="text-align:left;">Special ( {{this.totalSpecialCoursesCredit}} out of 8 )</h2>
-
-      <el-row :gutter="24">
-        <TakenCourseGauge :span="8" title="Free Elective Courses" :obtainedCredit="FreeElectiveTotalCredit" totalCredit="8" :courses="FreeElectiveCourses"></TakenCourseGauge>
-      </el-row>
-
-      <br><br>
-
-      <el-tag style="font-size: 30px;">Grand Total: {{this.totalGECredit + this.totalMajorCoursesCredit + this.totalSpecialCoursesCredit}} out of 186</el-tag>
-      
-
-    </el-collapse>
-
+    <!-- Grand total credit -->
+    <el-tag style="font-size: 30px;">Grand Total: {{this.totalGECredit + this.totalMajorCoursesCredit + this.totalSpecialCoursesCredit}} out of 186</el-tag>
+    
   </div>
 
   <!-- Add dialog box -->
@@ -494,5 +476,12 @@ export default defineComponent({
 </script>
 
 <style>
-
+/* reference: https://youtu.be/vQAvjof1oe4?t=363 */
+.grid-ish{
+  display: flex;
+  flex-wrap: wrap;
+}
+.grid-ish > * {
+  flex: 1 1 33%
+}
 </style>

@@ -1,9 +1,10 @@
 <template>
-    <el-col :span="span">
+    <el-col :span="auto" style="margin-top:24px;">
         <div class="grid-content bg-purple"></div>
         <el-card :body-style="{ padding: '0px' }">
             <template #header>
-                <h3>{{title}}</h3>
+                <div class="row" style="height:4em; margin-top:8px; margin-bottom:8px; overflow:hidden;"><h3>{{title}}</h3></div>
+                <!-- <h3>{{title}}</h3> -->
                 <el-container style="display: flex; justify-content: center;">
                     <el-space>
                         <div>
@@ -88,5 +89,7 @@ export default {
 </script>
 
 <style>
-
+.el-card__header{
+    height: 260px;
+}
 </style>

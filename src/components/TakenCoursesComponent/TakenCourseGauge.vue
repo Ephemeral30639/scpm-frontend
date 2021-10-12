@@ -1,9 +1,9 @@
 <template>
-    <el-col :span="span">
+    <el-col :span="auto" style="margin-top:24px;">
         <div class="grid-content bg-purple"></div>
         <el-card :body-style="{ padding: '0px' }">
             <template #header>
-                <h3>{{title}}</h3>
+                <div class="row" style="height:4em; margin-top:8px; margin-bottom:8px; overflow:hidden;"><h3>{{title}}</h3></div>
                 <el-progress type="dashboard" :percentage="(obtainedCredit/totalCredit)*100" :color="colors">
                     <el-container direction="vertical">
                         <span class="percentage-value" style="font-weight: bolder;">{{obtainedCredit}} / {{totalCredit}}</span>
@@ -33,7 +33,6 @@ export default {
         courses: Object,
         obtainedCredit: Number,
         totalCredit: Number,
-        span: Number,
         colors: Object
     },
     data () {
@@ -61,5 +60,7 @@ export default {
 </script>
 
 <style>
-
+.el-card__header{
+    height: 260px;
+}
 </style>
