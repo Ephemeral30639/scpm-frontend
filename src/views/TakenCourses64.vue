@@ -292,7 +292,7 @@ export default defineComponent({
 
             this.IDesignTotalCredit = this.IDesignCourses.map(IDesignCourses => IDesignCourses.Credit).reduce((total, IDesignCourses) => IDesignCourses + total, 0)
 
-            this.totalGECredit = this.EnglishTotalCredit + this.lifeAppreciationTotalCredit + this.globalCitizenshipTotalCredit + this.criticalThinkingTotalCredit + this.leadershipTotalCredit + this.digitalLiteracyTotalCredit
+            this.totalGECredit = this.EnglishTotalCredit + this.lifeAppreciationTotalCredit + this.globalCitizenshipTotalCredit + this.criticalThinkingTotalCredit + this.leadershipTotalCredit + this.digitalLiteracyTotalCredit + this.geElectiveTotalCredit
             
             this.totalMajorCoursesCredit = this.engineeringCoreTotalCredit + this.majorRequiredTotalCredit + this.computerEngineeringElectiveTotalCredit
 
