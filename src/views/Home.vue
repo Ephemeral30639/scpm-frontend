@@ -85,7 +85,7 @@
       featureCardsUseButtons(feature){
         switch(feature){
           case 'takencourses':
-            this.$router.push({path: '/takencoursesjunction'})
+            this.$router.push({path: '/takencourses'})
             break
           case 'advice':
             this.$router.push({path: '/courseadvice'})
