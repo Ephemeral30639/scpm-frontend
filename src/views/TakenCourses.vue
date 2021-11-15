@@ -10,12 +10,14 @@
   <div class="container" style="padding:40px;">
 
     <!-- Buttons -->
-    <el-row v-if="AllTakenCourses.length">
-      <TakenCoursesButtonAdd :subcategories="Subcategory"></TakenCoursesButtonAdd>
-      <TakenCoursesButtonDelete :TakenCourses="AllTakenCourses" :subcategories="Subcategory"></TakenCoursesButtonDelete>
-      <TakenCoursesButtonSearch :AllTakenCourses="AllTakenCourses"></TakenCoursesButtonSearch>
-      <TakenCoursesButtonCatalog></TakenCoursesButtonCatalog>
-    </el-row>
+    <el-affix :offset="50">
+      <el-row v-if="AllTakenCourses.length">
+        <TakenCoursesButtonAdd :subcategories="Subcategory"></TakenCoursesButtonAdd>
+        <TakenCoursesButtonDelete :TakenCourses="AllTakenCourses" :subcategories="Subcategory"></TakenCoursesButtonDelete>
+        <TakenCoursesButtonSearch :AllTakenCourses="AllTakenCourses"></TakenCoursesButtonSearch>
+        <TakenCoursesButtonCatalog></TakenCoursesButtonCatalog>
+      </el-row>
+    </el-affix>
         
     <br><br>
 
@@ -29,7 +31,7 @@
     </div>
 
     <!-- Grand total credit -->
-    <el-tag style="font-size: 30px;">Grand Total: {{this.MainCategory[0].obtainedCredit + this.MainCategory[1].obtainedCredit + this.MainCategory[2].obtainedCredit}} out of {{this.MainCategory[0].totalCredit + this.MainCategory[1].totalCredit + this.MainCategory[2].totalCredit}}</el-tag>
+    <el-tag style="font-size: 30px;">Grand Total: {{grandObtainedCredit}} out of {{grandTotalCredit}}</el-tag>
     
   </div>
 
@@ -63,6 +65,8 @@ export default defineComponent({
         user: {
           name: 'Student'
         },
+        grandTotalCredit: 0,
+        grandObtainedCredit: 0
 
       };
     },
@@ -116,6 +120,9 @@ export default defineComponent({
                 for(let i = 0; i < this.MainCategory.length; i++){
                   let subCategoriesInAMainCategory = this.Subcategory.filter(categories => categories.mainCategory == this.MainCategory[i].name)
                   this.groupingCoursesbySubCategory(res.data, subCategoriesInAMainCategory, i, this.MainCategory[i].subCategoryData)
+                
+                  this.grandTotalCredit = this.grandTotalCredit + this.MainCategory[i].totalCredit
+                  this.grandObtainedCredit = this.grandObtainedCredit + this.MainCategory[i].obtainedCredit
                 }
                 this.loading = false
               })
