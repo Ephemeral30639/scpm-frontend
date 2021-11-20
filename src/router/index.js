@@ -3,11 +3,11 @@ import Home from '../views/Home.vue'
 import About from '../views/AboutTheWeb.vue'
 import Register from '../views/Register.vue'
 import Test from '../views/Test.vue'
-import TakenCoursesJunction from '../views/TakenCoursesJunction.vue'
-import TakenCourses60 from '../views/TakenCourses60.vue'
-import TakenCourses61 from '../views/TakenCourses61.vue'
-import TakenCourses63 from '../views/TakenCourses63.vue'
-import TakenCourses64 from '../views/TakenCourses64.vue'
+import TakenCourses from '../views/TakenCourses.vue'
+// import TakenCourses60 from '../views/TakenCourses60.vue'
+// import TakenCourses61 from '../views/TakenCourses61.vue'
+// import TakenCourses63 from '../views/TakenCourses63.vue'
+// import TakenCourses64 from '../views/TakenCourses64.vue'
 import Makeup from '../views/Makeup.vue'
 import Login from '../views/Login.vue'
 import GPCC from '../views/GPCC.vue'
@@ -40,30 +40,30 @@ const routes = [
         component: Test
     },
     {
-        path: '/takencoursesjunction',
-        name: 'TakenCoursesJunction',
-        component: TakenCoursesJunction
+        path: '/takencourses',
+        name: 'TakenCourses',
+        component: TakenCourses
     },
-    {
-        path: '/takencourses60',
-        name: 'TakenCourses60',
-        component: TakenCourses60
-    },
-    {
-        path: '/takencourses61',
-        name: 'TakenCourses61',
-        component: TakenCourses61
-    },
-    {
-        path: '/takencourses63',
-        name: 'TakenCourses63',
-        component: TakenCourses63
-    },
-    {
-        path: '/takencourses64',
-        name: 'TakenCourses64',
-        component: TakenCourses64
-    },
+    // {
+    //     path: '/takencourses60',
+    //     name: 'TakenCourses60',
+    //     component: TakenCourses60
+    // },
+    // {
+    //     path: '/takencourses61',
+    //     name: 'TakenCourses61',
+    //     component: TakenCourses61
+    // },
+    // {
+    //     path: '/takencourses63',
+    //     name: 'TakenCourses63',
+    //     component: TakenCourses63
+    // },
+    // {
+    //     path: '/takencourses64',
+    //     name: 'TakenCourses64',
+    //     component: TakenCourses64
+    // },
     {
         path: '/makeup',
         name: 'Makeup',
