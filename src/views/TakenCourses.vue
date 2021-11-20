@@ -76,7 +76,7 @@ export default defineComponent({
       // logged in session since no cookies was pass if we don't put " {withCredentials: true} ". This was the reason why "req.user.studentID" in backend was "undefined".
       // No cookies was send to the backend to identify the logged in user.
 
-      axios.get('http://localhost:5000/getuser', {withCredentials: true})
+      axios.get('https://scpm2021backend.herokuapp.com/getuser', {withCredentials: true})
       .then(res => {
         if (res.data == "Not Logged In") {
           this.$message.error({message: 'You are not logged in. Please log in first.', duration: 4000})
@@ -86,7 +86,7 @@ export default defineComponent({
           this.user.name = res.data.user.firstname
 
           //load major category structure
-          axios.get('http://localhost:5000/taken-courses/loadmajorcategorystructure', {withCredentials: true})
+          axios.get('https://scpm2021backend.herokuapp.com/taken-courses/loadmajorcategorystructure', {withCredentials: true})
           .then((res) => {
         
             if(res.data == 'Error'){
@@ -97,7 +97,7 @@ export default defineComponent({
             this.MainCategory = this.MainCategory.map(array => ({...array, obtainedCredit: 0, totalCredit: 0, subCategoryData: []}))
 
             //load sub category structure
-            axios.get('http://localhost:5000/taken-courses/loadsubcategorystructure', {withCredentials: true})
+            axios.get('https://scpm2021backend.herokuapp.com/taken-courses/loadsubcategorystructure', {withCredentials: true})
             .then((res) => {
           
               if(res.data == 'Error'){
@@ -107,7 +107,7 @@ export default defineComponent({
               this.Subcategory = res.data
 
               //load taken courses
-              axios.get('http://localhost:5000/taken-courses/loadtakencourse', {withCredentials: true})
+              axios.get('https://scpm2021backend.herokuapp.com/taken-courses/loadtakencourse', {withCredentials: true})
               .then((res) => {
               
                 if(res.data == 'Error'){

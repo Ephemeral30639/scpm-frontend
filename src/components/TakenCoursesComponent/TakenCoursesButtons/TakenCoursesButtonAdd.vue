@@ -62,7 +62,7 @@ export default  defineComponent({
       };
     },
     created() {
-        axios.get('http://localhost:5000/taken-courses/loadnontakencourse', {withCredentials: true})
+        axios.get('https://scpm2021backend.herokuapp.com/taken-courses/loadnontakencourse', {withCredentials: true})
         .then((res) => {
         
             if(res.data == 'Error'){
@@ -124,7 +124,7 @@ export default  defineComponent({
             this.multipleSelection = this.multipleSelection.map(array => ({...array, remark: this.chosenRemark}))
             console.log("adding")            
             console.log(this.multipleSelection)
-            axios.post("http://localhost:5000/taken-courses/addtakencourse",  this.multipleSelection, {withCredentials: true})
+            axios.post("https://scpm2021backend.herokuapp.com/taken-courses/addtakencourse",  this.multipleSelection, {withCredentials: true})
             .then((res) => {
                 if(res.data == 'Error'){
                     this.$message.error({message: 'Failed to add course. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})

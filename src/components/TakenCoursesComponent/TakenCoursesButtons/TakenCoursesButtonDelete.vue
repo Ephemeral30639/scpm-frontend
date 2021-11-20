@@ -91,7 +91,7 @@ export default  defineComponent({
                 this.multipleSelection = this.multipleSelection.concat(this.subcategoryList[i].selected)
             console.log("deleting")            
             console.log(this.multipleSelection)
-            axios.post("http://localhost:5000/taken-courses/deletetakencourse",  this.multipleSelection, {withCredentials: true})
+            axios.post("https://scpm2021backend.herokuapp.com/taken-courses/deletetakencourse",  this.multipleSelection, {withCredentials: true})
             .then((res) => {
                 if(res.data == 'Error'){
                     this.$message.error({message: 'Failed to delete course. Please wait a moment and refresh the page to try again.', duration: 10000, showClose: true})
