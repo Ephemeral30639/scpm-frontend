@@ -15,7 +15,7 @@
         <TakenCoursesButtonAdd :subcategories="Subcategory"></TakenCoursesButtonAdd>
         <TakenCoursesButtonDelete :TakenCourses="AllTakenCourses" :subcategories="Subcategory"></TakenCoursesButtonDelete>
         <TakenCoursesButtonSearch :AllTakenCourses="AllTakenCourses"></TakenCoursesButtonSearch>
-        <TakenCoursesButtonCatalog></TakenCoursesButtonCatalog>
+        <!-- <TakenCoursesButtonCatalog></TakenCoursesButtonCatalog> -->
       </el-row>
     </el-affix>
         
