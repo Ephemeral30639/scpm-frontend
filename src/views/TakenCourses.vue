@@ -11,7 +11,7 @@
 
     <!-- Buttons -->
     <el-affix :offset="50">
-      <el-row v-if="AllTakenCourses.length">
+      <el-row v-if="renderButton">
         <TakenCoursesButtonAdd :subcategories="Subcategory"></TakenCoursesButtonAdd>
         <TakenCoursesButtonDelete :TakenCourses="AllTakenCourses" :subcategories="Subcategory"></TakenCoursesButtonDelete>
         <TakenCoursesButtonSearch :AllTakenCourses="AllTakenCourses"></TakenCoursesButtonSearch>
@@ -60,6 +60,7 @@ export default defineComponent({
         activeIndex: '2',
         loading: true,
         AllTakenCourses: [],
+        renderButton: false,
         MainCategory: [],
         Subcategory: [],
         user: {
@@ -115,6 +116,7 @@ export default defineComponent({
                   return
                 }
                 this.AllTakenCourses = res.data
+                this.renderButton = true
 
                 //Group courses into sub category to display in each card
                 for(let i = 0; i < this.MainCategory.length; i++){
